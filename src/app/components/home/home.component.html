@@ -6,7 +6,7 @@
 
   <div>
     <nav>
-      <button id="post">Post</button>
+      <button id="post" class="btn btn-primary">Post</button>
       <button id="setting">Settings</button>
     </nav>
   </div>
@@ -14,7 +14,8 @@
 
   <div>
     <form>
-      <input name="email" placeholder="Input email"> <input type="submit" value="Login">
+      <input name="email" placeholder="Input email">
+      <input type="submit" value="Login" (click)="onSubmitLogin()">
     </form>
   </div>
 </div>

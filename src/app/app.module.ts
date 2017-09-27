@@ -13,6 +13,10 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { ElectronService } from './providers/electron.service';
 
+
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+
+
 import { AppService } from './providers/app.service';
 
 
@@ -27,7 +31,8 @@ import { AppService } from './providers/app.service';
     BrowserModule,
     FormsModule,
     HttpModule,
-    AppRoutingModule
+    AppRoutingModule,
+    NgbModule.forRoot()
   ],
   providers: [ElectronService, AppService],
   bootstrap: [AppComponent]

@@ -14,4 +14,8 @@ export class HomeComponent implements OnInit {
 
   }
 
+  onSubmitLogin() {
+    console.log("login");
+  }
+
 }
