@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { ElectronService } from './providers/electron.service';
+import { AppService } from './providers/app.service';
+
 
 @Component({
   selector: 'app-root',
@@ -7,7 +9,7 @@ import { ElectronService } from './providers/electron.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  constructor(public electronService: ElectronService) {
+  constructor(public electronService: ElectronService,  app: AppService) {
 
     if (electronService.isElectron()) {
       console.log('Mode electron');

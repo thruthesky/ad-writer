@@ -13,6 +13,11 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { ElectronService } from './providers/electron.service';
 
+import { AppService } from './providers/app.service';
+
+
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,7 +29,9 @@ import { ElectronService } from './providers/electron.service';
     HttpModule,
     AppRoutingModule
   ],
-  providers: [ElectronService],
+  providers: [ElectronService, AppService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor() {}
+}
