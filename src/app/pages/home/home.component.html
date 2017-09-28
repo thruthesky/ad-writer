@@ -5,16 +5,14 @@
     </h1>
     <small>Powered by Withcenter</small>
 
-    <nav class="d-flex justify-content-end">
+    <nav>
       <button class="post" class="btn btn-sm btn-primary">Post</button>
       <button class="keyword-monitoring" class="btn btn-sm btn-primary" routerLink="/keyword">Keyword Monitoring</button>
-      <button class="settings" class="btn btn-sm btn-secondary">Version 0.92</button>
+      <button class="settings" class="btn btn-sm btn-secondary">Version {{ app.version }}</button>
     </nav>
   </header>
 
   <main>
-
-
 
 
     <div *ngIf="app.login">
@@ -35,9 +33,6 @@
         <button type="submit" class="btn btn-primary">Login</button>
       </form>
     </div>
-
-
-
 
   </main>
 </div>

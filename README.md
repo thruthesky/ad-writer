@@ -2,6 +2,10 @@
 
 This is a writing software. You can write once and this will deliver to all over the world.
 
+# Logger
+
+https://github.com/thruthesky/keyword-rank-observer
+
 
 # Posting
 

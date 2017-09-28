@@ -1,0 +1,58 @@
+<div class="page keyword-monitoring-page">
+  <header>
+    <h1 class="fs-lg fw-normal">Settings</h1>
+    <nav>
+      <button class="btn btn-sm btn-secondary" (click)="app.doLogout()">Logout</button>
+    </nav>
+  </header>
+
+  <main>
+
+    <div *ngIf="!app.login" class="alert alert-warning" role="alert">
+      <h4 class="alert-heading">로그인을 하세요!</h4>
+      <p>
+        로그인을 먼저 하셔야 개인 설정을 이용 할 수 있습니다.
+      </p>
+      <hr>
+      <p class="mb-0">
+        애드라이터 버전 {{ app.version }}
+      </p>
+    </div>
+
+    <div>
+      
+      <div class="pointer mb-2 btn btn-sm btn-secondary" (click)="showKeywords=!showKeywords">사용 가능한 키워드 보기</div>
+
+      <div *ngIf="showKeywords">
+        사용 가능한 네이버 데스크톱 지식인 키워드.
+        <ul>
+          <li *ngFor=" let keyword of naverDesktopKeywords ">
+            {{ keyword }}
+          </li>
+        </ul>
+        사용 가능한 네이버 모바일 블로그 + 지식인 키워드.
+        <ul>
+          <li *ngFor=" let keyword of naverMobileKeywords ">
+            {{ keyword }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+
+    <ul class="list-group">
+      <li class="list-group-item active">Keyword Monitoring</li>
+      <li class="list-group-item">
+        <div class="pointer" (click)="showNaverDesktop=!showNaverDesktop">네이버 데스크톱 모니터링 할 키워드</div>
+        <div *ngIf="showNaverDesktop">
+          <div>키워드 : <input (keyup.enter)="onInputKeyword('naver/desktop')"></div>
+        </div>
+      </li>
+      <li class="list-group-item">네이버 모바일 모니터링 할 키워드</li>
+    </ul>
+
+    <small class="muted">선택 가능한 키워드를 참고하십시오. 키워드를 지정하지 않으면 선택 가능한 모든 키워드가 모니터링됩니다.</small>
+
+  </main>
+
+</div>

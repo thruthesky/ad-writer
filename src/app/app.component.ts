@@ -9,7 +9,7 @@ import { AppService } from './providers/app.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  constructor(public electronService: ElectronService,  app: AppService) {
+  constructor(public electronService: ElectronService,  public app: AppService) {
 
     if (electronService.isElectron()) {
       console.log('Mode electron');

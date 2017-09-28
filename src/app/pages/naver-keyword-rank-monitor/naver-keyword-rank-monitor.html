@@ -1,6 +1,12 @@
 <div class="page keyword-monitoring-page">
-    <header>
-      <h1 class="fs-lg fw-normal">Keyword Rank Monitoring</h1>
-    </header>
+  <header>
+    <h1 class="fs-lg fw-normal">Keyword Rank Monitoring</h1>
+  </header>
+
+
+  <div *ngIf='data'>
+
+    화상영어 {{ data.time | date:'medium' }}
   </div>
-  
+
+</div>

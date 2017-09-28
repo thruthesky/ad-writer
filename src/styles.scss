@@ -29,15 +29,17 @@ body {
     margin-bottom: 1em;
     padding: 1em;
     background-color: #ddd;
+    nav {
+      display: flex;
+      justify-content: flex-end;
+      button {
+        font-size: .8em;
+        cursor: pointer;
+      }
+    }
   }
   main {
     padding: 1em;
-  }
-  nav {
-    button {
-      font-size: .8em;
-      cursor: pointer;
-    }
   }
 }
 
@@ -47,7 +49,6 @@ body {
 .btn {
   border-radius: 0!important;
 }
-
 
 input.form-control[type="text"],
 input.form-control[type="password"],
@@ -71,6 +72,7 @@ input.form-control[type="number"] {
   border-radius: 0!important;
 }
 
+
 /**
  *
  *
@@ -82,6 +84,10 @@ input.form-control[type="number"] {
 
 .bg-white {
   background-color: white!important;
+}
+
+.grey {
+  color: grey!important;
 }
 
 .fs-sm {
@@ -102,4 +108,10 @@ input.form-control[type="number"] {
 
 .fw-normal {
   font-weight: normal!important;
+}
+
+
+
+.pointer {
+  cursor: pointer;
 }

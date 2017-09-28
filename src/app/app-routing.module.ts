@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { HomeComponent } from './components/home/home.component';
+import { HomeComponent } from './pages/home/home.component';
 import { KeywordMonitoringPage } from './pages/keyword-monitoring/keyword-monitoring';
 import { NaverKeywordRankMonitorPage } from './pages/naver-keyword-rank-monitor/naver-keyword-rank-monitor';
+import { SettingsPage } from './pages/settings/settings';
 
 const routes: Routes = [
     {
@@ -13,6 +14,10 @@ const routes: Routes = [
     {
         path: 'naver-keyword-rank-monitor',
         component: NaverKeywordRankMonitorPage
+    },
+    {
+        path: 'settings',
+        component: SettingsPage
     },
     {
         path: '',

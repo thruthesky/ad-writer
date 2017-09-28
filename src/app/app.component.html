@@ -1,8 +1,12 @@
 <div class="fixed-top bg-white" id='top-menu'>
   <ul class="nav">
-    <li class="nav-item">
-      <a class="nav-link" href="#">Write</a>
-    </li>
+      <li class="nav-item">
+          <a *ngIf=" ! app.login " class="nav-link" href="#" routerLink='/'>Login</a>
+          <a *ngIf="app.login" class="nav-link" href="#" routerLink='/'>{{ app.user.id }}</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Write</a>
+      </li>
     <li class="nav-item">
       <a class="nav-link" routerLink="/keyword">Keyword</a>
     </li>
@@ -17,7 +21,7 @@
       </div>
     </li>
     <li class="nav-item">
-      <a class="nav-link disabled" href="#">Settings</a>
+      <a class="nav-link grey" href="#" routerLink="/settings">Settings</a>
     </li>
   </ul>
 </div>
