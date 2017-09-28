@@ -9,10 +9,10 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 
+
 import { AppRoutingModule } from './app-routing.module';
 
 import { ElectronService } from './providers/electron.service';
-
 
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
@@ -21,11 +21,16 @@ import { AppService } from './providers/app.service';
 
 
 
+import { KeywordMonitoringPage } from './pages/keyword-monitoring/keyword-monitoring';
+import { NaverKeywordRankMonitorPage } from './pages/naver-keyword-rank-monitor/naver-keyword-rank-monitor';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    KeywordMonitoringPage,
+    NaverKeywordRankMonitorPage
   ],
   imports: [
     BrowserModule,

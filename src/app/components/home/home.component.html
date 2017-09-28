@@ -1,21 +1,43 @@
 <div class="page home-page">
-  <h1 class="title">
-    {{title}}
-  </h1>
-  <small>Powered by Withcenter</small>
+  <header>
+    <h1 class="title">
+      Ad Writer
+    </h1>
+    <small>Powered by Withcenter</small>
 
-  <div>
-    <nav>
-      <button id="post" class="btn btn-primary">Post</button>
-      <button id="setting">Settings</button>
+    <nav class="d-flex justify-content-end">
+      <button class="post" class="btn btn-sm btn-primary">Post</button>
+      <button class="keyword-monitoring" class="btn btn-sm btn-primary" routerLink="/keyword">Keyword Monitoring</button>
+      <button class="settings" class="btn btn-sm btn-secondary">Version 0.92</button>
     </nav>
-  </div>
+  </header>
+
+  <main>
 
 
-  <div>
-    <form>
-      <input name="email" placeholder="Input email">
-      <input type="submit" value="Login" (click)="onSubmitLogin()">
-    </form>
-  </div>
+
+
+    <div *ngIf="app.login">
+      Welcome, {{ app.user.id }}
+    </div>
+    <div *ngIf="! app.login ">
+      <form (ngSubmit)="onSubmitLogin()">
+        <div class="form-group">
+          <label for="home-id">Login ID</label>
+          <input type="text" name="id" [(ngModel)]="id" class="form-control" id="home-id" placeholder="Input login ID.">
+          <small class="form-text text-muted">Please input your login ID.</small>
+        </div>
+
+        <div class="form-group">
+          <label for="home-password">Password</label>
+          <input type="password" name="password" [(ngModel)]="password" class="form-control" id="home-password" placeholder="Input password.">
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+      </form>
+    </div>
+
+
+
+
+  </main>
 </div>

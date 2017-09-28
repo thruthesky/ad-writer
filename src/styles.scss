@@ -1,7 +1,105 @@
 /* You can add global styles to this file, and also import other style files */
-html, body {
+
+html,
+body {
   margin: 0;
   padding: 0;
-
   height: 100%;
+}
+
+
+/**
+ * TOP MENU
+ */
+
+#top-menu {
+  height: 40px;
+}
+
+
+/**
+ *
+ * Page default design.
+ *
+ */
+
+.page {
+  margin-top: 40px;
+  header {
+    margin-bottom: 1em;
+    padding: 1em;
+    background-color: #ddd;
+  }
+  main {
+    padding: 1em;
+  }
+  nav {
+    button {
+      font-size: .8em;
+      cursor: pointer;
+    }
+  }
+}
+
+
+/* Override bootstrap theme */
+
+.btn {
+  border-radius: 0!important;
+}
+
+
+input.form-control[type="text"],
+input.form-control[type="password"],
+input.form-control[type="email"],
+input.form-control[type="number"] {
+  border-radius: 0!important;
+}
+
+[ngbdropdown] {
+  margin-top: 2px;
+  .btn-outline-primary {
+    border: 0!important;
+  }
+  .dropdown-toggle::after {
+    vertical-align: 0.1em!important;
+  }
+}
+
+.extra-dropdown {
+  margin-top: .2em;
+  border-radius: 0!important;
+}
+
+/**
+ *
+ *
+ * Utility
+ *
+ *
+ *
+ */
+
+.bg-white {
+  background-color: white!important;
+}
+
+.fs-sm {
+  font-size: .8em!important;
+}
+
+.fs-md {
+  font-size: 1em!important;
+}
+
+.fs-lg {
+  font-size: 1.6em!important;
+}
+
+.fs-xl {
+  font-size: 2.5em!important;
+}
+
+.fw-normal {
+  font-weight: normal!important;
 }

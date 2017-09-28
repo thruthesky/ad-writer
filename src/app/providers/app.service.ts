@@ -13,9 +13,13 @@ firebase.initializeApp(config);
 
 @Injectable()
 export class AppService {
+    login = false;
+    user = {
+        id: ''
+    };
     db: firebase.database.Reference = null;
     constructor() {
-        this.db = firebase.database().ref('/').child('adv').child('ad-writer');
+        this.db = firebase.database().ref('/').child('adv');
     }
 }
 
