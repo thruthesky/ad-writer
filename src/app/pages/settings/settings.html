@@ -2,7 +2,7 @@
   <header>
     <h1 class="fs-lg fw-normal">{{ app.t('settings') }}</h1>
     <nav>
-      <button class="btn btn-sm btn-secondary" (click)="app.doLogout()">{{ app.t('logout') }}</button>
+      <button class="btn btn-sm btn-secondary" (click)="app.user.logout()">{{ app.t('logout') }}</button>
     </nav>
   </header>
 
@@ -38,25 +38,24 @@
 
 
 
-
     <div class="mb-5">
 
       <ul class="list-group">
         <li class="list-group-item active">강조 표시 아이디 입력</li>
         <li class="list-group-item">
-          <input class="w-100" name="first" [(ngModel)]="first" #ff (keyup)="typing.next({ first: ff.value })" placeholder="아이디를 입력하세요.">
+          <input class="w-100" name="first" [(ngModel)]="first" #ff (keyup)="typingEmphasis.next({ first: ff.value })" placeholder="아이디를 입력하세요.">
         </li>
         <li class="list-group-item">
-          <input class="w-100" name="second" [(ngModel)]="second" #se (keyup)="typing.next({ second: se.value })" placeholder="아이디를 입력하세요.">
+          <input class="w-100" name="second" [(ngModel)]="second" #se (keyup)="typingEmphasis.next({ second: se.value })" placeholder="아이디를 입력하세요.">
         </li>
         <li class="list-group-item">
-          <input class="w-100" name="third" [(ngModel)]="third" #th (keyup)="typing.next({ third: th.value })" placeholder="아이디를 입력하세요.">
+          <input class="w-100" name="third" [(ngModel)]="third" #th (keyup)="typingEmphasis.next({ third: th.value })" placeholder="아이디를 입력하세요.">
         </li>
         <li class="list-group-item">
-          <input class="w-100" name="forth" [(ngModel)]="forth" #fo (keyup)="typing.next({ forth: fo.value })" placeholder="아이디를 입력하세요.">
+          <input class="w-100" name="forth" [(ngModel)]="forth" #fo (keyup)="typingEmphasis.next({ forth: fo.value })" placeholder="아이디를 입력하세요.">
         </li>
         <li class="list-group-item">
-          <input class="w-100" name="fifth" [(ngModel)]="fifth" #fi (keyup)="typing.next({ fifth: fi.value })" placeholder="아이디를 입력하세요.">
+          <input class="w-100" name="fifth" [(ngModel)]="fifth" #fi (keyup)="typingEmphasis.next({ fifth: fi.value })" placeholder="아이디를 입력하세요.">
         </li>
       </ul>
 
@@ -100,7 +99,7 @@
         <li class="list-group-item">
           <div>
             <label class="fs-sm">네이버 모바일 통합검색 블로그+지식인 순위 집계할 할 키워드</label>
-            <input class="w-100" [(ngModel)]="naverMobileKeywords"  #nmc (keyup)="typingCollectKeywords.next({path:'naver-kin-mobile', value: nmc.value })">
+            <input class="w-100" [(ngModel)]="naverMobileKeywords" #nmc (keyup)="typingCollectKeywords.next({path:'naver-kin-mobile', value: nmc.value })">
           </div>
         </li>
       </ul>
@@ -118,25 +117,28 @@
       <ul class="list-group">
         <li class="list-group-item active">순위 모니터링 할 키워드</li>
 
-        <li class="list-group-item">
-          <div>
-            <label class="fs-sm">네이버 데스크톱 통합검색 지식인 모니터링 할 키워드</label>
-            <input class="w-100" (keyup.enter)=" 0 ">
-          </div>
-        </li>
 
         <li class="list-group-item">
           <div>
+            <label class="fs-sm">네이버 데스크톱 통합검색 지식인 모니터링 할 키워드</label>
+            <input class="w-100" [(ngModel)]="naverDesktopMonitoringKeywords" #ndmk  (keyup)="typingMonitoringKeywords.next({desktop: ndmk.value })">
+          </div>
+        </li>
+        <li class="list-group-item">
+          <div>
             <label class="fs-sm">네이버 모바일 통합검색 블로그+지식인 모니터링 할 키워드</label>
-            <input class="w-100" (keyup.enter)=" 0 ">
+            <input class="w-100" [(ngModel)]="naverMobileMonitoringKeywords" #nmmk (keyup)="typingMonitoringKeywords.next({mobile: nmmk.value })">
           </div>
         </li>
       </ul>
 
 
+
+
+
       <small class="muted">
-          모니터링 할 키워드는, 순위 집계 키워드 중 하나를 선택하시면 됩니다.
-          콤마로 구분하여 입력하세요.
+          모니터링 할 키워드는, 순위 집계 키워드 중에서 선택하시면 됩니다.
+          콤마로 구분하여 여러개를 입력 할 수 있으며 입력된 순서대로 표시가 됩니다.
           키워드를 지정하지 않으면 선택 가능한 모든 키워드가 모니터링됩니다.
         </small>
     </div>

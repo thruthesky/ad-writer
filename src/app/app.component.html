@@ -1,12 +1,21 @@
 <div class="fixed-top bg-white" id='top-menu'>
   <ul class="nav">
-      <li class="nav-item">
-          <a *ngIf=" ! app.login " class="nav-link" href="#" routerLink='/'>Login</a>
-          <a *ngIf="app.login" class="nav-link" href="#" routerLink='/'>{{ app.user.id }}</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#" routerLink="/write">{{ app.t('write') }}</a>
-      </li>
+    <li class="nav-item">
+      <a *ngIf=" app.user.isLogout " class="nav-link" href="#" routerLink='/'>{{ app.t('login') }}</a>
+
+      <div ngbDropdown class="d-inline-block" *ngIf=" app.user.isLogin ">
+        <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>{{ app.truncate(app.user.name, 10) }}</button>
+        <div class="extra-dropdown" ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button class="dropdown-item" routerLink="/">{{ app.t('home') }}</button>
+            <button class="dropdown-item" (click)=" app.user.logout() ">{{ app.t('logout') }}</button>
+          <button class="dropdown-item" routerLink="/settings">{{ app.t('settings') }}</button>
+        </div>
+      </div>
+
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#" routerLink="/write">{{ app.t('write') }}</a>
+    </li>
     <li class="nav-item">
       <a class="nav-link" routerLink="/keyword">{{ app.t('keyword') }}</a>
     </li>
@@ -25,5 +34,6 @@
     </li>
   </ul>
 </div>
+
 
 <router-outlet></router-outlet>

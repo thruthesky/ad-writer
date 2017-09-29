@@ -53,9 +53,6 @@ import { AngularXapiComponentsModule } from '../angular-xapi/angular-xapi-compon
 })
 export class AppModule {
   constructor(
-    x: XapiService
   ) {
-    x.setServerUrl('https://sonub.com:8443/');
-
   }
 }

@@ -23,6 +23,7 @@ export class NaverKeywordRankMonitorPage implements OnInit, OnDestroy {
         public app: AppService
     ) {
 
+
         this.displayRank();
     }
 
@@ -38,40 +39,87 @@ export class NaverKeywordRankMonitorPage implements OnInit, OnDestroy {
 
     async displayRank() {
         this.settings = await this.app.loadSettings();
-        await this.loadKeywords();
 
-        for (const k of this.naverDesktopKeywords) {
-            // console.log("Get rank for : ", k);
+        let keywords = this.app.getMonitoringKeywords( this.settings );
+        if ( keywords ) this.displayRankOfSomeKeywords( keywords );
+        else this.displayRankOfAllKeywords();
+        
+
+    }
+    async displayRankOfSomeKeywords( keywords ) {
+        console.log("displayRankOfSomeKeywords: ", keywords);
+        if ( keywords['desktop'] ) {
+            const keys = keywords['desktop'].split(',');
+            this.displayDesktopKeywords( keys );
+        }
+        if ( keywords['mobile'] ) {
+            const keys = keywords['mobile'].split(',');
+            this.displayMobileKeywords( keys );
+        }
+    }
+    async displayRankOfAllKeywords() {
+
+        
+        await this.loadKeywords();
+        this.displayDesktopKeywords( this.naverDesktopKeywords );
+        this.displayMobileKeywords( this.naverMobileKeywords );
+
+                // for (const k of this.naverDesktopKeywords) {
+                //     // console.log("Get rank for : ", k);
+                //     const on = this.app.db.child('keyword-rank-naver').child('desktop').child(k)
+                //         .limitToLast(1)
+                //         .on('child_added', snap => {
+                //             let v = snap.val();
+                //             // console.log("Got data of ", k, v);
+                //             // this.isEmphasis(v);
+                //             this.naverDesktopKeywordRanks[k] = v;
+                //             this.app.render(200);
+                //         });
+                //     this.child_added.push(on);
+                // }
+        
+        
+        
+                // for (const k of this.naverMobileKeywords) {
+                //     console.log("Get mobile rank for : ", k);
+                //     const on = this.app.db.child('keyword-rank-naver').child('mobile').child(k)
+                //         .limitToLast(1)
+                //         .on('child_added', snap => {
+                //             let v = snap.val();
+                //             console.log("Got data of mobile keyword: ", k, v);
+                //             // this.isEmphasis(v);
+                //             this.naverMobileKeywordRanks[k] = v;
+                //             this.app.render(200);
+                //         });
+                //     this.child_added.push(on);
+                // }
+        
+    }
+    displayDesktopKeywords( keys ) {
+        for (const k of keys) {
             const on = this.app.db.child('keyword-rank-naver').child('desktop').child(k)
                 .limitToLast(1)
                 .on('child_added', snap => {
                     let v = snap.val();
-                    // console.log("Got data of ", k, v);
-                    // this.isEmphasis(v);
                     this.naverDesktopKeywordRanks[k] = v;
                     this.app.render(200);
                 });
             this.child_added.push(on);
         }
-
-
-
-        for (const k of this.naverMobileKeywords) {
-            console.log("Get mobile rank for : ", k);
+    }
+    displayMobileKeywords( keys ) {
+        for (const k of keys) {
             const on = this.app.db.child('keyword-rank-naver').child('mobile').child(k)
                 .limitToLast(1)
                 .on('child_added', snap => {
                     let v = snap.val();
-                    console.log("Got data of mobile keyword: ", k, v);
-                    // this.isEmphasis(v);
                     this.naverMobileKeywordRanks[k] = v;
                     this.app.render(200);
                 });
             this.child_added.push(on);
         }
-
-
     }
+
     async loadKeywords() {
         console.log("loadKeywords() begin");
         await this.app.db.child('keyword/naver-kin-desktop').once('value', snap => {

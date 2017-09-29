@@ -29,4 +29,10 @@ https://github.com/thruthesky/keyword-rank-observer
 
 
 
+## DB structure
+
+/adv/keyword-rank-naver - node + nightmare 로 naver 키워드 랭킹을 집계하여 저장하는 곳.
+
+
+
 

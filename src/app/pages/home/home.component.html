@@ -1,34 +1,34 @@
 <div class="page home-page">
   <header>
     <h1 class="title">
-      Ad Writer
+      {{ app.t('ad_writer') }}
     </h1>
-    <small>Powered by Withcenter</small>
+    <small>{{ app.t('ad_writer_desc') }}</small>
 
     <nav>
-      <button class="settings" class="btn btn-sm btn-secondary">Version {{ app.version }}</button>
+      <button class="settings" class="btn btn-sm btn-secondary">{{ app.t('version', {version: app.version}) }}</button>
     </nav>
   </header>
 
   <main>
 
 
-    <div *ngIf="app.login">
-      {{ app.t('welcome', { name: app.user.id }) }}
+    <div *ngIf="app.user.isLogin">
+      {{ app.t('welcome', { name: app.user.name }) }}
     </div>
-    <div *ngIf="! app.login ">
+    <div *ngIf=" app.user.isLogout ">
       <form (ngSubmit)="onSubmitLogin()">
         <div class="form-group">
-          <label for="home-id">Login ID</label>
-          <input type="text" name="id" [(ngModel)]="id" class="form-control" id="home-id" placeholder="Input login ID.">
-          <small class="form-text text-muted">Please input your login ID.</small>
+          <label for="home-id">{{ app.t('login_id') }}</label>
+          <input type="text" name="id" [(ngModel)]="id" class="form-control" id="home-id" placeholder="{{ app.t('login_id_holder') }}">
+          <small class="form-text text-muted">{{ app.t('login_id_desc') }}</small>
         </div>
 
         <div class="form-group">
-          <label for="home-password">Password</label>
-          <input type="password" name="password" [(ngModel)]="password" class="form-control" id="home-password" placeholder="Input password.">
+          <label for="home-password">{{ app.t('password') }}</label>
+          <input type="password" name="password" [(ngModel)]="password" class="form-control" id="home-password" placeholder="{{ app.t('password_holder') }}">
         </div>
-        <button type="submit" class="btn btn-primary">Login</button>
+        <button type="submit" class="btn btn-primary">{{ app.t('login') }}</button>
       </form>
     </div>
 

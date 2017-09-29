@@ -15,80 +15,97 @@ firebase.initializeApp(config);
 
 
 import { LanguageService } from './language';
+import { XapiService, UserService, ForumService, SERVER_ERROR_CODE } from './../../angular-xapi/angular-xapi-service.module';
+
 
 @Injectable()
 export class AppService {
     version = '0.92';
-    login = false;
-    user = {
-        id: ''
-    };
     db: firebase.database.Reference = null;
     constructor(
         private zone: NgZone,
         public ln: LanguageService,
-        private router: Router
+        private router: Router,
+        public user: UserService,
+        public forum: ForumService,
+        public xapi: XapiService
     ) {
+        xapi.setServerUrl('https://www.sonub.com');
         this.db = firebase.database().ref('/').child('adv');
-        this.checkLogin();
-
         this.router.events.subscribe((event) => {
             if (event instanceof NavigationStart) window.scrollTo(0, 0);
         });
+
+        console.log("login: ", user.isLogin);
     }
 
     t(code, args?) {
         return this.ln.text(code, args);
     }
 
-    doLogin(id, password) {
-        const userRef = this.db.child('users').child(id);
-        userRef.once('value', snap => {
-            if (snap.val()) {
-                const val = snap.val();
-                if (val['password'] === password) {
-                    this.afterLogin(id);
-                }
-                else {
-                    alert("Wrong password");
-                }
-            }
-            else {
-                userRef.set({ 'password': password }).then(a => {
-                    this.afterLogin(id);
-                })
-            }
-        });
-    }
-    doLogout() {
-        this.user.id = '';
-        this.login = false;
-    }
-    afterLogin(id) {
-        this.login = true;
-        this.user.id = id;
-        localStorage.setItem('user.id', this.user.id);
-        this.render();
-    }
-    checkLogin() {
-        this.user.id = localStorage.getItem('user.id');
-        console.log('this.user.id', this.user.id);
-        if (this.user.id) {
-            this.login = true;
-            this.render();
-        }
-    }
-
+    
     render(timer = 10) {
         setTimeout(() => this.zone.run(() => { }), timer);
     }
 
 
     async loadSettings() {
-        const snap = await this.db.child('users').child(this.user.id).once('value');
+        const snap = await this.db.child('users').child(this.safeId).once('value');
         return snap.val();
     }
+    
+    getMonitoringKeywords(v) {
 
+        if ( v['naver-monitoring-keywords'] ) {
+            if ( !v['naver-monitoring-keywords']['desktop'] && !v['naver-monitoring-keywords']['mobile'] ) return null;
+            let re = {};
+            if ( v['naver-monitoring-keywords']['desktop'] ) re['desktop'] = v['naver-monitoring-keywords']['desktop'];
+            if ( v['naver-monitoring-keywords']['mobile'] ) re['mobile'] = v['naver-monitoring-keywords']['mobile'];
+            return re;
+        }
+        else return null;
+        
+    }
+
+    get safeId(): string {
+        if ( this.user.email ) {
+            let r = this.user.email;
+            r = r.replace('.', '_');
+            r = r.replace('$', '_');
+            r = r.replace('#', '_');
+            r = r.replace('[', '_');
+            r = r.replace(']', '_');
+            r = r.replace('/', '_');
+            return r;
+        }
+        else return null;
+    }
+    get userId(): string {
+        return this.safeId;
+    }
+
+
+    // login or register
+    login( id, password ) {
+        id = id + '@adwriter.com';
+        this.user.login( id, password ).subscribe( re => {
+            console.log("user.login: success: re: ", re);
+        }, e => {
+            console.log("user.login: error: ", e);
+            if ( e.code === SERVER_ERROR_CODE.CODE_USER_NOT_FOUND_BY_THAT_EMAIL ) {
+                let data = {
+                    user_login: id,
+                    user_email: id,
+                    user_pass: password
+                };
+                this.user.register( data ).subscribe( re => {
+                    console.log("user.login => user.register => success: re: ", re);
+                }, reg => {
+                    alert( reg.message );
+                })
+            }
+        });
+    }
 
 
     /// library
@@ -101,5 +118,8 @@ export class AppService {
     truncate(str, limit) {
         return (str.length < limit) ? str : str.substring(0, limit) + '...';
     }
+
+
+
 
 }

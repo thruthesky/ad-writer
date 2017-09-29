@@ -19,7 +19,7 @@ export class HomeComponent implements OnInit {
   onSubmitLogin() {
     console.log("login");
 
-    this.app.doLogin( this.id, this.password );
+    this.app.login( this.id, this.password );
 
   }
 
