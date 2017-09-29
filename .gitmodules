@@ -1,0 +1,3 @@
+[submodule "src/angular-xapi"]
+	path = src/angular-xapi
+	url = https://github.com/thruthesky/angular-xapi

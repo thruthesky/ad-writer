@@ -26,6 +26,9 @@ import { NaverKeywordRankMonitorPage } from './pages/naver-keyword-rank-monitor/
 import { SettingsPage } from './pages/settings/settings';
 import { WritePage } from './pages/write/write';
 
+import { AngularXapiServiceModule, XapiService } from '../angular-xapi/angular-xapi-service.module';
+import { AngularXapiComponentsModule } from '../angular-xapi/angular-xapi-component.module';
+
 
 @NgModule({
   declarations: [
@@ -41,11 +44,18 @@ import { WritePage } from './pages/write/write';
     FormsModule,
     HttpModule,
     AppRoutingModule,
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    AngularXapiServiceModule,
+    AngularXapiComponentsModule
   ],
   providers: [ElectronService, AppService, LanguageService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor() {}
+  constructor(
+    x: XapiService
+  ) {
+    x.setServerUrl('https://sonub.com:8443/');
+
+  }
 }
