@@ -1,8 +1,8 @@
 <div class="page keyword-monitoring-page">
   <header>
-    <h1 class="fs-lg fw-normal">Settings</h1>
+    <h1 class="fs-lg fw-normal">{{ app.t('settings') }}</h1>
     <nav>
-      <button class="btn btn-sm btn-secondary" (click)="app.doLogout()">Logout</button>
+      <button class="btn btn-sm btn-secondary" (click)="app.doLogout()">{{ app.t('logout') }}</button>
     </nav>
   </header>
 
@@ -19,8 +19,53 @@
       </p>
     </div>
 
+
     <div>
-      
+      Select Your Language
+
+      <label class="custom-control custom-radio">
+        <input id="radio1" name="language" type="radio" class="custom-control-input" [checked]=" app.ln.getLanguage() == 'en' " (click)="app.ln.setLanguage('en')">
+        <span class="custom-control-indicator"></span>
+        <span class="custom-control-description">English</span>
+      </label>
+      <label class="custom-control custom-radio">
+        <input id="radio2" name="language" type="radio" class="custom-control-input" [checked]=" app.ln.getLanguage() == 'ko' " (click)="app.ln.setLanguage('ko')">
+        <span class="custom-control-indicator"></span>
+        <span class="custom-control-description">Korean</span>
+      </label>
+
+    </div>
+
+
+
+
+    <div class="mb-5">
+
+      <ul class="list-group">
+        <li class="list-group-item active">강조 표시 아이디 입력</li>
+        <li class="list-group-item">
+          <input class="w-100" name="first" [(ngModel)]="first" #ff (keyup)="typing.next({ first: ff.value })" placeholder="아이디를 입력하세요.">
+        </li>
+        <li class="list-group-item">
+          <input class="w-100" name="second" [(ngModel)]="second" #se (keyup)="typing.next({ second: se.value })" placeholder="아이디를 입력하세요.">
+        </li>
+        <li class="list-group-item">
+          <input class="w-100" name="third" [(ngModel)]="third" #th (keyup)="typing.next({ third: th.value })" placeholder="아이디를 입력하세요.">
+        </li>
+        <li class="list-group-item">
+          <input class="w-100" name="forth" [(ngModel)]="forth" #fo (keyup)="typing.next({ forth: fo.value })" placeholder="아이디를 입력하세요.">
+        </li>
+        <li class="list-group-item">
+          <input class="w-100" name="fifth" [(ngModel)]="fifth" #fi (keyup)="typing.next({ fifth: fi.value })" placeholder="아이디를 입력하세요.">
+        </li>
+      </ul>
+
+      <small class="muted">강조 표시 할 아이디를 입력하세요. 키워드 모니터링이나 통계에서 아이디가 강조 표시됩니다. 꼭 나의 아이디가 아닌, 경쟁자의 아이디를 입력해도 됩니다. 최대 5 개 까지 입력 할 수 있습니다.</small>
+
+    </div>
+
+    <div>
+
       <div class="pointer mb-2 btn btn-sm btn-secondary" (click)="showKeywords=!showKeywords">사용 가능한 키워드 보기</div>
 
       <div *ngIf="showKeywords">
@@ -40,19 +85,61 @@
     </div>
 
 
-    <ul class="list-group">
-      <li class="list-group-item active">Keyword Monitoring</li>
-      <li class="list-group-item">
-        <div class="pointer" (click)="showNaverDesktop=!showNaverDesktop">네이버 데스크톱 모니터링 할 키워드</div>
-        <div *ngIf="showNaverDesktop">
-          <div>키워드 : <input (keyup.enter)="onInputKeyword('naver/desktop')"></div>
-        </div>
-      </li>
-      <li class="list-group-item">네이버 모바일 모니터링 할 키워드</li>
-    </ul>
+    <hr>
+    <div>
+      <ul class="list-group">
+        <li class="list-group-item active">순위 집계할 키워드</li>
 
-    <small class="muted">선택 가능한 키워드를 참고하십시오. 키워드를 지정하지 않으면 선택 가능한 모든 키워드가 모니터링됩니다.</small>
+        <li class="list-group-item">
+          <div>
+            <label class="fs-sm">네이버 데스크톱 통합검색 지식인 순위 집계 할 키워드</label>
+            <input class="w-100" [(ngModel)]="naverDesktopKeywords" #ndc (keyup)="typingCollectKeywords.next({path:'naver-kin-desktop', value: ndc.value })">
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div>
+            <label class="fs-sm">네이버 모바일 통합검색 블로그+지식인 순위 집계할 할 키워드</label>
+            <input class="w-100" [(ngModel)]="naverMobileKeywords"  #nmc (keyup)="typingCollectKeywords.next({path:'naver-kin-mobile', value: nmc.value })">
+          </div>
+        </li>
+      </ul>
+
+
+
+      <small class="muted">
+          콤마로 구분하여 입력하세요. (나중에) 가나다 순서로 자동 정렬 됨. 주의: 각 항목별로 키워드를 20개 이상 입력하면 부하가 거릴 수 있으므로.
+        </small>
+    </div>
+
+
+    <hr>
+    <div>
+      <ul class="list-group">
+        <li class="list-group-item active">순위 모니터링 할 키워드</li>
+
+        <li class="list-group-item">
+          <div>
+            <label class="fs-sm">네이버 데스크톱 통합검색 지식인 모니터링 할 키워드</label>
+            <input class="w-100" (keyup.enter)=" 0 ">
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div>
+            <label class="fs-sm">네이버 모바일 통합검색 블로그+지식인 모니터링 할 키워드</label>
+            <input class="w-100" (keyup.enter)=" 0 ">
+          </div>
+        </li>
+      </ul>
+
+
+      <small class="muted">
+          모니터링 할 키워드는, 순위 집계 키워드 중 하나를 선택하시면 됩니다.
+          콤마로 구분하여 입력하세요.
+          키워드를 지정하지 않으면 선택 가능한 모든 키워드가 모니터링됩니다.
+        </small>
+    </div>
 
   </main>
-
 </div>

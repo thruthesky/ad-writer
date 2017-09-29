@@ -5,23 +5,23 @@
           <a *ngIf="app.login" class="nav-link" href="#" routerLink='/'>{{ app.user.id }}</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Write</a>
+        <a class="nav-link" href="#" routerLink="/write">{{ app.t('write') }}</a>
       </li>
     <li class="nav-item">
-      <a class="nav-link" routerLink="/keyword">Keyword</a>
+      <a class="nav-link" routerLink="/keyword">{{ app.t('keyword') }}</a>
     </li>
     <li class="nav-item">
       <div ngbDropdown class="d-inline-block">
-        <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Extra</button>
+        <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>{{ app.t('extra') }}</button>
         <div class="extra-dropdown" ngbDropdownMenu aria-labelledby="dropdownBasic1">
-          <button class="dropdown-item" routerLink="/naver-keyword-rank-monitor">Naver Keyword Rank Monitor</button>
-          <button class="dropdown-item" routerLink="/keyword">Naver Keyword Rank Statistics</button>
-          <button class="dropdown-item">Daum ...</button>
+          <button class="dropdown-item" routerLink="/naver-keyword-rank-monitor">네이버 순위 모니터링</button>
+          <button class="dropdown-item" routerLink="/keyword">네이버 순위 통계</button>
+          <button class="dropdown-item">다음 (준비중)</button>
         </div>
       </div>
     </li>
     <li class="nav-item">
-      <a class="nav-link grey" href="#" routerLink="/settings">Settings</a>
+      <a class="nav-link grey" href="#" routerLink="/settings">{{ app.t('settings') }}</a>
     </li>
   </ul>
 </div>

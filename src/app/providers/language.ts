@@ -7,7 +7,7 @@ const LANGUAGE_KEY = 'language';
 export class LanguageService {
 
     constructor() { }
-    
+
     /**
      * Returns web browser language.
      * @return 2 lettters of language code like 'en', 'ko'.
@@ -54,6 +54,7 @@ export class LanguageService {
  * @param args
  */
     text(code, args?) {
+        // console.log('args: ', args);
         let ln;
         if (args && args['ln']) ln = args['ln'];
         else ln = this.getLanguage();

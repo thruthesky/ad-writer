@@ -1,4 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
+import { Router, NavigationStart } from '@angular/router';
+
 import * as firebase from 'firebase';
 
 const config = {
@@ -24,14 +26,19 @@ export class AppService {
     db: firebase.database.Reference = null;
     constructor(
         private zone: NgZone,
-        public ln: LanguageService
+        public ln: LanguageService,
+        private router: Router
     ) {
         this.db = firebase.database().ref('/').child('adv');
         this.checkLogin();
+
+        this.router.events.subscribe((event) => {
+            if (event instanceof NavigationStart) window.scrollTo(0, 0);
+        });
     }
 
-    t( code ) {
-        this.ln.text( code );
+    t(code, args?) {
+        return this.ln.text(code, args);
     }
 
     doLogin(id, password) {
@@ -74,6 +81,25 @@ export class AppService {
 
     render(timer = 10) {
         setTimeout(() => this.zone.run(() => { }), timer);
+    }
+
+
+    async loadSettings() {
+        const snap = await this.db.child('users').child(this.user.id).once('value');
+        return snap.val();
+    }
+
+
+
+    /// library
+    /**
+     * Truncate a string over a given length and add ellipsis if necessary
+     * @param {string} str - string to be truncated
+     * @param {integer} limit - max length of the string before truncating
+     * @return {string} truncated string
+     */
+    truncate(str, limit) {
+        return (str.length < limit) ? str : str.substring(0, limit) + '...';
     }
 
 }

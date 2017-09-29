@@ -1,0 +1,34 @@
+.keyword-monitoring-page {
+    
+}
+
+.desktop, .mobile {
+    .keyword {
+        .key {
+            display: inline-block;
+            padding: .25em;
+            background-color: blue;
+            color: white;
+        }
+    }
+}
+
+
+
+.desktop, .mobile {
+    [rank="first"] {
+        background-color: #C91010!important;
+    }
+    [rank="second"] {
+        background-color: #0B3CDB!important;
+    }
+    [rank="third"] {
+        background-color: #213880!important;
+    }
+    [rank="forth"] {
+        background-color: #1E2846!important;
+    }
+    [rank="fifth"] {
+        background-color: #35373F!important;
+    }
+}

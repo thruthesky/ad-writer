@@ -25,6 +25,7 @@ body {
 
 .page {
   margin-top: 40px;
+  background-color: #eee;
   header {
     margin-bottom: 1em;
     padding: 1em;
@@ -72,6 +73,16 @@ input.form-control[type="number"] {
   border-radius: 0!important;
 }
 
+.no-guttors {
+  margin-right: 0;
+  margin-left: 0;
+
+  > .col,
+  > [class*="col-"] {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
 
 /**
  *
@@ -88,6 +99,10 @@ input.form-control[type="number"] {
 
 .grey {
   color: grey!important;
+}
+
+.fs-xs {
+  font-size: .6em!important;
 }
 
 .fs-sm {
@@ -108,6 +123,9 @@ input.form-control[type="number"] {
 
 .fw-normal {
   font-weight: normal!important;
+}
+.fw-light {
+  font-weight: 100!important;
 }
 
 

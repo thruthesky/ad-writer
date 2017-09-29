@@ -24,6 +24,8 @@ import { LanguageService } from './providers/language';
 import { KeywordMonitoringPage } from './pages/keyword-monitoring/keyword-monitoring';
 import { NaverKeywordRankMonitorPage } from './pages/naver-keyword-rank-monitor/naver-keyword-rank-monitor';
 import { SettingsPage } from './pages/settings/settings';
+import { WritePage } from './pages/write/write';
+
 
 @NgModule({
   declarations: [
@@ -31,7 +33,8 @@ import { SettingsPage } from './pages/settings/settings';
     HomeComponent,
     KeywordMonitoringPage,
     NaverKeywordRankMonitorPage,
-    SettingsPage
+    SettingsPage,
+    WritePage
   ],
   imports: [
     BrowserModule,

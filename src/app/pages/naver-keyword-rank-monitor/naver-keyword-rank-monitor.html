@@ -1,12 +1,55 @@
 <div class="page keyword-monitoring-page">
-  <header>
-    <h1 class="fs-lg fw-normal">Keyword Rank Monitoring</h1>
-  </header>
+
+  <main>
+    <ul>
+      <li>키워드 모니터링</li>
+      <li>키워드 표시 순서 : 가나다 순, 자동 업데이트 주기: 5분.</li>
+    </ul>
 
 
-  <div *ngIf='data'>
+    <div class="container-fluid">
+      <div class="row no-gutters">
+        <div class="col-sm-6">
+          <div class="desktop fs-sm" *ngIf='keys(naverDesktopKeywordRanks).length'>
+            <h2>네이버 데스크톱 순위</h2>
+            <div class="keyword" *ngFor=" let k of keys(naverDesktopKeywordRanks) ">
+              <span class="key">{{ k }}</span> 검색 순위 {{ naverDesktopKeywordRanks[k].time | date:'MM-dd HH:mm' }}
+              <div *ngFor=" let post of naverDesktopKeywordRanks[k].rank; let i = index ">
+                {{ i + 1 }}. {{ post.title }}
+                <ng-container *ngFor=" let name of post.names ">
+                  <span class="badge badge-secondary ml-2 fw-light" [attr.rank]="isEmphasis(name)">
+                    {{ name }}
+                  </span>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
 
-    화상영어 {{ data.time | date:'medium' }}
-  </div>
+        
+        <div class="col-sm-6">
+          <h2>네이버 모바일 순위</h2>
+          <div class="mobile fs-sm" *ngIf='keys(naverMobileKeywordRanks).length'>
+            <div class="keyword" *ngFor=" let k of keys(naverMobileKeywordRanks) ">
+              <span class="key">{{ k }}</span> 검색 순위 {{ naverMobileKeywordRanks[k].time | date:'MM-dd HH:mm' }}
+              <div *ngFor=" let post of naverMobileKeywordRanks[k].rank; let i = index ">
+                <a href="{{ post.href }}">
+                  {{ i + 1 }}. {{ app.truncate(post.title, 20) }}
+                  <span *ngIf="post.name"> - 블로그: {{ post.name }}</span>
+                  <ng-container *ngFor=" let name of post.names ">
+                    <span class="badge badge-secondary ml-2 fw-light" [attr.rank]="isEmphasis(name)">
+                      {{ name }}
+                    </span>
+                  </ng-container>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </main>
 
 </div>

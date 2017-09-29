@@ -6,8 +6,6 @@
     <small>Powered by Withcenter</small>
 
     <nav>
-      <button class="post" class="btn btn-sm btn-primary">Post</button>
-      <button class="keyword-monitoring" class="btn btn-sm btn-primary" routerLink="/keyword">Keyword Monitoring</button>
       <button class="settings" class="btn btn-sm btn-secondary">Version {{ app.version }}</button>
     </nav>
   </header>
@@ -16,7 +14,7 @@
 
 
     <div *ngIf="app.login">
-      Welcome, {{ app.user.id }}
+      {{ app.t('welcome', { name: app.user.id }) }}
     </div>
     <div *ngIf="! app.login ">
       <form (ngSubmit)="onSubmitLogin()">
