@@ -35,9 +35,9 @@ https://github.com/thruthesky/keyword-rank-observer
 $ npm i
 $ git submodule update --init
 $ git submodule foreach git checkout master
-$ cd auto-poster-2
-$ npm i
+$ cd auto-post
 $ tsc
+
 
 
 ## Run
@@ -57,3 +57,44 @@ $ npm start
 
 
 
+## Auto Posting.
+
+Auto posting scripts are completely separated from Ad Writer.
+
+
+### Options
+
+`--user=Ad-Writer-User-ID`
+`--key=Ad-Writer-Post-Key`
+`--id=Login-ID`
+`--password=Login-Password`
+`--category=Category-To-Post`
+
+
+To test auto posting script, do some like below.
+
+````
+$ node auto-post/dist/src/task/sonub.js --user=jjjo@adwriter_com --key=-KvI63YLMcjKNL_3McAC --id=user1223@gmail.com --password=pass1223 --category=discussion
+$ node auto-post/dist/src/task/facebook.js --user=jjjo@adwriter_com --key=-KvI63YLMcjKNL_3McAC
+$ node auto-post/dist/src/task/twitter.js --user=jjjo@adwriter_com --key=-KvI63YLMcjKNL_3McAC
+$ node auto-post/dist/src/task/google-plus.js --user=jjjo@adwriter_com --key=-KvI63YLMcjKNL_3McAC
+````
+
+### Autoo Posting Protocol
+
+Auto posting scripts can write out with `console.log('xxxx: ... ')`.
+
+for instance
+````
+console.log('begin: ....');
+console.log('get-firebase-data-ok: ....');
+console.log('get-firebase-data-fail: ....');
+console.log('open-site-ok: ....');
+console.log('open-site-fail: ....');
+console.log('login-ok: ...');
+console.log('login-fail: ...');
+console.log('open-post-create-page-ok: ...');
+console.log('open-post-create-page-fail: ...');
+console.log('post-ok: ....');
+console.log('post-fail: ....');
+````

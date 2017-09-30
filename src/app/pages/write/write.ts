@@ -5,6 +5,7 @@ import { PostCreateComponent } from '../../../angular-xapi/components/post-creat
 const spawn = require('child_process').spawn;
 
 
+
 @Component({
     selector: 'write-page',
     templateUrl: 'write.html'
@@ -16,7 +17,9 @@ export class WritePage {
     ) {
         console.log("write page: server url: ", app.xapi.getServerUrl());
 
-        app.xapi.version().subscribe( re => console.log('version: ', re));
+        app.xapi.version().subscribe(re => console.log('version: ', re));
+
+        this.autoPosting( 'jjjo@adwriter_com', '-KvI63YLMcjKNL_3McAC' );
     }
 
     async onPostCreatSuccess(post_id) {
@@ -36,23 +39,28 @@ export class WritePage {
 
         console.log("finished push: key: ", key);
 
-        this.autoPosting( this.app.userId, key );
+        this.autoPosting(this.app.userId, key);
 
     }
 
 
 
-    autoPosting( user, key ) {
-        const ls = spawn('ls', ['-l', './']);
+    autoPosting(user, key) {
+
+        
+        console.log("base path: ", window['appPath']);
+
+
+        const ls = spawn('node', [`auto-post/dist/src/task/sonub.js`, `--user=${user}`, `--key=${key}`]);
         ls.stdout.on('data', (data) => {
-          console.log(`${data}`);
+            console.log(`${data}`);
         });
         ls.stderr.on('data', (data) => {
-          console.log(`${data}`);
+            console.log(`${data}`);
         });
         ls.on('close', (code) => {
-          console.log(`child process exited with code ${code}`);
+            console.log(`child process exited with code ${code}`);
         });
-     
+
     }
 }

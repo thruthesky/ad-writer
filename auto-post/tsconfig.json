@@ -1,0 +1,22 @@
+{
+    "exclude": [
+      "node_modules",
+      "dist"
+    ],
+    "compilerOptions": {
+      "target": "es5",
+      "watch": true,
+      "sourceMap": true,
+      "declaration": false,
+      "noImplicitAny": false,
+      "removeComments": true,
+      "outDir": "dist",
+      "lib": ["es6"],
+      "skipDefaultLibCheck": true,
+      "skipLibCheck": true
+    },
+  
+    "include": [
+      "src/**/*.ts"
+    ]
+  }

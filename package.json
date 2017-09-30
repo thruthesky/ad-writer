@@ -45,10 +45,14 @@
     "@angular/platform-browser-dynamic": "4.4.3",
     "@angular/router": "4.4.3",
     "@ng-bootstrap/ng-bootstrap": "^1.0.0-beta.5",
+    "cheerio": "^1.0.0-rc.2",
     "core-js": "2.4.1",
     "enhanced-resolve": "3.3.0",
     "firebase": "^4.4.0",
+    "locutus": "^2.0.9",
+    "nightmare": "^2.10.0",
     "rxjs": "5.4.3",
+    "yars": "^1.2.0",
     "zone.js": "0.8.17"
   },
   "devDependencies": {
@@ -56,6 +60,7 @@
     "@angular/compiler-cli": "4.4.3",
     "@types/core-js": "0.9.36",
     "@types/jasmine": "2.5.54",
+    "@types/nightmare": "^1.6.36",
     "@types/node": "7.0.7",
     "autoprefixer": "7.1.4",
     "codelyzer": "3.2.0",
