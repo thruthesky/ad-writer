@@ -18,10 +18,12 @@ import { LanguageService } from './language';
 import { XapiService, UserService, ForumService, SERVER_ERROR_CODE } from './../../angular-xapi/angular-xapi-service.module';
 
 
+
 @Injectable()
 export class AppService {
     version = '0.92';
     db: firebase.database.Reference = null;
+    
     constructor(
         private zone: NgZone,
         public ln: LanguageService,
@@ -30,7 +32,7 @@ export class AppService {
         public forum: ForumService,
         public xapi: XapiService
     ) {
-        xapi.setServerUrl('https://www.sonub.com');
+        xapi.setServerUrl('https://sonub.com:8443');
         this.db = firebase.database().ref('/').child('adv');
         this.router.events.subscribe((event) => {
             if (event instanceof NavigationStart) window.scrollTo(0, 0);
@@ -55,6 +57,7 @@ export class AppService {
     }
     
     getMonitoringKeywords(v) {
+        if ( ! v ) return null;
 
         if ( v['naver-monitoring-keywords'] ) {
             if ( !v['naver-monitoring-keywords']['desktop'] && !v['naver-monitoring-keywords']['mobile'] ) return null;
@@ -118,6 +121,12 @@ export class AppService {
     truncate(str, limit) {
         return (str.length < limit) ? str : str.substring(0, limit) + '...';
     }
+
+
+
+    
+    
+
 
 
 

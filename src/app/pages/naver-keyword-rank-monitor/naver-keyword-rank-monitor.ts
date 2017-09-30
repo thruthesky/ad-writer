@@ -36,10 +36,10 @@ export class NaverKeywordRankMonitorPage implements OnInit, OnDestroy {
         }
     }
 
+    
 
     async displayRank() {
         this.settings = await this.app.loadSettings();
-
         let keywords = this.app.getMonitoringKeywords( this.settings );
         if ( keywords ) this.displayRankOfSomeKeywords( keywords );
         else this.displayRankOfAllKeywords();

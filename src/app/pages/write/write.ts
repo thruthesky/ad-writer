@@ -1,20 +1,58 @@
-import { Component } from '@angular/core';
-import { XapiService, ForumService } from '../../../angular-xapi/angular-xapi-service.module';
+import { Component, ViewChild } from '@angular/core';
+import { AppService } from './../../providers/app.service';
+import { PostCreateComponent } from '../../../angular-xapi/components/post-create/post-create';
+
+const spawn = require('child_process').spawn;
+
 
 @Component({
     selector: 'write-page',
     templateUrl: 'write.html'
 })
 export class WritePage {
+    @ViewChild('postCreateComponent') postCreateComponent: PostCreateComponent;
     constructor(
-        private x: XapiService,
-        private forum: ForumService
+        public app: AppService
     ) {
-        console.log("write page: server url: ", x.getServerUrl());
+        console.log("write page: server url: ", app.xapi.getServerUrl());
 
-        x.version().subscribe( re => console.log('version: ', re));
+        app.xapi.version().subscribe( re => console.log('version: ', re));
+    }
+
+    async onPostCreatSuccess(post_id) {
+        const c = this.postCreateComponent;
+        console.log(`WritePage::onPostCreateSuccess ${post_id}`);
+        console.log('title: ', c.post_title);
+
+        let data = {
+            title: c.post_title,
+            content: c.post_content,
+            files: c.files
+        };
+
+        const push = this.app.db.child('ad-write').child(this.app.userId).push();
+        const key = push.key;
+        await push.set(data);
+
+        console.log("finished push: key: ", key);
+
+        this.autoPosting( this.app.userId, key );
+
     }
 
 
-    
+
+    autoPosting( user, key ) {
+        const ls = spawn('ls', ['-l', './']);
+        ls.stdout.on('data', (data) => {
+          console.log(`${data}`);
+        });
+        ls.stderr.on('data', (data) => {
+          console.log(`${data}`);
+        });
+        ls.on('close', (code) => {
+          console.log(`child process exited with code ${code}`);
+        });
+     
+    }
 }
