@@ -35,6 +35,18 @@ https://github.com/thruthesky/keyword-rank-observer
 $ npm i
 $ git submodule update --init
 $ git submodule foreach git checkout master
+$ cd auto-poster-2
+$ npm i
+$ tsc
+
+
+## Run
+
+$ cd auto-poster-2
+$ tsc
+$ cd ..
+$ npm start
+
 
 
 
