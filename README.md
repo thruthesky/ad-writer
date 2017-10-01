@@ -95,6 +95,6 @@ console.log('login-ok: ...');
 console.log('login-fail: ...');
 console.log('open-post-create-page-ok: ...');
 console.log('open-post-create-page-fail: ...');
-console.log('post-ok: ....');
+console.log('success: ....');
 console.log('post-fail: ....');
 ````

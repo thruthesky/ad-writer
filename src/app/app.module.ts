@@ -25,6 +25,8 @@ import { KeywordMonitoringPage } from './pages/keyword-monitoring/keyword-monito
 import { NaverKeywordRankMonitorPage } from './pages/naver-keyword-rank-monitor/naver-keyword-rank-monitor';
 import { SettingsPage } from './pages/settings/settings';
 import { WritePage } from './pages/write/write';
+import { SimpleTinyComponent } from './pages/write/simple-tiny';
+
 
 import { AngularXapiServiceModule, XapiService } from '../angular-xapi/angular-xapi-service.module';
 import { AngularXapiComponentsModule } from '../angular-xapi/angular-xapi-component.module';
@@ -37,7 +39,8 @@ import { AngularXapiComponentsModule } from '../angular-xapi/angular-xapi-compon
     KeywordMonitoringPage,
     NaverKeywordRankMonitorPage,
     SettingsPage,
-    WritePage
+    WritePage,
+    SimpleTinyComponent
   ],
   imports: [
     BrowserModule,

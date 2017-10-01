@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppService } from './../../providers/app.service';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/debounceTime';
@@ -9,7 +9,7 @@ import 'rxjs/add/operator/debounceTime';
     templateUrl: 'settings.html'
 })
 
-export class SettingsPage implements OnInit {
+export class SettingsPage implements OnInit, OnDestroy {
     showKeywords = false;
 
     naverDesktopKeywords = '';
@@ -30,15 +30,38 @@ export class SettingsPage implements OnInit {
     typingCollectKeywords = new Subject<any>();
     typingMonitoringKeywords = new Subject<any>();
 
+
+    showSiteFormBox = false;
+
+
+    siteReference;
+    siteValue;
+    siteValueOn;
+    siteInputValue;
+
     constructor(
         public app: AppService
     ) {
         this.loadKeywords();
         this.loadSettings();
         this.typings();
+
+        this.siteReference = this.app.referenceSite();
+        this.siteValueOn = this.siteReference.on('value', snap => {
+            const v = snap.val();
+            if ( v ) {
+                this.siteValue = [];
+                for ( const x of Object.keys(v) ) {
+                    this.siteValue.push( { key: x, value: v[x] } );
+                }
+            }
+        });
     }
 
     ngOnInit() { }
+    ngOnDestroy() {
+        this.siteReference.off('value', this.siteValueOn);
+    }
 
 
     typings() {
@@ -107,5 +130,15 @@ export class SettingsPage implements OnInit {
 
     }
 
+    async onSubmitSiteAdd() {
+        let info = this.siteInputValue;
+        const path = this.app.safeId(info.split('/').map( x => x.trim() ).join('/'));
+        info = info.split('/').map( x => x.trim() ).join(' / ');
+        await this.siteReference.child(path).set( info );
+        this.siteInputValue = '';
+    }
 
+    onClickSiteDelete( key ) {
+        this.siteReference.child(key).set(null);
+    }
 }

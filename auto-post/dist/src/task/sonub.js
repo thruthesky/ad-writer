@@ -52,16 +52,17 @@ var Sonub = (function (_super) {
     __extends(Sonub, _super);
     function Sonub(defaultOptions) {
         var _this = _super.call(this, defaultOptions) || this;
+        _this.url = 'https://www.sonub.com';
         _this.firefox();
         return _this;
     }
     Sonub.prototype.main = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var date, snap, post, n;
+            var date, snap, post, n, content;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        protocol.set('sonub', this.argv.category);
+                        protocol.set(this.argv.pid);
                         date = this.date('Y-m-d H:i:s');
                         protocol.send('begin', "posting begins at: " + date);
                         return [4 /*yield*/, firebase_1.db.child('ad-write')
@@ -75,7 +76,7 @@ var Sonub = (function (_super) {
                             protocol.end('get-firebase-data-fail:');
                         else
                             protocol.send('get-firebase-data-ok:');
-                        return [4 /*yield*/, this.get('https://www.sonub.com/user/login')];
+                        return [4 /*yield*/, this.get(this.url + '/user/login')];
                     case 2:
                         _a.sent();
                         return [4 /*yield*/, this.insert('#register_user_login', this.argv.id)];
@@ -106,21 +107,33 @@ var Sonub = (function (_super) {
                         return [4 /*yield*/, this.wait('#community-header')];
                     case 10:
                         _a.sent();
-                        return [4 /*yield*/, this.click('#community-discussion-button')];
+                        return [4 /*yield*/, this.click('#community-' + this.argv.category + '-button')];
                     case 11:
                         _a.sent();
-                        return [4 /*yield*/, this.wait('#post-list-discussion')];
+                        return [4 /*yield*/, this.wait('#post-list-create-button')];
                     case 12:
                         _a.sent();
-                        return [4 /*yield*/, this.wait('#post-list-create-button')];
+                        return [4 /*yield*/, this.click('#post-list-create-button')];
                     case 13:
                         _a.sent();
-                        return [4 /*yield*/, this.click('#post-list-create-button')];
+                        return [4 /*yield*/, this.wait('[name="post_title"]')];
                     case 14:
                         _a.sent();
-                        return [4 /*yield*/, this.click('.post-create-button')];
+                        protocol.send('open-post-create-page-ok');
+                        return [4 /*yield*/, this.insert('[name="post_title"]', post.title)];
                     case 15:
                         _a.sent();
+                        content = post.content;
+                        return [4 /*yield*/, this.insert('[name="post_content"]', content)];
+                    case 16:
+                        _a.sent();
+                        return [4 /*yield*/, this.click('.post-create-button')];
+                    case 17:
+                        _a.sent();
+                        return [4 /*yield*/, this.waitDisappear('.post-create-button')];
+                    case 18:
+                        _a.sent();
+                        protocol.end('success');
                         return [2 /*return*/];
                 }
             });
@@ -129,7 +142,7 @@ var Sonub = (function (_super) {
     return Sonub;
 }(nightmare_1.MyNightmare));
 var options = {
-    show: true,
+    show: false,
     x: 1408, y: 0, width: 360, height: 700,
     openDevTools: { mode: '' },
 };

@@ -9,3 +9,4 @@ interface Window {
   process: any;
   require: any;
 }
+declare var tinymce: any;
