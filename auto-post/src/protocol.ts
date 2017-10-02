@@ -8,7 +8,7 @@ export function send(code, msg = '') {
     console.log(`${protocolName}=${code}: ${msg}`);
 }
 
-export function end(code) {
-    console.log(`${protocolName}=${code}`);
+export function end(code, msg = '') {
+    send( code, msg );
     process.exit(0);
 }

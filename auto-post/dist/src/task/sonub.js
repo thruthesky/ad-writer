@@ -48,11 +48,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var nightmare_1 = require("./../../nightmare/nightmare");
 var firebase_1 = require("../firebase");
 var protocol = require("./../protocol");
+var argv = require('yargs').argv;
 var Sonub = (function (_super) {
     __extends(Sonub, _super);
     function Sonub(defaultOptions) {
         var _this = _super.call(this, defaultOptions) || this;
-        _this.url = 'https://www.sonub.com';
+        _this.serverUrl = 'https://www.sonub.com';
         _this.firefox();
         return _this;
     }
@@ -76,7 +77,7 @@ var Sonub = (function (_super) {
                             protocol.end('get-firebase-data-fail:');
                         else
                             protocol.send('get-firebase-data-ok:');
-                        return [4 /*yield*/, this.get(this.url + '/user/login')];
+                        return [4 /*yield*/, this.get(this.serverUrl + '/user/login')];
                     case 2:
                         _a.sent();
                         return [4 /*yield*/, this.insert('#register_user_login', this.argv.id)];
@@ -107,7 +108,11 @@ var Sonub = (function (_super) {
                         return [4 /*yield*/, this.wait('#community-header')];
                     case 10:
                         _a.sent();
-                        return [4 /*yield*/, this.click('#community-' + this.argv.category + '-button')];
+                        return [4 /*yield*/, this.click('#community-' + this.argv.category + '-button')
+                                .then(function (a) { return a; })
+                                .catch(function (e) {
+                                protocol.end('ERROR: ' + e);
+                            })];
                     case 11:
                         _a.sent();
                         return [4 /*yield*/, this.wait('#post-list-create-button')];
@@ -142,7 +147,7 @@ var Sonub = (function (_super) {
     return Sonub;
 }(nightmare_1.MyNightmare));
 var options = {
-    show: false,
+    show: argv.browser === 'true',
     x: 1408, y: 0, width: 360, height: 700,
     openDevTools: { mode: '' },
 };

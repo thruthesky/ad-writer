@@ -107,6 +107,9 @@ export class AppService {
                     alert(reg.message);
                 })
             }
+            else {
+                alert(e.message);
+            }
         });
     }
 

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { HomeComponent } from './pages/home/home.component';
-import { KeywordMonitoringPage } from './pages/keyword-monitoring/keyword-monitoring';
+import { KeywordStatisticsPage } from './pages/keyword-statistics/keyword-statistics';
 import { NaverKeywordRankMonitorPage } from './pages/naver-keyword-rank-monitor/naver-keyword-rank-monitor';
 import { SettingsPage } from './pages/settings/settings';
 import { WritePage } from './pages/write/write';
@@ -14,7 +14,7 @@ const routes: Routes = [
     },
     {
         path: 'keyword',
-        component: KeywordMonitoringPage
+        component: KeywordStatisticsPage
     },
     {
         path: 'naver-keyword-rank-monitor',

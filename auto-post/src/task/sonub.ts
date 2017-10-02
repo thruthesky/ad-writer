@@ -1,10 +1,11 @@
 import { MyNightmare as Nightmare } from './../../nightmare/nightmare';
 import { db } from '../firebase';
 import * as protocol from './../protocol';
+const argv = require('yargs').argv;
 
 
 class Sonub extends Nightmare {
-    url = 'https://www.sonub.com';
+    serverUrl = 'https://www.sonub.com';
     constructor(defaultOptions) {
         super(defaultOptions);
         this.firefox();
@@ -26,8 +27,8 @@ class Sonub extends Nightmare {
 
         // console.log(post);
 
-        await this.get( this.url + '/user/login' );
-        await this.insert('#register_user_login', this.argv.id);
+        await this.get( this.serverUrl + '/user/login' );
+        await this.insert('#register_user_login', this.argv.id)
         await this.insert('#register_user_pass', this.argv.password);
         await this.click('.page-form-submit');
 
@@ -42,10 +43,15 @@ class Sonub extends Nightmare {
         await this.wait('#menu-page-header');
         await this.click('#menu-community');
         await this.wait('#community-header');
-        await this.click('#community-' + this.argv.category + '-button');
+        await this.click('#community-' + this.argv.category + '-button')
+            .then( a => a )
+            .catch( e => {
+                protocol.end('ERROR: ' + e);
+            });
+
         
 
-        // await this.get( this.url + '/forum/' + this.argv.category );
+        // await this.get( this.serverUrl + '/forum/' + this.argv.category );
 
         // write
         await this.wait('#post-list-create-button');
@@ -73,8 +79,9 @@ class Sonub extends Nightmare {
 }
 
 
+
 let options = {
-    show: false,
+    show: argv.browser === 'true',
     x: 1408, y: 0, width: 360, height: 700,
     openDevTools: { mode: '' },
 };

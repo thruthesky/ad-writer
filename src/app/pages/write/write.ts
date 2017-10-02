@@ -22,6 +22,8 @@ export class WritePage implements OnDestroy {
     autoPostingProcessMessage = {};
     autoPostingProcessLoader = {};
 
+    showBrowser = false;
+
     constructor(
         public app: AppService
     ) {
@@ -94,6 +96,8 @@ export class WritePage implements OnDestroy {
     autoPosting(user, key) {
 
 
+        this.autoPostingProcessMessage = {};
+        this.autoPostingProcessLoader = {};
 
         for (const name of Object.keys(this.results)) {
             if (this.results[name]) {
@@ -110,39 +114,59 @@ export class WritePage implements OnDestroy {
 
                 console.log("base path: ", window['appPath']);
 
-                const ls = spawn('node', [`auto-post/dist/src/task/${script}.js`,
-                `--user=${user}`,
-                `--key=${key}`,
-                `--category=${category}`,
-                `--id=${id}`,
-                `--password=${password}`,
-                `--pid=${name}`
-                ]);
-                this.autoPostingProcessLoader[name] = true;
-                this.autoPostingProcessMessage[name] = 'preparing';
-                console.log("loader: ", this.autoPostingProcessLoader);
-                ls.stdout.on('data', (data) => {
-                    let arr = data.toString().split('=');
-                    let pid = arr[0];
-                    let re = arr[1].trim();
-                    this.autoPostingProcessMessage[arr[0]] = re;
-
-                    if (re === 'success') {
-                        this.autoPostingProcessLoader[pid] = false;
-                        console.log("success: pid: ", this.autoPostingProcessLoader);
-                    }
-                    this.app.render(100);
-                });
-                ls.stderr.on('data', (data) => {
-                    console.log(`${data}`);
-                });
-                ls.on('close', (code) => {
-                    console.log(`child process exited with code ${code}`);
-                });
+                this.fork( script, name, user, key, category, id, password  );
 
             }
         }
 
 
+    }
+
+    fork( script, pid, user, key, category, id, password ) {
+
+        const $params = [`auto-post/dist/src/task/${script}.js`,
+        `--user=${user}`,
+        `--key=${key}`,
+        `--category=${category}`,
+        `--id=${id}`,
+        `--password=${password}`,
+        `--pid=${pid}`,
+        `--browser=${this.showBrowser}`
+        ];
+        console.log("node " + $params.join(' '));
+        const ls = spawn('node', $params);
+        this.autoPostingProcessLoader[pid] = 0;
+        this.autoPostingProcessMessage[pid] = 'preparing';
+        this.app.render();
+        console.log("loader: ", this.autoPostingProcessLoader);
+        ls.stdout.on('data', (data) => {
+            let arr = data.toString().split('=');
+            let pid = arr[0];
+            let re = arr[1].trim();
+            this.autoPostingProcessMessage[arr[0]] = re;
+
+            if (re === 'success:') {
+                this.autoPostingProcessLoader[pid] = 1;
+                console.log("success: pid: ", this.autoPostingProcessLoader);
+            }
+            this.app.render(100);
+        });
+        ls.stderr.on('data', (data) => {
+            console.log(`ERROR: ${data}`);
+            let errstr = data.toString();
+            if ( errstr.indexOf('Cannot find module') ) {
+                this.autoPostingProcessMessage[ pid ] = `Error: cannot find ${script} script.`;
+            }
+            else {
+                this.autoPostingProcessMessage[ pid ] = `Error: process error.`;
+            }
+            this.autoPostingProcessLoader[pid] = 2;
+            console.log("success: pid: ", this.autoPostingProcessLoader);
+            this.app.render(100);
+            
+        });
+        ls.on('close', (code) => {
+            console.log(`child process exited with code ${code}`);
+        });
     }
 }

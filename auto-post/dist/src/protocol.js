@@ -9,8 +9,9 @@ function send(code, msg) {
     console.log(exports.protocolName + "=" + code + ": " + msg);
 }
 exports.send = send;
-function end(code) {
-    console.log(exports.protocolName + "=" + code);
+function end(code, msg) {
+    if (msg === void 0) { msg = ''; }
+    send(code, msg);
     process.exit(0);
 }
 exports.end = end;

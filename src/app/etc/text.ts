@@ -22,7 +22,11 @@ export let TEXT = {
     login_id_desc: { en: 'Please input your login ID.', ko: '로그인 아이디를 입력하십시오.' },
     login_id_holder: { en: 'Input login ID', ko: '아이디를 입력하세요.' },
     password: { en: 'Password', ko: '비밀번호' },
-    password_holder: { en: 'Input Password', ko: '비밀번호를 입력하세요.'}
+    password_holder: { en: 'Input Password', ko: '비밀번호를 입력하세요.'},
+    auto_sites: { en: 'Auto Posting Sites', ko: '자동 글 쓰기 사이트 정보' },
+    add: { en: 'ADD', ko: '추가' },
+    auto_sites_desc: { en: 'Input site name, category(forum id), login id, password. Separate by slash(/).', ko: '슬래시(/)로 구분하여 사이트, 카테고리, 아이디, 비밀번호를 입력하세요.' },
+
 
 };
 

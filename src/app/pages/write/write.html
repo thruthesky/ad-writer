@@ -21,24 +21,42 @@
         <hr>
       </div>
       <div class="col-md-4">
-        <div>Sites to deliver post. ( update )</div>
+        <div class="sites ml-md-3">
+
+          <div class="mb-2">
+            Choose sites to deliver your post.
+          </div>
 
 
-        <div class="fs-sm" *ngFor=" let site of sites ">
-          <label class="pointer">
-              <input type="checkbox" name="{{ site.key }}" [(ngModel)]=" results[ site.key ] ">
-              {{ site.value[0] }}
-              {{ site.value[1] }}
-              {{ site.value[2] }}
-              <div>
-                
-                  <span *ngIf=" autoPostingProcessLoader[ site.key ] "><i class="fa fa-spinner fa-spin"></i></span>
-                  <span *ngIf=" autoPostingProcessLoader[ site.key ] === false "><i class="fa fa-check"></i></span>
-                {{ autoPostingProcessMessage[ site.key ] }}
-              </div>
-            </label>
+          <div>
+            <label>
+            <input type="checkbox" name="showBrowser" [(ngModel)]="showBrowser">
+            Show Browser
+          </label>
+          </div>
+          <div class="fs-sm" *ngFor=" let site of sites ">
+            <label class="pointer">
+                          <input type="checkbox" name="{{ site.key }}" [(ngModel)]=" results[ site.key ] ">
+                          {{ site.value[0] }}
+                          {{ site.value[1] }}
+                          {{ site.value[2] }}
+                          <div>
+                            
+                              <span *ngIf=" autoPostingProcessLoader[ site.key ] === 0 "><i class="fa fa-spinner fa-spin"></i></span>
+                              <span *ngIf=" autoPostingProcessLoader[ site.key ] === 1 "><i class="fa fa-check"></i></span>
+                              <span *ngIf=" autoPostingProcessLoader[ site.key ] === 2 "><i class="fa fa-times"></i></span>
+                            {{ autoPostingProcessMessage[ site.key ] }}
+                          </div>
+                        </label>
+          </div>
+
+
+          <div class="pointer" routerLink="/settings">
+            <i class="fa fa-plus"></i> Add sites on settings
+          </div>
+
         </div>
-
+        <!--/sites-->
       </div>
     </div>
 

@@ -12,3 +12,11 @@ firebase.initializeApp(config);
 
 
 export const db = firebase.database().ref().child('adv');
+export async function getPost(user, key) {
+    const snap = await db.child('ad-write')
+        .child(user)
+        .child(key)
+        .once('value');
+    return snap.val();
+}
+

@@ -21,7 +21,7 @@ import { AppService } from './providers/app.service';
 import { LanguageService } from './providers/language';
 
 
-import { KeywordMonitoringPage } from './pages/keyword-monitoring/keyword-monitoring';
+import { KeywordStatisticsPage } from './pages/keyword-statistics/keyword-statistics';
 import { NaverKeywordRankMonitorPage } from './pages/naver-keyword-rank-monitor/naver-keyword-rank-monitor';
 import { SettingsPage } from './pages/settings/settings';
 import { WritePage } from './pages/write/write';
@@ -36,7 +36,7 @@ import { AngularXapiComponentsModule } from '../angular-xapi/angular-xapi-compon
   declarations: [
     AppComponent,
     HomeComponent,
-    KeywordMonitoringPage,
+    KeywordStatisticsPage,
     NaverKeywordRankMonitorPage,
     SettingsPage,
     WritePage,

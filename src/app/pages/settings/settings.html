@@ -45,13 +45,13 @@
       <ul class="list-group">
         <li class="list-group-item active">
           <div class="d-flex justify-content-between">
-            <div>자동 글 쓰기 사이트 정보</div>
-            <div (click)="showSiteFormBox = !showSiteFormBox"><i class="fa fa-plus"></i> 추가하기</div>
+            <div>{{ app.t('auto_sites') }}</div>
+            <div class='pointer' (click)="showSiteFormBox = !showSiteFormBox"><i class="fa fa-plus"></i> {{ app.t('add') }}</div>
           </div>
         </li>
 
         <li class="list-group-item" *ngIf="showSiteFormBox">
-          <small class="muted">슬래시(/)로 구분하여 사이트, 카테고리, 아이디, 비밀번호를 입력하세요.</small>
+          <small class="muted">{{ app.t('auto_sites_desc') }}</small>
           <input class="w-100" name="siteInputValue" [(ngModel)]="siteInputValue" (keyup.enter)="onSubmitSiteAdd( )">
         </li>
 

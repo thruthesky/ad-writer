@@ -70,14 +70,10 @@ Auto posting scripts are completely separated from Ad Writer.
 `--password=Login-Password`
 `--category=Category-To-Post`
 
-
 To test auto posting script, do some like below.
 
 ````
-$ node auto-post/dist/src/task/sonub.js --user=jjjo@adwriter_com --key=-KvI63YLMcjKNL_3McAC --id=user1223@gmail.com --password=pass1223 --category=discussion
-$ node auto-post/dist/src/task/facebook.js --user=jjjo@adwriter_com --key=-KvI63YLMcjKNL_3McAC
-$ node auto-post/dist/src/task/twitter.js --user=jjjo@adwriter_com --key=-KvI63YLMcjKNL_3McAC
-$ node auto-post/dist/src/task/google-plus.js --user=jjjo@adwriter_com --key=-KvI63YLMcjKNL_3McAC
+node auto-post/dist/src/task/sonub.js --user=thruthesky@adwriter_com --key=-KvRWa5RXiKnzSSr7v9z --category=discussion --id=thruthesky@daum.net --password=asdf99 --pid=sonub_discussion_thruthesky@daum_net_asdf99 --browser=false
 ````
 
 ### Autoo Posting Protocol
@@ -86,15 +82,6 @@ Auto posting scripts can write out with `console.log('xxxx: ... ')`.
 
 for instance
 ````
-console.log('begin: ....');
-console.log('get-firebase-data-ok: ....');
-console.log('get-firebase-data-fail: ....');
-console.log('open-site-ok: ....');
-console.log('open-site-fail: ....');
-console.log('login-ok: ...');
-console.log('login-fail: ...');
-console.log('open-post-create-page-ok: ...');
-console.log('open-post-create-page-fail: ...');
-console.log('success: ....');
-console.log('post-fail: ....');
+protocol.send('begin: ....');
+protocol.send('success: ....');
 ````
