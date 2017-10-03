@@ -13,6 +13,11 @@ export function end(code, msg = '') {
     process.exit(0);
 }
 
+export function error(code, msg = ''){
+    send( code, msg );
+    process.exit(1);
+}
+
 export function removeTags( post : string, cheerio = require('cheerio') ) {
 
     let content = cheerio.load(post)('html').text();
