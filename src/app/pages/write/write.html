@@ -7,7 +7,9 @@
 
   <main>
 
-    <div class="row no-guttors">
+    <login-first-component></login-first-component>
+
+    <div class="row no-guttors" *ngIf="app.user.isLogin">
       <div class="col-md-8">
 
 
@@ -40,6 +42,7 @@
                           {{ site.value[0] }}
                           {{ site.value[1] }}
                           {{ site.value[2] }}
+                          {{ site.value[3] }}
                           <div>
                             
                               <span *ngIf=" autoPostingProcessLoader[ site.key ] === 0 "><i class="fa fa-spinner fa-spin"></i></span>

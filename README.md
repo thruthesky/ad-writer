@@ -85,3 +85,14 @@ for instance
 protocol.send('begin: ....');
 protocol.send('success: ....');
 ````
+
+
+
+### Site settings
+
+* 네이버 블로그
+    설정 예제 ) 네이버 블로그 / naver-blog / 1 / fulljebi / dmlqltmd2j
+    * 카테고리는 블로그 카테고리를 입력한다.
+    * 하지만, 글 입력 폼에서 카테고리를 별도로 선택을 해야 한다. 하지만, 글을 쓸 때, 선택하지 않으므로, 사실상 첫 카테고리에 등록이 된다.
+    * 따라서 카테고리는 그냥 계속 1 로 입력해 놓는다. 
+    http://m.blog.naver.com/PostList.nhn?blogId=fulljebi&categoryNo=1

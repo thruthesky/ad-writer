@@ -31,6 +31,8 @@ import { SimpleTinyComponent } from './pages/write/simple-tiny';
 import { AngularXapiServiceModule, XapiService } from '../angular-xapi/angular-xapi-service.module';
 import { AngularXapiComponentsModule } from '../angular-xapi/angular-xapi-component.module';
 
+import { LoginFirstComponent } from './components/login-first/login-first';
+
 
 @NgModule({
   declarations: [
@@ -40,7 +42,8 @@ import { AngularXapiComponentsModule } from '../angular-xapi/angular-xapi-compon
     NaverKeywordRankMonitorPage,
     SettingsPage,
     WritePage,
-    SimpleTinyComponent
+    SimpleTinyComponent,
+    LoginFirstComponent
   ],
   imports: [
     BrowserModule,

@@ -31,20 +31,22 @@ export class WritePage implements OnDestroy {
 
         app.xapi.version().subscribe(re => console.log('version: ', re));
 
-        this.sitesOn = app.referenceSite().on('value', snap => {
-            if (snap.val()) {
-                const obj = snap.val();
-                this.sites = [];
-                for (const k of Object.keys(obj)) {
-                    this.sites.push({ key: k, value: obj[k].split('/').map(x => x.trim()) });
+        if (app.user.isLogin) {
+            this.sitesOn = app.referenceSite().on('value', snap => {
+                if (snap.val()) {
+                    const obj = snap.val();
+                    this.sites = [];
+                    for (const k of Object.keys(obj)) {
+                        this.sites.push({ key: k, value: obj[k].split('/').map(x => x.trim()) });
+                    }
                 }
-            }
-        });
+            });
+        }
         // this.autoPosting( 'jjjo@adwriter_com', '-KvI63YLMcjKNL_3McAC' );
     }
 
     ngOnDestroy() {
-        this.app.referenceSite().off('value', this.sitesOn);
+        if ( this.sitesOn ) this.app.referenceSite().off('value', this.sitesOn);
     }
 
     // tinyMceKeyup(content) {
@@ -106,15 +108,15 @@ export class WritePage implements OnDestroy {
                 let info = this.sites.find(x => x.key === name).value;
                 console.log('info: ', info);
 
-                const script = info[0];
-                const category = info[1];
-                const id = info[2];
-                const password = info[3];
+                const script = info[1];
+                const category = info[2];
+                const id = info[3];
+                const password = info[4];
 
 
                 console.log("base path: ", window['appPath']);
 
-                this.fork( script, name, user, key, category, id, password  );
+                this.fork(script, name, user, key, category, id, password);
 
             }
         }
@@ -122,7 +124,7 @@ export class WritePage implements OnDestroy {
 
     }
 
-    fork( script, pid, user, key, category, id, password ) {
+    fork(script, pid, user, key, category, id, password) {
 
         const $params = [`auto-post/dist/src/task/${script}.js`,
         `--user=${user}`,
@@ -154,16 +156,16 @@ export class WritePage implements OnDestroy {
         ls.stderr.on('data', (data) => {
             console.log(`ERROR: ${data}`);
             let errstr = data.toString();
-            if ( errstr.indexOf('Cannot find module') ) {
-                this.autoPostingProcessMessage[ pid ] = `Error: cannot find ${script} script.`;
+            if (errstr.indexOf('Cannot find module')) {
+                this.autoPostingProcessMessage[pid] = `Error: cannot find ${script} script.`;
             }
             else {
-                this.autoPostingProcessMessage[ pid ] = `Error: process error.`;
+                this.autoPostingProcessMessage[pid] = `Error: process error.`;
             }
             this.autoPostingProcessLoader[pid] = 2;
             console.log("success: pid: ", this.autoPostingProcessLoader);
             this.app.render(100);
-            
+
         });
         ls.on('close', (code) => {
             console.log(`child process exited with code ${code}`);
