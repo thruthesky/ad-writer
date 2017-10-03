@@ -8,16 +8,8 @@
 
   <main>
 
-    <div *ngIf="!app.login" class="alert alert-warning" role="alert">
-      <h4 class="alert-heading">로그인을 하세요!</h4>
-      <p>
-        로그인을 먼저 하셔야 개인 설정을 이용 할 수 있습니다.
-      </p>
-      <hr>
-      <p class="mb-0">
-        애드라이터 버전 {{ app.version }}
-      </p>
-    </div>
+
+    <login-first-component></login-first-component>
 
 
     <div>
@@ -40,7 +32,7 @@
 
 
 
-    <div class="mb-5">
+    <div class="auto-post-sites mb-5" *ngIf="app.user.isLogin">
 
       <ul class="list-group">
         <li class="list-group-item active">
@@ -70,7 +62,7 @@
 
 
 
-    <div class="mb-5">
+    <div class="emphasis mb-5" *ngIf="app.user.isLogin">
 
       <ul class="list-group">
         <li class="list-group-item active">강조 표시 아이디 입력</li>
@@ -145,7 +137,7 @@
 
 
     <hr>
-    <div>
+    <div class="monitoring-keywords mb-5" *ngIf="app.user.isLogin">
       <ul class="list-group">
         <li class="list-group-item active">순위 모니터링 할 키워드</li>
 

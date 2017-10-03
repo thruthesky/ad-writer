@@ -10,7 +10,7 @@ protocol.send('begin', (new Date).toLocaleTimeString());
 
 class Philgo extends Nightmare {
 
-    serverUrl = 'http://philgo.org';
+    serverUrl = 'https://www.philgo.com';
     post = null;
     constructor(defaultOptions) {
         super(defaultOptions);

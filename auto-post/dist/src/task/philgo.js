@@ -59,7 +59,7 @@ var Philgo = (function (_super) {
     __extends(Philgo, _super);
     function Philgo(defaultOptions) {
         var _this = _super.call(this, defaultOptions) || this;
-        _this.serverUrl = 'http://philgo.org';
+        _this.serverUrl = 'https://www.philgo.com';
         _this.post = null;
         _this.firefox();
         return _this;

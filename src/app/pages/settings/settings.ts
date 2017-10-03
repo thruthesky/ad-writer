@@ -47,20 +47,27 @@ export class SettingsPage implements OnInit, OnDestroy {
         this.typings();
 
         this.siteReference = this.app.referenceSite();
-        this.siteValueOn = this.siteReference.on('value', snap => {
-            const v = snap.val();
-            if ( v ) {
-                this.siteValue = [];
-                for ( const x of Object.keys(v) ) {
-                    this.siteValue.push( { key: x, value: v[x] } );
+
+        if ( this.siteReference ) {
+            this.siteValueOn = this.siteReference.on('value', snap => {
+                const v = snap.val();
+                if ( v ) {
+                    this.siteValue = [];
+                    for ( const x of Object.keys(v) ) {
+                        this.siteValue.push( { key: x, value: v[x] } );
+                    }
                 }
-            }
-        });
+            });
+        }
+        else {
+            
+        }
+        
     }
 
     ngOnInit() { }
     ngOnDestroy() {
-        this.siteReference.off('value', this.siteValueOn);
+        if ( this.siteReference ) this.siteReference.off('value', this.siteValueOn);
     }
 
 

@@ -5,13 +5,28 @@
     </h1>
     <small>{{ app.t('ad_writer_desc') }}</small>
 
-    <nav>
-      <button class="settings" class="btn btn-sm btn-secondary">{{ app.t('version', {version: app.version}) }}</button>
-    </nav>
+
+    <div class="d-flex justify-content-end mt-2 fs-sm">
+
+      <div>{{ app.t('version') }} {{ app.version }}</div>
+
+    </div>
   </header>
 
   <main>
 
+      <div class="language d-flex justify-content-end fs-sm">
+          <label class="custom-control custom-radio">
+            <input id="radio1" name="language" type="radio" class="custom-control-input" [checked]=" app.ln.getLanguage() == 'en' " (click)="app.ln.setLanguage('en')">
+            <span class="custom-control-indicator"></span>
+            <span class="custom-control-description">English</span>
+          </label>
+          <label class="custom-control custom-radio">
+            <input id="radio2" name="language" type="radio" class="custom-control-input" [checked]=" app.ln.getLanguage() == 'ko' " (click)="app.ln.setLanguage('ko')">
+            <span class="custom-control-indicator"></span>
+            <span class="custom-control-description">한국어</span>
+          </label>
+      </div>
 
     <div *ngIf="app.user.isLogin">
       {{ app.t('welcome', { name: app.user.name }) }}

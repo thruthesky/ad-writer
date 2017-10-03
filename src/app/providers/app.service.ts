@@ -21,7 +21,7 @@ import { XapiService, UserService, ForumService, SERVER_ERROR_CODE } from './../
 
 @Injectable()
 export class AppService {
-    version = '0.92';
+    version = '0.10.3';
     db: firebase.database.Reference = null;
 
     constructor(
@@ -52,8 +52,12 @@ export class AppService {
 
 
     async loadSettings() {
-        const snap = await this.db.child('users').child(this.userId).once('value');
-        return snap.val();
+        if ( this.userId ) {
+            const snap = await this.db.child('users').child(this.userId).once('value');
+            return snap.val();
+        }
+        else return null;
+        
     }
 
     getMonitoringKeywords(v) {
@@ -131,7 +135,8 @@ export class AppService {
 
 
     referenceSite() {
-        return this.db.child('users').child(this.userId).child('sites');
+        if ( this.userId ) return this.db.child('users').child(this.userId).child('sites');
+        else return null;
     }
 
 
