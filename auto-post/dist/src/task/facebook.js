@@ -48,6 +48,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var nightmare_1 = require("./../../nightmare/nightmare");
 var argv = require('yargs').argv;
 var protocol = require("./../protocol");
+var lib = require("./../auto-post-library");
 var firebase_1 = require("../firebase");
 if (argv.pid === void 0) {
     console.log('no pid');
@@ -55,25 +56,24 @@ if (argv.pid === void 0) {
 }
 protocol.set(argv.pid);
 protocol.send('begin', (new Date).toLocaleTimeString());
-var Twitter = (function (_super) {
-    __extends(Twitter, _super);
-    function Twitter(defaultOptions) {
+var Facebook = (function (_super) {
+    __extends(Facebook, _super);
+    function Facebook(defaultOptions) {
         var _this = _super.call(this, defaultOptions) || this;
-        _this.twitterUrl = 'https://mobile.twitter.com';
+        _this.serverUrl = 'https://m.facebook.com';
         _this.post = null;
         _this.id = _this.argv.id;
         _this.password = _this.argv.password;
-        _this.loginPage = "/login";
-        _this.usernameField = 'input[name="session[username_or_email]"]';
-        _this.passwordField = 'input[name="session[password]"]';
-        _this.mainTweetPage = _this.argv.category;
-        _this.composeTweetPage = "/compose/tweet";
-        _this.composeTweetArea = 'textArea[placeholder="What\'s happening?"]';
-        _this.tweetButton = 'div[data-testid="tweet-button"]';
+        _this.loginButton = 'input[name="login"]';
+        _this.usernameField = 'input[name="email"]';
+        _this.passwordField = 'input[name="pass"]';
+        _this.postTextArea = 'textarea[name="xc_message"]';
+        _this.postButton = 'input[name="view_post"]';
+        _this.groupPostWarn = "a:contains('" + "1 post requiring approval" + "')";
         _this.firefox();
         return _this;
     }
-    Twitter.prototype.main = function () {
+    Facebook.prototype.main = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _a;
             return __generator(this, function (_b) {
@@ -84,7 +84,7 @@ var Twitter = (function (_super) {
                     case 1:
                         _a.post = _b.sent();
                         if (this.post === null)
-                            protocol.error('fail', 'failed to get post from firebase');
+                            protocol.end('fail', 'failed to get post from firebase');
                         else
                             protocol.send('got post from firebase');
                         return [4 /*yield*/, this.login()];
@@ -93,113 +93,116 @@ var Twitter = (function (_super) {
                         return [4 /*yield*/, this.publish()];
                     case 3:
                         _b.sent();
-                        protocol.end('success', 'task finished');
+                        protocol.end('success', 'success');
                         return [2 /*return*/];
                 }
             });
         });
     };
-    Twitter.prototype.login = function () {
+    Facebook.prototype.login = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var isLogin, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0: return [4 /*yield*/, this.nextAction("Logging in..")];
+            var $html, re;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.get(this.serverUrl)];
                     case 1:
-                        _b.sent();
-                        return [4 /*yield*/, this.get(this.twitterUrl + this.loginPage)];
+                        $html = _a.sent();
+                        return [4 /*yield*/, protocol.send('login', 'logging in...')];
                     case 2:
-                        _b.sent();
-                        return [4 /*yield*/, this.insert(this.usernameField, this.id)];
+                        _a.sent();
+                        return [4 /*yield*/, this.nextAction('Typing email and password.')];
                     case 3:
-                        _b.sent();
-                        return [4 /*yield*/, this.typeEnter(this.passwordField, this.password)];
+                        _a.sent();
+                        return [4 /*yield*/, this.insert(this.usernameField, this.id)];
                     case 4:
-                        _b.sent();
-                        return [4 /*yield*/, this.nextAction("Checking user log in...")];
+                        _a.sent();
+                        return [4 /*yield*/, this.insert(this.passwordField, this.password)];
                     case 5:
-                        _b.sent();
-                        return [4 /*yield*/, this.waitDisappear(this.passwordField)];
+                        _a.sent();
+                        return [4 /*yield*/, this.nextAction('Press enter to login.')];
                     case 6:
-                        isLogin = _b.sent();
-                        return [4 /*yield*/, isLogin];
-                    case 7: return [4 /*yield*/, (_b.sent())];
+                        _a.sent();
+                        return [4 /*yield*/, this.enter(this.passwordField)];
+                    case 7:
+                        _a.sent();
+                        return [4 /*yield*/, this.waitDisappear(this.passwordField)];
                     case 8:
-                        if (!(_b.sent())) return [3 /*break*/, 10];
-                        return [4 /*yield*/, protocol.send("Login", "success")];
+                        re = _a.sent();
+                        if (!re)
+                            protocol.end('login', 'failed');
+                        protocol.send('login', 'success');
+                        return [4 /*yield*/, this.wait('body')];
                     case 9:
-                        _a = _b.sent();
-                        return [3 /*break*/, 12];
-                    case 10: return [4 /*yield*/, protocol.error("Login", 'failed')];
-                    case 11:
-                        _a = _b.sent();
-                        _b.label = 12;
-                    case 12:
-                        _a;
+                        _a.sent();
                         return [2 /*return*/];
                 }
             });
         });
     };
-    Twitter.prototype.publish = function () {
+    Facebook.prototype.publish = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var postReference, selector, postThis, isTweeted, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var postReference, postThis, isPending, isPosted;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
                         postReference = this.generatePostId;
-                        selector = "div:contains('" + postReference + "')";
-                        return [4 /*yield*/, protocol.removeTags(this.post.content)];
+                        postThis = lib.textify(this.post.content) + '\r\n' + postReference;
+                        protocol.send('open forum: ' + this.argv.category, 'openning..');
+                        return [4 /*yield*/, this.get(this.serverUrl + '/' + this.argv.category)];
                     case 1:
-                        postThis = (_b.sent()) + '\r\n' + postReference;
-                        return [4 /*yield*/, protocol.send("Go to compose tweet page.")];
+                        _a.sent();
+                        protocol.send('checking post text area');
+                        return [4 /*yield*/, this.waitAppear(this.postTextArea)];
                     case 2:
-                        _b.sent();
-                        return [4 /*yield*/, this.get(this.twitterUrl + this.composeTweetPage)];
+                        _a.sent();
+                        protocol.send('Typing the post: ', 'typing..');
+                        return [4 /*yield*/, this.type(this.postTextArea, postThis)
+                                .click(this.postButton)];
                     case 3:
-                        _b.sent();
-                        return [4 /*yield*/, protocol.send("Typing Tweet")];
+                        _a.sent();
+                        return [4 /*yield*/, this.waitAppear(this.groupPostWarn, 5)];
                     case 4:
-                        _b.sent();
-                        return [4 /*yield*/, this.type(this.composeTweetArea, postThis)];
-                    case 5:
-                        _b.sent();
-                        return [4 /*yield*/, protocol.send("Click tweet button.")];
+                        isPending = _a.sent();
+                        if (!isPending) return [3 /*break*/, 5];
+                        protocol.send('post', 'Post pending.');
+                        return [3 /*break*/, 7];
+                    case 5: return [4 /*yield*/, this.findPost(postReference)];
                     case 6:
-                        _b.sent();
-                        return [4 /*yield*/, this.click(this.tweetButton)];
-                    case 7:
-                        _b.sent();
-                        return [4 /*yield*/, protocol.send("Checking if tweet is posted!")];
-                    case 8:
-                        _b.sent();
-                        return [4 /*yield*/, this.waitAppear(selector, 5)];
-                    case 9:
-                        isTweeted = _b.sent();
-                        return [4 /*yield*/, isTweeted];
-                    case 10:
-                        if (!(_b.sent())) return [3 /*break*/, 12];
-                        return [4 /*yield*/, protocol.send("tweet", 'success tweet found')];
-                    case 11:
-                        _a = _b.sent();
-                        return [3 /*break*/, 14];
-                    case 12: return [4 /*yield*/, protocol.error("tweet", "Tweet not found!")];
-                    case 13:
-                        _a = _b.sent();
-                        _b.label = 14;
-                    case 14:
-                        _a;
-                        return [2 /*return*/];
+                        isPosted = _a.sent();
+                        (isPosted) ? protocol.send('post', 'ok')
+                            : protocol.error("post", 'post not found!');
+                        _a.label = 7;
+                    case 7: return [2 /*return*/];
                 }
             });
         });
     };
-    return Twitter;
+    Facebook.prototype.findPost = function (query) {
+        return __awaiter(this, void 0, void 0, function () {
+            var selector, $html, re;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, "span:contains('" + query + "')"];
+                    case 1:
+                        selector = _a.sent();
+                        return [4 /*yield*/, this.getHtml()];
+                    case 2:
+                        $html = _a.sent();
+                        return [4 /*yield*/, this.waitAppear(selector)];
+                    case 3:
+                        re = _a.sent();
+                        return [4 /*yield*/, re];
+                    case 4: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    return Facebook;
 }(nightmare_1.MyNightmare));
 var options = {
-    show: argv.browser === 'true',
+    show: true,
     x: 1408, y: 0, width: 360, height: 700,
     openDevTools: { mode: '' },
 };
-(new Twitter(options)).main();
-//# sourceMappingURL=twitter.js.map
+(new Facebook(options)).main();
+//# sourceMappingURL=facebook.js.map

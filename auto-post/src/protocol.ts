@@ -1,4 +1,4 @@
-import { element } from 'protractor';
+
 let $ = require('cheerio');
 export let protocolName;
 
@@ -22,7 +22,7 @@ export function error(code, msg = ''){
     process.exit(1);
 }
 
-export function removeTags( post : string ) {
+export function removeTags( post: string ) {
     let pContents = [];
     let aHref = [];
     
