@@ -1,7 +1,9 @@
 import { MyNightmare as Nightmare } from './../../nightmare/nightmare';
 const argv = require('yargs').argv;
 import * as protocol from './../protocol';
+import * as lib from '../auto-post-library'
 import { getPost } from '../firebase';
+
 
 if ( argv.pid === void 0 ) { console.log('no pid'); process.exit(1); }
 protocol.set(argv.pid);
@@ -31,7 +33,7 @@ class Twitter extends Nightmare{
 
     async main(){
         this.post = await getPost(argv.user, argv.key);
-        if (this.post === null) protocol.error('fail', 'failed to get post from firebase');
+        if (this.post === null) protocol.end('fail', 'failed to get post from firebase');
         else protocol.send('got post from firebase');
         await this.login();
         await this.publish();
@@ -39,36 +41,36 @@ class Twitter extends Nightmare{
     }
 
     async login() {
-        await this.nextAction("Logging in..")
+        this.nextAction("Logging in..")
         await this.get( this.twitterUrl + this.loginPage );
         await this.insert( this.usernameField, this.id );
         await this.typeEnter( this.passwordField, this.password );
       
-        await this.nextAction("Checking user log in...")
+        this.nextAction("Checking user log in...")
         let isLogin = await this.waitDisappear( this.passwordField );
-        await (await isLogin) ? await protocol.send("Login","success")
-                              : await protocol.error("Login",'failed')
+        (isLogin) ? protocol.send("Login","success")
+                  : protocol.end("Login",'failed')
     }
 
     async publish(){
-        let postReference = this.generatePostId
+        let postReference = 'Ref#'+Date.now().toString();
         let selector = `div:contains('${postReference}')`
-        let postThis = await protocol.removeTags(this.post.content) + '\r\n' + postReference;
+        let postThis = lib.textify(this.post.content) + '\r\n' + postReference;
 
-        await protocol.send("Go to compose tweet page.");
+        protocol.send("Go to compose tweet page.");
         await this.get( this.twitterUrl + this.composeTweetPage );
         
-        await protocol.send("Typing Tweet");
-        await this.type( this.composeTweetArea, postThis );
+        protocol.send("Typing Tweet");
+        await this.insert( this.composeTweetArea, postThis );
         
-        await protocol.send("Click tweet button.");
+        protocol.send("Click tweet button.");
         await this.click( this.tweetButton );
         
         // await this.get( this.twitterUrl + '/' + this.mainTweetPage );
-        await protocol.send("Checking if tweet is posted!");
+        protocol.send("Checking if tweet is posted!");
         let isTweeted = await this.waitAppear( selector , 5);
-        ( await isTweeted) ? await protocol.send("tweet",'success tweet found')
-                                 : await protocol.error("tweet","Tweet not found!");
+        ( isTweeted) ? protocol.send("tweet",'success tweet found')
+                     : protocol.end("tweet","Tweet not found!");
     
     }
 }
