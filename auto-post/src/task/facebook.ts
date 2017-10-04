@@ -37,7 +37,7 @@ class Facebook extends Nightmare {
      * 
      */
     async main() {
-        //  get data from firebase
+        //  get data from firebase        
         this.post = await getPost(argv.user, argv.key);
         if (this.post === null) protocol.end('fail', 'failed to get post from firebase');
         else protocol.send('got post from firebase');
@@ -56,8 +56,6 @@ class Facebook extends Nightmare {
         await this.nextAction('Press enter to login.');
         await this.enter(this.passwordField);
 
-        // await nightmare.wait(100);
-
         let re = await this.waitDisappear(this.passwordField);
         if ( ! re ) protocol.end('login', 'failed');
         protocol.send('login', 'success');
@@ -67,7 +65,7 @@ class Facebook extends Nightmare {
      * For publishing on facebook.
      */
     private async publish() {
-        let postReference = this.generatePostId
+        let postReference = 'Ref#'+Date.now().toString();
         let postThis = lib.textify(this.post.content) + '\r\n' + postReference;
 
         protocol.send('open forum: ' + this.argv.category, 'openning..')
@@ -77,8 +75,8 @@ class Facebook extends Nightmare {
         await this.waitAppear(this.postTextArea);
 
         protocol.send('Typing the post: ', 'typing..');
-        await this.type(this.postTextArea, postThis)
-            .click(this.postButton);
+        await this.insert(this.postTextArea, postThis)
+                    .click(this.postButton);
 
         // check if post is posted or pending
         let isPending = await this.waitAppear(this.groupPostWarn, 5)
@@ -89,7 +87,7 @@ class Facebook extends Nightmare {
         else {
             let isPosted = await this.findPost(postReference);
             (isPosted) ? protocol.send('post', 'ok')
-                : protocol.error("post", 'post not found!');
+                       : protocol.end("post", 'post not found!');
         }
     }
 
