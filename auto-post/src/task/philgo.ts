@@ -39,9 +39,9 @@ class Philgo extends Nightmare {
         if ( re ) protocol.send('login-ok');
         else protocol.end('fail', 'login failed');
         
-
-        await this.get( this.serverUrl + '?module=post&action=write&post_id=' + argv.category );
-
+        let $html = await this.get( this.serverUrl + '?module=post&action=write&post_id=' + argv.category );
+        if ( $html.find('input.subject').length ) protocol.send('open write form ok');
+        else protocol.end('failed to open write form. check category.');
 
         await this.insert('input.subject', this.post.title);
         await this.insert('#content', this.post.content);
@@ -56,7 +56,7 @@ class Philgo extends Nightmare {
 
 let options = {
     show: argv.browser === 'true',
-    x: 1408, y: 0, width: 360, height: 700,
+    x: 1408, y: 0, width: 360, height: 900,
     openDevTools: { mode: '' },
 };
 (new Philgo(options)).main();

@@ -16,6 +16,13 @@
         <post-create-component #postCreateComponent [parent]='self' [showContentBox]='false' (success)="onPostCreatSuccess($event)"
           [category]="'adwriter'" [caption]="'광고 글 쓰기'"></post-create-component>
 
+       
+          
+        <div>
+          Sitepreview URL ( Facebook Only) <input type="text" name="link">
+        </div>
+
+
         <simple-tiny #tiny [elementId]="'my-editor-id'">
         </simple-tiny>
 
@@ -36,19 +43,19 @@
             Show Browser
           </label>
           </div>
-          <div class="fs-sm" *ngFor=" let site of sites ">
+          <div class="fs-sm" *ngFor=" let name of sitesKeys() ">
+
             <label class="pointer">
-                          <input type="checkbox" name="{{ site.key }}" [(ngModel)]=" results[ site.key ] ">
-                          {{ site.value[0] }}
-                          {{ site.value[1] }}
-                          {{ site.value[2] }}
-                          {{ site.value[3] }}
+                  <input type="checkbox" name="{{ name }}" [(ngModel)]=" results[ name ] ">
+                          {{ sites[name].name }}
+                          {{ sites[name].category }}
+                          {{ sites[name].id }}
                           <div>
-                            
-                              <span *ngIf=" autoPostingProcessLoader[ site.key ] === 0 "><i class="fa fa-spinner fa-spin"></i></span>
-                              <span *ngIf=" autoPostingProcessLoader[ site.key ] === 1 "><i class="fa fa-check"></i></span>
-                              <span *ngIf=" autoPostingProcessLoader[ site.key ] === 2 "><i class="fa fa-times"></i></span>
-                            {{ autoPostingProcessMessage[ site.key ] }}
+                      
+                              <span *ngIf=" autoPostingProcessLoader[ name ] === 0 "><i class="fa fa-spinner fa-spin"></i></span>
+                              <span *ngIf=" autoPostingProcessLoader[ name ] === 1 "><i class="fa fa-check"></i></span>
+                              <span *ngIf=" autoPostingProcessLoader[ name ] === 2 "><i class="fa fa-times"></i></span>
+                            {{ autoPostingProcessMessage[ name ] }}
                           </div>
                         </label>
           </div>
@@ -63,5 +70,12 @@
       </div>
     </div>
 
+    * 활용: 글을 쓰고 맨 밑에 원하는 사이트로 링크를 건다. 사이트 자체를 광고 할 때에는 별도를 글을 작성 할 필요는 없다. 예) 필고를 광고하면, 그냥 글 쓰고 맨 밑에 링크를 걸면 된다.
+
+    * 네이버는 Blog API 로 태그를 지원하지 않는다. 공식문서에 "글 하단에 '태그: 필리핀,마닐라'" 와 같이 하고 있다고 한다.
+    따라서, 태그는 그냥 수동으로 하단에 입력을 한다.
+
+    * 인터넷 속도가 느릴 때 자주 에러가 난다. 다시 한번 점검 할 것.
+    
   </main>
 </div>

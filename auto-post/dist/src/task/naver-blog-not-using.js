@@ -49,22 +49,22 @@ var nightmare_1 = require("./../../nightmare/nightmare");
 var argv = require('yargs').argv;
 var protocol = require("./../protocol");
 var firebase_1 = require("../firebase");
+var strip_tags = require('locutus/php/strings/strip_tags');
 if (argv.pid === void 0) {
     console.log('no pid');
     process.exit(1);
 }
 protocol.set(argv.pid);
 protocol.send('begin', (new Date).toLocaleTimeString());
-var Philgo = (function (_super) {
-    __extends(Philgo, _super);
-    function Philgo(defaultOptions) {
+var NaverBlog = (function (_super) {
+    __extends(NaverBlog, _super);
+    function NaverBlog(defaultOptions) {
         var _this = _super.call(this, defaultOptions) || this;
-        _this.serverUrl = 'https://www.philgo.com';
         _this.post = null;
         _this.firefox();
         return _this;
     }
-    Philgo.prototype.main = function () {
+    NaverBlog.prototype.main = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _a;
             return __generator(this, function (_b) {
@@ -86,64 +86,113 @@ var Philgo = (function (_super) {
             });
         });
     };
-    Philgo.prototype.publish = function () {
+    NaverBlog.prototype.publish = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var re, $html;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.get(this.serverUrl + '/?module=member&action=login')];
+                    case 0: return [4 /*yield*/, this.login()];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, this.insert('.login_page_form input[name="id"]', argv.id)];
+                        return [4 /*yield*/, this.openBlogEditor()];
                     case 2:
                         _a.sent();
-                        return [4 /*yield*/, this.insert('.login_page_form input[name="password"]', argv.password)];
+                        return [4 /*yield*/, this.write()];
                     case 3:
                         _a.sent();
-                        return [4 /*yield*/, this.click('.login_page_form .submit')];
-                    case 4:
-                        _a.sent();
-                        return [4 /*yield*/, this.waitDisappear('.login_page_form')];
-                    case 5:
-                        re = _a.sent();
-                        if (re)
-                            protocol.send('login-ok');
-                        else
-                            protocol.end('fail', 'login failed');
-                        return [4 /*yield*/, this.get(this.serverUrl + '?module=post&action=write&post_id=' + argv.category)];
-                    case 6:
-                        $html = _a.sent();
-                        if ($html.find('input.subject').length)
-                            protocol.send('open write form ok');
-                        else
-                            protocol.end('failed to open write form. check category.');
-                        return [4 /*yield*/, this.insert('input.subject', this.post.title)];
-                    case 7:
-                        _a.sent();
-                        return [4 /*yield*/, this.insert('#content', this.post.content)];
-                    case 8:
-                        _a.sent();
-                        return [4 /*yield*/, this.click('.post_write_submit')];
-                    case 9:
-                        _a.sent();
-                        return [4 /*yield*/, this.waitAppear('.post_vote')];
-                    case 10:
-                        re = _a.sent();
-                        if (re)
-                            protocol.end('success');
-                        else
-                            protocol.end('fail', 'failed after clicking post button');
                         return [2 /*return*/];
                 }
             });
         });
     };
-    return Philgo;
+    NaverBlog.prototype.login = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var re;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.get('https://m.naver.com/aside/')];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, this.click('.user_name.user_logoff')];
+                    case 2:
+                        _a.sent();
+                        return [4 /*yield*/, this.wait('#frmNIDLogin').then(function (a) { return protocol.send('open login page'); }).catch(function (e) { return protocol.end('failed to open login page'); })];
+                    case 3:
+                        _a.sent();
+                        return [4 /*yield*/, this.type('#id', argv.id)];
+                    case 4:
+                        _a.sent();
+                        return [4 /*yield*/, this.type('#pw', argv.password)];
+                    case 5:
+                        _a.sent();
+                        return [4 /*yield*/, this.click('#frmNIDLogin input[type="submit"]')];
+                    case 6:
+                        _a.sent();
+                        return [4 /*yield*/, this.waitSelectors(['#ext_profile', '_btn_reset'])];
+                    case 7:
+                        re = _a.sent();
+                        if (re === -1)
+                            protocol.end('login failed');
+                        else
+                            protocol.send('login success');
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    NaverBlog.prototype.openBlogEditor = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var $html;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.get('http://m.blog.naver.com/PostList.nhn?blogId=fulljebi&categoryNo=' + argv.category)];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, this.get('http://m.blog.naver.com/PostWriteForm.nhn?blogId=fulljebi')];
+                    case 2:
+                        $html = _a.sent();
+                        if (!$html.find('.btn_close2').length) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.click('.btn_close2')];
+                    case 3:
+                        _a.sent();
+                        return [4 /*yield*/, this.wait(200)];
+                    case 4:
+                        _a.sent();
+                        _a.label = 5;
+                    case 5: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    NaverBlog.prototype.write = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var content;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.insert('#subject', this.post.title)];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, this.wait(200)];
+                    case 2:
+                        _a.sent();
+                        content = this.post.content;
+                        content = strip_tags(content);
+                        return [4 /*yield*/, this.insert('#contents', content)];
+                    case 3:
+                        _a.sent();
+                        return [4 /*yield*/, this.wait(200)];
+                    case 4:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    return NaverBlog;
 }(nightmare_1.MyNightmare));
 var options = {
     show: argv.browser === 'true',
     x: 1408, y: 0, width: 360, height: 900,
     openDevTools: { mode: '' },
 };
-(new Philgo(options)).main();
-//# sourceMappingURL=philgo.js.map
+(new NaverBlog(options)).main();
+//# sourceMappingURL=naver-blog-not-using.js.map

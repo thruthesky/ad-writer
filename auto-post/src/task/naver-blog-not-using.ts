@@ -1,9 +1,9 @@
 
-
 import { MyNightmare as Nightmare } from './../../nightmare/nightmare';
 const argv = require('yargs').argv;
 import * as protocol from './../protocol';
 import { getPost } from '../firebase';
+const strip_tags = require('locutus/php/strings/strip_tags');
 
 if ( argv.pid === void 0 ) { console.log('no pid'); process.exit(1); }
 protocol.set(argv.pid);
@@ -49,6 +49,7 @@ class NaverBlog extends Nightmare {
         else protocol.send('login success');
     }
     async openBlogEditor() {
+        // await this.get('http://blog.editor.naver.com/editor?targetCategory=1');
         await this.get('http://m.blog.naver.com/PostList.nhn?blogId=fulljebi&categoryNo=' + argv.category);
         let $html = await this.get('http://m.blog.naver.com/PostWriteForm.nhn?blogId=fulljebi');
         if ( $html.find('.btn_close2').length ) {
@@ -57,18 +58,19 @@ class NaverBlog extends Nightmare {
         } 
     }
     async write() {
-        // await this.click('#subject');
-        // await this.wait(100);
+        
         await this.insert('#subject', this.post.title);
         await this.wait(200);
 
-        // await this.click('#contents');
-        // await this.wait(100);
-        await this.insert('#contents', this.post.content);
+        
+
+        let content = this.post.content;
+        content = strip_tags( content );
+        await this.insert('#contents', content);
         await this.wait(200);
 
-        await this.click('.btn_ok');
-        await this.wait('._postView').then( a => protocol.send('success') ).catch( e => protocol.end('failed after clicking post button'));
+        // await this.click('.btn_ok');
+        // await this.wait('._postView').then( a => protocol.send('success') ).catch( e => protocol.end('failed after clicking post button'));
 
     }
 }
@@ -76,7 +78,7 @@ class NaverBlog extends Nightmare {
 
 let options = {
     show: argv.browser === 'true',
-    x: 1408, y: 0, width: 360, height: 700,
+    x: 1408, y: 0, width: 360, height: 900,
     openDevTools: { mode: '' },
 };
 (new NaverBlog(options)).main();

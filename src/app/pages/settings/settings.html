@@ -44,12 +44,66 @@
 
         <li class="list-group-item" *ngIf="showSiteFormBox">
           <small class="muted">{{ app.t('auto_sites_desc') }}</small>
-          <input class="w-100" name="siteInputValue" [(ngModel)]="siteInputValue" (keyup.enter)="onSubmitSiteAdd( )">
+
+          <form (ngSubmit)="onSubmitSiteAdd()">
+
+              <div class="form-group">
+                  <label for="exampleInputName">Auto Posting Name</label>
+                  <input type="text" class="form-control" id="exampleInputName" name="postingName" [(ngModel)]="posting.name" placeholder="Enter a name for auto posting.">
+                </div>
+
+            <div class="form-group">
+                <label for="exampleInputSite">Site to auto post: 
+              <select class="custom-select" id="exampleInputSite" name="postingSite" [(ngModel)]="posting.site" >
+                <option value="" selected>사이트 선택. Please choose a site.</option>
+                <option value="philgo">필고 Philgo</option>
+                <option value="sonub">소너브 Sonub</option>
+                <option value="blogapi">각종 Blog Api. 네이버, 티스토리, 워드프레스 등.</option>
+                <option value="facebook">페이스북 Facebook</option>
+                <option value="twitter">트위터 Twitter</option>
+                <option value="tistory">티스토리 TiStory</option>
+              </select>
+            </label>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputLoginID">User login ID</label>
+              <input type="text" class="form-control" id="exampleInputLoginID" name="postingID"  [(ngModel)]="posting.id" placeholder="Enter user login ID.">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputLoginPassword">User Password</label>
+              <input type="text" class="form-control" id="exampleInputLoginPassword" name="postingPassword" [(ngModel)]="posting.password"  placeholder="Enter user password.">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputCategory">Category</label>
+              <input type="text" class="form-control" id="exampleInputCategory" name="postingCategory" [(ngModel)]="posting.category" placeholder="Enter category.">
+            </div>
+
+            <div class="form-group" *ngIf="posting.site == 'blogapi' ">
+                <label for="exampleInputEndPoint">End Point URL</label>
+                <input type="text" class="form-control" id="exampleInputEndPoint" name="postingEndPoint" [(ngModel)]="posting.endpoint" placeholder="Enter blog end point url.">
+              </div>
+
+
+          <button type="submit" class="btn btn-primary w-100">등록 Submit</button>
+
+          </form>
+
+
+          
         </li>
+
+
 
         <li class="list-group-item" *ngFor="let site of siteValue ">
           <div class="d-flex justify-content-between">
-            <div>{{ site.value }}</div>
+            <div>
+                {{ site.value.name }} /
+                {{ site.value.site }} /
+                {{ site.value.id }} /
+                {{ site.value.password }} /
+                {{ site.value.category }}
+                {{ site.value.endpoint }}
+            </div>
             <div class="pointer" (click)="onClickSiteDelete( site.key )"><i class="fa fa-times"></i></div>
           </div>
         </li>

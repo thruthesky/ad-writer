@@ -49,6 +49,7 @@ var nightmare_1 = require("./../../nightmare/nightmare");
 var argv = require('yargs').argv;
 var protocol = require("./../protocol");
 var firebase_1 = require("../firebase");
+var strip_tags = require('locutus/php/strings/strip_tags');
 if (argv.pid === void 0) {
     console.log('no pid');
     process.exit(1);
@@ -164,6 +165,7 @@ var NaverBlog = (function (_super) {
     };
     NaverBlog.prototype.write = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var content;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.insert('#subject', this.post.title)];
@@ -172,17 +174,13 @@ var NaverBlog = (function (_super) {
                         return [4 /*yield*/, this.wait(200)];
                     case 2:
                         _a.sent();
-                        return [4 /*yield*/, this.insert('#contents', this.post.content)];
+                        content = this.post.content;
+                        content = strip_tags(content);
+                        return [4 /*yield*/, this.insert('#contents', content)];
                     case 3:
                         _a.sent();
                         return [4 /*yield*/, this.wait(200)];
                     case 4:
-                        _a.sent();
-                        return [4 /*yield*/, this.click('.btn_ok')];
-                    case 5:
-                        _a.sent();
-                        return [4 /*yield*/, this.wait('._postView').then(function (a) { return protocol.send('success'); }).catch(function (e) { return protocol.end('failed after clicking post button'); })];
-                    case 6:
                         _a.sent();
                         return [2 /*return*/];
                 }
@@ -193,7 +191,7 @@ var NaverBlog = (function (_super) {
 }(nightmare_1.MyNightmare));
 var options = {
     show: argv.browser === 'true',
-    x: 1408, y: 0, width: 360, height: 700,
+    x: 1408, y: 0, width: 360, height: 900,
     openDevTools: { mode: '' },
 };
 (new NaverBlog(options)).main();

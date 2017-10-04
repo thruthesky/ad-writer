@@ -39,6 +39,15 @@ export class SettingsPage implements OnInit, OnDestroy {
     siteValueOn;
     siteInputValue;
 
+    posting = {
+        name: '',
+        id: '',
+        password: '',
+        endpoint: '',
+        category: '',
+        site: ''
+    };
+
     constructor(
         public app: AppService
     ) {
@@ -47,10 +56,13 @@ export class SettingsPage implements OnInit, OnDestroy {
         this.typings();
 
         this.siteReference = this.app.referenceSite();
-
+        
         if ( this.siteReference ) {
+
+            
             this.siteValueOn = this.siteReference.on('value', snap => {
                 const v = snap.val();
+                
                 if ( v ) {
                     this.siteValue = [];
                     for ( const x of Object.keys(v) ) {
@@ -63,6 +75,17 @@ export class SettingsPage implements OnInit, OnDestroy {
             
         }
         
+
+        // setTimeout(() => {
+        //     this.showSiteFormBox = true;
+        //     this.posting.name = "Testing";
+        //     this.posting.site = 'blogapi';
+        //     this.posting.id = 'idbd';
+        //     this.posting.password = 'passwordblogapi';
+        //     this.posting.category = '1';
+        //     this.posting.endpoint = "https://www.sonub.com/xmlrpc.php";
+        //     this.onSubmitSiteAdd();
+        // }, 500);
     }
 
     ngOnInit() { }
@@ -138,11 +161,9 @@ export class SettingsPage implements OnInit, OnDestroy {
     }
 
     async onSubmitSiteAdd() {
-        let info = this.siteInputValue;
-        const path = this.app.safeId(info.split('/').map( x => x.trim() ).join('/'));
-        info = info.split('/').map( x => x.trim() ).join(' / ');
-        await this.siteReference.child(path).set( info );
-        this.siteInputValue = '';
+        console.log("onSubmitSiteAdd() ", this.posting);
+        await this.siteReference.child(this.posting.name).set( this.posting );
+        
     }
 
     onClickSiteDelete( key ) {
