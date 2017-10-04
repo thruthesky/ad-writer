@@ -1,4 +1,5 @@
 import { element } from 'protractor';
+let $ = require('cheerio');
 export let protocolName;
 
 export function set(pid) {
@@ -14,31 +15,28 @@ export function end(code, msg = '') {
     process.exit(0);
 }
 
+
+// Gem's addition
 export function error(code, msg = ''){
     send( code, msg );
     process.exit(1);
 }
 
-export function removeTags( post : string, $ = require('cheerio') ) {
-    let arr = [];
-    let $html = $.load(post)('p');
-    $html.each( function( i, element ){
-        arr[i] = $(this).text();
+export function removeTags( post : string ) {
+    let pContents = [];
+    let aHref = [];
+    
+    let p = $.load(post)('p');
+    p.each( function( index, element ){
+        $(this).find('a').remove();
+        pContents[index] = $(this).text()
     } );
 
-    let siteUrl = $.load(post)('a').attr('href');
+    let a = $.load(post)('a');
+    a.each( function( index, element ){
+        aHref[index] = $(this).attr('href');
+    } );
 
-    return arr.join('\r\n') + siteUrl;
-    // return  contents + '\r\n' + siteUrl;
-//    console.log( contents + '\r\n' + siteUrl );
+    return pContents.join('\r\n') + '\r\n' + aHref.join('\r\n');
+
 }
-
-
-// removeTags( 
-//     `
-//     <h1>This is title</h1>
-//     <p>
-//     This is contents with link inside. <a href="https://www.sonub.com">click me</a>
-//     </p>
-//     `
-//  )
