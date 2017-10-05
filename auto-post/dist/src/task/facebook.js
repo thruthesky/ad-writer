@@ -199,7 +199,7 @@ var Facebook = (function (_super) {
     return Facebook;
 }(nightmare_1.MyNightmare));
 var options = {
-    show: true,
+    show: argv.browser === 'true',
     x: 1408, y: 0, width: 360, height: 700,
     openDevTools: { mode: '' },
 };

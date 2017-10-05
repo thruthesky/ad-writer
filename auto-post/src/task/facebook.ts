@@ -57,7 +57,7 @@ class Facebook extends Nightmare {
         await this.enter(this.passwordField);
 
         let re = await this.waitDisappear(this.passwordField);
-        if ( ! re ) protocol.end('login', 'failed');
+        if (!re) protocol.end('login', 'failed');
         protocol.send('login', 'success');
         await this.wait('body');
     }
@@ -76,7 +76,7 @@ class Facebook extends Nightmare {
 
         protocol.send('Typing the post: ', 'typing..');
         await this.insert(this.postTextArea, postThis)
-                    .click(this.postButton);
+            .click(this.postButton);
 
         // check if post is posted or pending
         let isPending = await this.waitAppear(this.groupPostWarn, 5)
@@ -87,7 +87,7 @@ class Facebook extends Nightmare {
         else {
             let isPosted = await this.findPost( postThis );
             (isPosted) ? protocol.send('post', 'ok')
-                       : protocol.end("post", 'post not found!');
+                : protocol.end("post", 'post not found!');
         }
     }
 
@@ -106,8 +106,7 @@ class Facebook extends Nightmare {
 }
 
 let options = {
-    // show: argv.browser === 'true',
-    show: true,
+    show: argv.browser === 'true',
     x: 1408, y: 0, width: 360, height: 700,
     openDevTools: { mode: '' },
 };

@@ -13,7 +13,10 @@ puppeteer.launch({ headless: argv.browser !== 'true' }).then(async browser => {
     if (post === null) protocol.end('fail', 'failed to get post from firebase');
     else protocol.send('got post from firebase');
 
+    
     const page = await browser.newPage();
+    await page.setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36");
+    // await page.setUserAgent("Opera/9.80 (X11; Linux i686; Ubuntu/14.10) Presto/2.12.388 Version/12.16");
     await page.goto('http://www.tistory.com/');
     await page.click('.link_login');
     await page.waitFor('#loginId').then(a => protocol.send('open login page ok')).catch(e => protocol.end('failed to open login page'));
@@ -23,8 +26,19 @@ puppeteer.launch({ headless: argv.browser !== 'true' }).then(async browser => {
     await page.focus('#loginPw').catch(e => protocol.end('password focus failed'));
     await page.type(argv.password).catch(e => protocol.end('password type failed'));
     await page.waitFor(2000);
-    await page.click('button[type="submit"]').catch(e => protocol.end('submit failed'));
-    await page.waitFor('.profile_info').then(a => protocol.send('login ok')).catch(e => protocol.end('failed to login.'));
+    await page.click('button[type="submit"]')
+        .then(a => protocol.send('login button clicked'))
+        .catch(e => protocol.end('submit failed'));
+
+    /// 로그인 검사. Check login.
+    await page.waitFor('.gnb_tistory') // 
+        .then(a => protocol.send('login ok'))
+        .catch(async e => { // failed to login.
+            await page.screenshot({path: 'tistory-screenshot.png'});
+            await page.$('.tit_error')
+                .then( a => protocol.end('failed to login. You may need authentication. see tistory screenshot.png'))
+                .catch( e => protocol.end('failed to login. Unknown error. see tistory-screenshot.png'));
+        });
 
     await page.goto('http://' + argv.category + '.tistory.com/admin/entry/post/?type=post&returnURL=/manage/posts/');
     await page.waitFor('.btn_provisionally').then(a => protocol.send('open write page ok')).catch(e => protocol.end('failed to open write page'));
@@ -50,93 +64,3 @@ puppeteer.launch({ headless: argv.browser !== 'true' }).then(async browser => {
 
 
 
-/*
-import { MyNightmare as Nightmare } from './../../nightmare/nightmare';
-const argv = require('yargs').argv;
-import * as protocol from './../protocol';
-import { getPost } from '../firebase';
-const strip_tags = require('locutus/php/strings/strip_tags');
-
-if ( argv.pid === void 0 ) { console.log('no pid'); process.exit(1); }
-protocol.set(argv.pid);
-protocol.send('begin', (new Date).toLocaleTimeString());
-
-
-class TiStory extends Nightmare {
-
-    post = null;
-    constructor(defaultOptions) {
-        super(defaultOptions);
-        this.firefox();
-    }
-
-    async main() {
-
-        /// get data from firebase
-        this.post = await getPost(argv.user, argv.key);
-        if (this.post === null) protocol.end('fail', 'failed to get post from firebase');
-        else protocol.send('got post from firebase');
-
-        /// post it
-        await this.publish();
-        
-    }
-
-    async publish() {
-
-        await this.login();
-        await this.openBlogEditor();
-        await this.write();
-    
-    }
-    async login() {
-        await this.get('http://www.tistory.com/');
-        await this.click('.link_login');
-        // await this.wait('#loginId');
-        // await this.click('.link_daumlogin');
-
-        await this.wait('#loginId').then( a => protocol.send('open login page ok')).catch( e => protocol.end('failed to open login page') );
-        await this.type('#loginId', argv.id)
-        await this.type('#loginPw', argv.password);
-        await this.click('button[type="submit"]');
-        await this.wait('.profile_info').then( a => protocol.send('login ok')).catch( e => protocol.end('failed to login') );
-    }
-    async openBlogEditor() {
-        await this.get('http://' + argv.category + '.tistory.com/admin/entry/post/?type=post&returnURL=/manage/posts/');
-        await this.wait('.btn_provisionally').then( a => protocol.send('open write page ok')).catch( e => protocol.end('failed to open write page') );
-    }
-    async write() {
-        
-        await this.click('.tx-list');
-        await this.wait(300);
-        await this.click('.btn_public');
-        await this.wait(300);
-        await this.insert('#titleBox', this.post.title);
-        await this.wait(300);
-        await this.insert('#tx_canvas_source', this.post.content);
-        await this.wait(500);
-
-        
-
-        
-
-        let content = this.post.content;
-        content = strip_tags( content );
-        await this.insert('#contents', content);
-        await this.wait(200);
-
-        // await this.click('.btn_ok');
-        // await this.wait('._postView').then( a => protocol.send('success') ).catch( e => protocol.end('failed after clicking post button'));
-
-    }
-}
-
-
-let options = {
-    show: argv.browser === 'true',
-    x: 1408, y: 0, width: 360, height: 900,
-    openDevTools: { mode: '' },
-};
-(new TiStory(options)).main();
-
-*/

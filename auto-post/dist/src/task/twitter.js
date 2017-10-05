@@ -133,7 +133,7 @@ var Twitter = (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        postThis = this.post.title + '\r\n' + lib.textify(this.post.content) + '\r\n' + postReference;
+                        postThis = this.post.title + '\r\n' + lib.textify(this.post.content);
                         selector = "div:contains('" + postThis + "')";
                         protocol.send("Go to compose tweet page.");
                         return [4, this.get(this.twitterUrl + this.composeTweetPage)];
