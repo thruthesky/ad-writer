@@ -1,3 +1,47 @@
+import * as protocol from './../protocol';
+const argv = require('yargs').argv;
+const puppeteer = require('puppeteer');
+import { getPost } from '../firebase';
+// https://www.blogger.com/blogger.g?blogID=3804997078465626362#editor/src=sidebar
+
+protocol.set(argv.pid);
+protocol.send('begin', (new Date).toLocaleTimeString());
+
+puppeteer.launch({ headless: argv.browser !== 'true' }).then(async browser => {
+
+    const post = await getPost(argv.user, argv.key);
+    if (post === null) protocol.end('fail', 'failed to get post from firebase');
+    else protocol.send('got post from firebase');
+
+
+    const page = await browser.newPage();
+    await page.setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36");
+    await page.goto('https://www.blogger.com/go/signin');
+
+
+    
+        await page.focus('input[type="email"]');
+        await page.type( argv.id );
+        await page.click( '#identifierNext' );
+        await page.waitFor(300);
+        await page.waitFor('input[type="password"]');
+        
+    await page.focus( 'input[type="password"]' );
+    await page.type( argv.password )
+    await page.click(this.passwordNextButton);
+
+        
+    // let canEnterPassword = await this.waitAppear(this.passwordField);
+    // if (!canEnterPassword) return false;
+    // await this.type(this.passwordField, this.password)
+    //     .click(this.passwordNextButton);
+
+});
+
+
+
+
+/*
 import { MyNightmare as Nightmare } from './../../nightmare/nightmare';
 const argv = require('yargs').argv;
 const $ = require('cheerio');
@@ -75,4 +119,7 @@ let options = {
     x: 1000, y: 0, width: 800, height: 700,
     openDevTools: { mode: '' },
 };
-(new Blogger(options)).main();
+(new Blogger(options)).main()
+
+*/
+

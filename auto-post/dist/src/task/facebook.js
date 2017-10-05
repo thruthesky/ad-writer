@@ -141,11 +141,10 @@ var Facebook = (function (_super) {
     };
     Facebook.prototype.publish = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var postReference, postThis, isPending, isPosted;
+            var postThis, isPending, isPosted;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        postReference = this.generatePostId;
                         postThis = lib.textify(this.post.content) + '\r\n' + postReference;
                         protocol.send('open forum: ' + this.argv.category, 'openning..');
                         return [4 /*yield*/, this.get(this.serverUrl + '/' + this.argv.category)];
@@ -156,7 +155,7 @@ var Facebook = (function (_super) {
                     case 2:
                         _a.sent();
                         protocol.send('Typing the post: ', 'typing..');
-                        return [4 /*yield*/, this.type(this.postTextArea, postThis)
+                        return [4 /*yield*/, this.insert(this.postTextArea, postThis)
                                 .click(this.postButton)];
                     case 3:
                         _a.sent();
@@ -170,7 +169,7 @@ var Facebook = (function (_super) {
                     case 6:
                         isPosted = _a.sent();
                         (isPosted) ? protocol.send('post', 'ok')
-                            : protocol.error("post", 'post not found!');
+                            : protocol.end("post", 'post not found!');
                         _a.label = 7;
                     case 7: return [2 /*return*/];
                 }
@@ -200,7 +199,7 @@ var Facebook = (function (_super) {
     return Facebook;
 }(nightmare_1.MyNightmare));
 var options = {
-    show: true,
+    show: argv.browser === 'true',
     x: 1408, y: 0, width: 360, height: 700,
     openDevTools: { mode: '' },
 };

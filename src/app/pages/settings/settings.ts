@@ -157,16 +157,44 @@ export class SettingsPage implements OnInit, OnDestroy {
             if ( v['naver-monitoring-keywords']['mobile'] ) this.naverMobileMonitoringKeywords = v['naver-monitoring-keywords']['mobile'];
         }
         
-
     }
 
     async onSubmitSiteAdd() {
-        console.log("onSubmitSiteAdd() ", this.posting);
+        if ( this.posting.site !== 'blogapi' ) this.posting.endpoint = '';
+        console.log("onSubmitSiteAdd() ... ", this.posting);
+        if ( this.posting['old_site'] ) {
+            await this.siteReference.child(this.posting['old_site']).set( null );
+            delete this.posting['old_site'];
+        }
         await this.siteReference.child(this.posting.name).set( this.posting );
-        
+        this.posting.name = '';
+        this.posting.site = '';
+        this.posting.id = '';
+        this.posting.password = '';
+        this.posting.category = '';
+        this.posting.endpoint = '';
     }
 
     onClickSiteDelete( key ) {
-        this.siteReference.child(key).set(null);
+        let re = confirm("Do you want to delete - " + key + '?');
+        if ( re ) this.siteReference.child(key).set(null);
     }
+
+    async onClickSiteEdit( key ) {
+        this.posting.endpoint = '';
+        const snap = await this.siteReference.child(key).once('value');
+        console.log(snap.val());
+        this.showSiteFormBox = true;
+        const v = snap.val();
+        this.posting.site = v.site;
+
+        this.posting['old_site'] = v.name;
+
+        this.posting.name = v.name;
+        this.posting.id = v.id;
+        this.posting.password = v.password;
+        this.posting.category = v.category;
+        if ( v.endpoint ) this.posting.endpoint = v.endpoint;
+    }
+
 }
