@@ -21,6 +21,7 @@ class Blogger extends Nightmare{
         this.firefox();
     }
 
+    
     async main(){
         this.post = await getPost(argv.user, argv.key);
         if (this.post === null) protocol.end('fail', 'failed to get post from firebase');
@@ -28,6 +29,7 @@ class Blogger extends Nightmare{
 
         await this.login();
         await this.publish();
+        await this.checkBlog( this.post.title );
 
         // protocol.end('task done.')
     }

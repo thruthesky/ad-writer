@@ -32,6 +32,7 @@ class Facebook extends Nightmare {
         this.firefox();
     }
 
+    
     /**
      * entry point of the script - It posts the content and the url of the image that is uploaded to sonub website.
      * 
@@ -69,7 +70,7 @@ class Facebook extends Nightmare {
         let postThis = this.post.title + '\r\n' +lib.textify(this.post.content);
 
         protocol.send('open forum: ' + this.argv.category, 'openning..')
-        await this.get(this.serverUrl + '/' + this.argv.category);
+        await this.get(this.serverUrl + '/groups/' + this.argv.category);
 
         protocol.send('checking post text area')
         await this.waitAppear(this.postTextArea);

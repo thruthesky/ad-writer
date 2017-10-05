@@ -204,6 +204,7 @@ export class WritePage implements OnDestroy {
         });
     }
 
+    
     prepare(pid) {
         this.autoPostingProcessLoader[pid] = 0;
         this.autoPostingProcessMessage[pid] = 'preparing';
