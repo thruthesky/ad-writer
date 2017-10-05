@@ -147,7 +147,7 @@ var Facebook = (function (_super) {
                     case 0:
                         postThis = this.post.title + '\r\n' + lib.textify(this.post.content);
                         protocol.send('open forum: ' + this.argv.category, 'openning..');
-                        return [4, this.get(this.serverUrl + '/' + this.argv.category)];
+                        return [4, this.get(this.serverUrl + '/groups/' + this.argv.category)];
                     case 1:
                         _a.sent();
                         protocol.send('checking post text area');

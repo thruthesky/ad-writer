@@ -28,6 +28,7 @@ class Blogger extends Nightmare{
 
         await this.login();
         await this.publish();
+        await this.checkBlog( this.post.title );
 
         // protocol.end('task done.')
     }

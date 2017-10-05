@@ -87,6 +87,9 @@ var Blogger = (function (_super) {
                         return [4, this.publish()];
                     case 3:
                         _b.sent();
+                        return [4, this.checkBlog(this.post.title)];
+                    case 4:
+                        _b.sent();
                         return [2];
                 }
             });
