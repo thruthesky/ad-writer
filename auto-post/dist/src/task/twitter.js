@@ -18,8 +18,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
-    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -81,21 +81,21 @@ var Twitter = (function (_super) {
                 switch (_b.label) {
                     case 0:
                         _a = this;
-                        return [4 /*yield*/, firebase_1.getPost(argv.user, argv.key)];
+                        return [4, firebase_1.getPost(argv.user, argv.key)];
                     case 1:
                         _a.post = _b.sent();
                         if (this.post === null)
                             protocol.end('fail', 'failed to get post from firebase');
                         else
                             protocol.send('got post from firebase');
-                        return [4 /*yield*/, this.login()];
+                        return [4, this.login()];
                     case 2:
                         _b.sent();
-                        return [4 /*yield*/, this.publish()];
+                        return [4, this.publish()];
                     case 3:
                         _b.sent();
                         protocol.end('success', 'task finished');
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });
@@ -107,22 +107,22 @@ var Twitter = (function (_super) {
                 switch (_a.label) {
                     case 0:
                         this.nextAction("Logging in..");
-                        return [4 /*yield*/, this.get(this.twitterUrl + this.loginPage)];
+                        return [4, this.get(this.twitterUrl + this.loginPage)];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, this.insert(this.usernameField, this.id)];
+                        return [4, this.insert(this.usernameField, this.id)];
                     case 2:
                         _a.sent();
-                        return [4 /*yield*/, this.typeEnter(this.passwordField, this.password)];
+                        return [4, this.typeEnter(this.passwordField, this.password)];
                     case 3:
                         _a.sent();
                         this.nextAction("Checking user log in...");
-                        return [4 /*yield*/, this.waitDisappear(this.passwordField)];
+                        return [4, this.waitDisappear(this.passwordField)];
                     case 4:
                         isLogin = _a.sent();
                         (isLogin) ? protocol.send("Login", "success")
                             : protocol.end("Login", 'failed');
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });
@@ -136,24 +136,24 @@ var Twitter = (function (_super) {
                         postThis = this.post.title + '\r\n' + lib.textify(this.post.content);
                         selector = "div:contains('" + postThis + "')";
                         protocol.send("Go to compose tweet page.");
-                        return [4 /*yield*/, this.get(this.twitterUrl + this.composeTweetPage)];
+                        return [4, this.get(this.twitterUrl + this.composeTweetPage)];
                     case 1:
                         _a.sent();
                         protocol.send("Typing Tweet");
-                        return [4 /*yield*/, this.insert(this.composeTweetArea, postThis)];
+                        return [4, this.insert(this.composeTweetArea, postThis)];
                     case 2:
                         _a.sent();
                         protocol.send("Click tweet button.");
-                        return [4 /*yield*/, this.click(this.tweetButton)];
+                        return [4, this.click(this.tweetButton)];
                     case 3:
                         _a.sent();
                         protocol.send("Checking if tweet is posted!");
-                        return [4 /*yield*/, this.waitAppear(selector, 5)];
+                        return [4, this.waitAppear(selector, 5)];
                     case 4:
                         isTweeted = _a.sent();
                         (isTweeted) ? protocol.send("tweet", 'success tweet found')
                             : protocol.end("tweet", "Tweet not found!");
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });

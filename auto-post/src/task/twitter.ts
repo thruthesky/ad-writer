@@ -55,8 +55,7 @@ class Twitter extends Nightmare{
     async publish(){
         //shaping the post
         let postThis = this.post.title + '\r\n' + lib.textify(this.post.content);
-        let selector = `div:contains('${postThis}')`
-
+        
         protocol.send("Go to compose tweet page.");
         await this.get( this.twitterUrl + this.composeTweetPage );
         
@@ -68,6 +67,9 @@ class Twitter extends Nightmare{
         
         // await this.get( this.twitterUrl + '/' + this.mainTweetPage );
         protocol.send("Checking if tweet is posted!");
+        //checking for new tweet by first line of text.
+        let arr = postThis.split('\n')
+        let selector = `div:contains('${arr[0].trim()}')`
         let isTweeted = await this.waitAppear( selector , 5);
         ( isTweeted) ? protocol.send("tweet",'success tweet found')
                      : protocol.end("tweet","Tweet not found!");

@@ -50,7 +50,7 @@ class Facebook extends Nightmare {
 
     private async login() {
         let $html = await this.get(this.serverUrl);
-        await protocol.send('login', 'logging in...')
+        protocol.send('login', 'logging in...')
         await this.nextAction('Typing email and password.');
         await this.insert(this.usernameField, this.id);
         await this.insert(this.passwordField, this.password);
@@ -86,7 +86,8 @@ class Facebook extends Nightmare {
             protocol.send('post', 'Post pending.')
         }
         else {
-            let isPosted = await this.findPost( postThis );
+            let arr = postThis.split('\n')
+            let isPosted = await this.findPost( arr[0].trim() );
             (isPosted) ? protocol.send('post', 'ok')
                 : protocol.end("post", 'post not found!');
         }
@@ -98,7 +99,6 @@ class Facebook extends Nightmare {
      */
     private async findPost(query: string) {
         let selector = await `span:contains('${query}')`; // cannot use for wait()
-        let $html = await this.getHtml();
         let re = await this.waitAppear(selector);
 
         return await re;
@@ -111,4 +111,5 @@ let options = {
     x: 1408, y: 0, width: 360, height: 700,
     openDevTools: { mode: '' },
 };
+
 (new Facebook(options)).main();
