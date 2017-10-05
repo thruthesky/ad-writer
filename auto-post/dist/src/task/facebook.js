@@ -18,8 +18,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
-    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -80,21 +80,21 @@ var Facebook = (function (_super) {
                 switch (_b.label) {
                     case 0:
                         _a = this;
-                        return [4 /*yield*/, firebase_1.getPost(argv.user, argv.key)];
+                        return [4, firebase_1.getPost(argv.user, argv.key)];
                     case 1:
                         _a.post = _b.sent();
                         if (this.post === null)
                             protocol.end('fail', 'failed to get post from firebase');
                         else
                             protocol.send('got post from firebase');
-                        return [4 /*yield*/, this.login()];
+                        return [4, this.login()];
                     case 2:
                         _b.sent();
-                        return [4 /*yield*/, this.publish()];
+                        return [4, this.publish()];
                     case 3:
                         _b.sent();
                         protocol.end('success', 'success');
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });
@@ -104,75 +104,74 @@ var Facebook = (function (_super) {
             var $html, re;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.get(this.serverUrl)];
+                    case 0: return [4, this.get(this.serverUrl)];
                     case 1:
                         $html = _a.sent();
-                        return [4 /*yield*/, protocol.send('login', 'logging in...')];
+                        return [4, protocol.send('login', 'logging in...')];
                     case 2:
                         _a.sent();
-                        return [4 /*yield*/, this.nextAction('Typing email and password.')];
+                        return [4, this.nextAction('Typing email and password.')];
                     case 3:
                         _a.sent();
-                        return [4 /*yield*/, this.insert(this.usernameField, this.id)];
+                        return [4, this.insert(this.usernameField, this.id)];
                     case 4:
                         _a.sent();
-                        return [4 /*yield*/, this.insert(this.passwordField, this.password)];
+                        return [4, this.insert(this.passwordField, this.password)];
                     case 5:
                         _a.sent();
-                        return [4 /*yield*/, this.nextAction('Press enter to login.')];
+                        return [4, this.nextAction('Press enter to login.')];
                     case 6:
                         _a.sent();
-                        return [4 /*yield*/, this.enter(this.passwordField)];
+                        return [4, this.enter(this.passwordField)];
                     case 7:
                         _a.sent();
-                        return [4 /*yield*/, this.waitDisappear(this.passwordField)];
+                        return [4, this.waitDisappear(this.passwordField)];
                     case 8:
                         re = _a.sent();
                         if (!re)
                             protocol.end('login', 'failed');
                         protocol.send('login', 'success');
-                        return [4 /*yield*/, this.wait('body')];
+                        return [4, this.wait('body')];
                     case 9:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });
     };
     Facebook.prototype.publish = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var postReference, postThis, isPending, isPosted;
+            var postThis, isPending, isPosted;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        postReference = this.generatePostId;
-                        postThis = lib.textify(this.post.content) + '\r\n' + postReference;
+                        postThis = this.post.title + '\r\n' + lib.textify(this.post.content);
                         protocol.send('open forum: ' + this.argv.category, 'openning..');
-                        return [4 /*yield*/, this.get(this.serverUrl + '/' + this.argv.category)];
+                        return [4, this.get(this.serverUrl + '/' + this.argv.category)];
                     case 1:
                         _a.sent();
                         protocol.send('checking post text area');
-                        return [4 /*yield*/, this.waitAppear(this.postTextArea)];
+                        return [4, this.waitAppear(this.postTextArea)];
                     case 2:
                         _a.sent();
                         protocol.send('Typing the post: ', 'typing..');
-                        return [4 /*yield*/, this.type(this.postTextArea, postThis)
+                        return [4, this.insert(this.postTextArea, postThis)
                                 .click(this.postButton)];
                     case 3:
                         _a.sent();
-                        return [4 /*yield*/, this.waitAppear(this.groupPostWarn, 5)];
+                        return [4, this.waitAppear(this.groupPostWarn, 5)];
                     case 4:
                         isPending = _a.sent();
-                        if (!isPending) return [3 /*break*/, 5];
+                        if (!isPending) return [3, 5];
                         protocol.send('post', 'Post pending.');
-                        return [3 /*break*/, 7];
-                    case 5: return [4 /*yield*/, this.findPost(postReference)];
+                        return [3, 7];
+                    case 5: return [4, this.findPost(postThis)];
                     case 6:
                         isPosted = _a.sent();
                         (isPosted) ? protocol.send('post', 'ok')
-                            : protocol.error("post", 'post not found!');
+                            : protocol.end("post", 'post not found!');
                         _a.label = 7;
-                    case 7: return [2 /*return*/];
+                    case 7: return [2];
                 }
             });
         });
@@ -182,17 +181,17 @@ var Facebook = (function (_super) {
             var selector, $html, re;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, "span:contains('" + query + "')"];
+                    case 0: return [4, "span:contains('" + query + "')"];
                     case 1:
                         selector = _a.sent();
-                        return [4 /*yield*/, this.getHtml()];
+                        return [4, this.getHtml()];
                     case 2:
                         $html = _a.sent();
-                        return [4 /*yield*/, this.waitAppear(selector)];
+                        return [4, this.waitAppear(selector)];
                     case 3:
                         re = _a.sent();
-                        return [4 /*yield*/, re];
-                    case 4: return [2 /*return*/, _a.sent()];
+                        return [4, re];
+                    case 4: return [2, _a.sent()];
                 }
             });
         });

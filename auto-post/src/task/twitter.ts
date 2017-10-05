@@ -53,10 +53,10 @@ class Twitter extends Nightmare{
     }
 
     async publish(){
-        let postReference = 'Ref#'+Date.now().toString();
-        let selector = `div:contains('${postReference}')`
-        let postThis = lib.textify(this.post.content) + '\r\n' + postReference;
-
+        //shaping the post
+        let postThis = this.post.title + '\r\n' + lib.textify(this.post.content) + '\r\n' + postReference;
+        let selector = `div:contains('${postThis}')`
+        
         protocol.send("Go to compose tweet page.");
         await this.get( this.twitterUrl + this.composeTweetPage );
         

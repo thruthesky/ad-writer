@@ -8,8 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
-    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -46,92 +46,92 @@ puppeteer.launch({ headless: argv.browser !== 'true' }).then(function (browser) 
     var post, page;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, firebase_1.getPost(argv.user, argv.key)];
+            case 0: return [4, firebase_1.getPost(argv.user, argv.key)];
             case 1:
                 post = _a.sent();
                 if (post === null)
                     protocol.end('fail', 'failed to get post from firebase');
                 else
                     protocol.send('got post from firebase');
-                return [4 /*yield*/, browser.newPage()];
+                return [4, browser.newPage()];
             case 2:
                 page = _a.sent();
-                return [4 /*yield*/, page.goto('http://www.tistory.com/')];
+                return [4, page.goto('http://www.tistory.com/')];
             case 3:
                 _a.sent();
-                return [4 /*yield*/, page.click('.link_login')];
+                return [4, page.click('.link_login')];
             case 4:
                 _a.sent();
-                return [4 /*yield*/, page.waitFor('#loginId').then(function (a) { return protocol.send('open login page ok'); }).catch(function (e) { return protocol.end('failed to open login page'); })];
+                return [4, page.waitFor('#loginId').then(function (a) { return protocol.send('open login page ok'); }).catch(function (e) { return protocol.end('failed to open login page'); })];
             case 5:
                 _a.sent();
-                return [4 /*yield*/, page.focus('#loginId')];
+                return [4, page.focus('#loginId')];
             case 6:
                 _a.sent();
-                return [4 /*yield*/, page.type(argv.id)];
+                return [4, page.type(argv.id)];
             case 7:
                 _a.sent();
-                return [4 /*yield*/, page.focus('#loginPw').catch(function (e) { return protocol.end('password focus failed'); })];
+                return [4, page.focus('#loginPw').catch(function (e) { return protocol.end('password focus failed'); })];
             case 8:
                 _a.sent();
-                return [4 /*yield*/, page.type(argv.password).catch(function (e) { return protocol.end('password type failed'); })];
+                return [4, page.type(argv.password).catch(function (e) { return protocol.end('password type failed'); })];
             case 9:
                 _a.sent();
-                return [4 /*yield*/, page.waitFor(2000)];
+                return [4, page.waitFor(2000)];
             case 10:
                 _a.sent();
-                return [4 /*yield*/, page.click('button[type="submit"]').catch(function (e) { return protocol.end('submit failed'); })];
+                return [4, page.click('button[type="submit"]').catch(function (e) { return protocol.end('submit failed'); })];
             case 11:
                 _a.sent();
-                return [4 /*yield*/, page.waitFor('.profile_info').then(function (a) { return protocol.send('login ok'); }).catch(function (e) { return protocol.end('failed to login.'); })];
+                return [4, page.waitFor('.profile_info').then(function (a) { return protocol.send('login ok'); }).catch(function (e) { return protocol.end('failed to login.'); })];
             case 12:
                 _a.sent();
-                return [4 /*yield*/, page.goto('http://' + argv.category + '.tistory.com/admin/entry/post/?type=post&returnURL=/manage/posts/')];
+                return [4, page.goto('http://' + argv.category + '.tistory.com/admin/entry/post/?type=post&returnURL=/manage/posts/')];
             case 13:
                 _a.sent();
-                return [4 /*yield*/, page.waitFor('.btn_provisionally').then(function (a) { return protocol.send('open write page ok'); }).catch(function (e) { return protocol.end('failed to open write page'); })];
+                return [4, page.waitFor('.btn_provisionally').then(function (a) { return protocol.send('open write page ok'); }).catch(function (e) { return protocol.end('failed to open write page'); })];
             case 14:
                 _a.sent();
-                return [4 /*yield*/, page.click('#tx_switchertoggle')];
+                return [4, page.click('#tx_switchertoggle')];
             case 15:
                 _a.sent();
-                return [4 /*yield*/, page.waitFor(300)];
+                return [4, page.waitFor(300)];
             case 16:
                 _a.sent();
-                return [4 /*yield*/, page.click('.btn_public')];
+                return [4, page.click('.btn_public')];
             case 17:
                 _a.sent();
-                return [4 /*yield*/, page.waitFor(300)];
+                return [4, page.waitFor(300)];
             case 18:
                 _a.sent();
-                return [4 /*yield*/, page.focus('#titleBox')];
+                return [4, page.focus('#titleBox')];
             case 19:
                 _a.sent();
-                return [4 /*yield*/, page.type(post.title)];
+                return [4, page.type(post.title)];
             case 20:
                 _a.sent();
-                return [4 /*yield*/, page.waitFor(300)];
+                return [4, page.waitFor(300)];
             case 21:
                 _a.sent();
-                return [4 /*yield*/, page.focus('#tx_canvas_source')];
+                return [4, page.focus('#tx_canvas_source')];
             case 22:
                 _a.sent();
-                return [4 /*yield*/, page.type(post.content)];
+                return [4, page.type(post.content)];
             case 23:
                 _a.sent();
-                return [4 /*yield*/, page.waitFor(500)];
+                return [4, page.waitFor(500)];
             case 24:
                 _a.sent();
-                return [4 /*yield*/, page.click('.btn_comm.btn_save')];
+                return [4, page.click('.btn_comm.btn_save')];
             case 25:
                 _a.sent();
-                return [4 /*yield*/, page.waitFor('.tit_cont').then(function (a) { return protocol.end('success'); }).catch(function (e) { return protocol.end('failed after clicking post button'); })];
+                return [4, page.waitFor('.tit_cont').then(function (a) { return protocol.end('success'); }).catch(function (e) { return protocol.end('failed after clicking post button'); })];
             case 26:
                 _a.sent();
-                return [4 /*yield*/, browser.close()];
+                return [4, browser.close()];
             case 27:
                 _a.sent();
-                return [2 /*return*/];
+                return [2];
         }
     });
 }); });

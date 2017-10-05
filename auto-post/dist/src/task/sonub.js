@@ -18,8 +18,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
-    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -66,7 +66,7 @@ var Sonub = (function (_super) {
                         protocol.set(this.argv.pid);
                         date = this.date('Y-m-d H:i:s');
                         protocol.send('begin', "posting begins at: " + date);
-                        return [4 /*yield*/, firebase_1.db.child('ad-write')
+                        return [4, firebase_1.db.child('ad-write')
                                 .child(this.argv.user)
                                 .child(this.argv.key)
                                 .once('value')];
@@ -77,69 +77,69 @@ var Sonub = (function (_super) {
                             protocol.end('get-firebase-data-fail:');
                         else
                             protocol.send('get-firebase-data-ok:');
-                        return [4 /*yield*/, this.get(this.serverUrl + '/user/login')];
+                        return [4, this.get(this.serverUrl + '/user/login')];
                     case 2:
                         _a.sent();
-                        return [4 /*yield*/, this.insert('#register_user_login', this.argv.id)];
+                        return [4, this.insert('#register_user_login', this.argv.id)];
                     case 3:
                         _a.sent();
-                        return [4 /*yield*/, this.insert('#register_user_pass', this.argv.password)];
+                        return [4, this.insert('#register_user_pass', this.argv.password)];
                     case 4:
                         _a.sent();
-                        return [4 /*yield*/, this.click('.page-form-submit')];
+                        return [4, this.click('.page-form-submit')];
                     case 5:
                         _a.sent();
-                        return [4 /*yield*/, this.waitSelectors(['.error', '.home-form-header'])];
+                        return [4, this.waitSelectors(['.error', '.home-form-header'])];
                     case 6:
                         n = _a.sent();
                         if (n !== 1)
                             protocol.end('login-fail');
                         else
                             protocol.send('login-ok');
-                        return [4 /*yield*/, this.click('#header-menu-icon')];
+                        return [4, this.click('#header-menu-icon')];
                     case 7:
                         _a.sent();
-                        return [4 /*yield*/, this.wait('#menu-page-header')];
+                        return [4, this.wait('#menu-page-header')];
                     case 8:
                         _a.sent();
-                        return [4 /*yield*/, this.click('#menu-community')];
+                        return [4, this.click('#menu-community')];
                     case 9:
                         _a.sent();
-                        return [4 /*yield*/, this.wait('#community-header')];
+                        return [4, this.wait('#community-header')];
                     case 10:
                         _a.sent();
-                        return [4 /*yield*/, this.click('#community-' + this.argv.category + '-button')
+                        return [4, this.click('#community-' + this.argv.category + '-button')
                                 .then(function (a) { return a; })
                                 .catch(function (e) {
                                 protocol.end('ERROR: ' + e);
                             })];
                     case 11:
                         _a.sent();
-                        return [4 /*yield*/, this.wait('#post-list-create-button')];
+                        return [4, this.wait('#post-list-create-button')];
                     case 12:
                         _a.sent();
-                        return [4 /*yield*/, this.click('#post-list-create-button')];
+                        return [4, this.click('#post-list-create-button')];
                     case 13:
                         _a.sent();
-                        return [4 /*yield*/, this.wait('[name="post_title"]')];
+                        return [4, this.wait('[name="post_title"]')];
                     case 14:
                         _a.sent();
                         protocol.send('open-post-create-page-ok');
-                        return [4 /*yield*/, this.insert('[name="post_title"]', post.title)];
+                        return [4, this.insert('[name="post_title"]', post.title)];
                     case 15:
                         _a.sent();
                         content = post.content;
-                        return [4 /*yield*/, this.insert('[name="post_content"]', content)];
+                        return [4, this.insert('[name="post_content"]', content)];
                     case 16:
                         _a.sent();
-                        return [4 /*yield*/, this.click('.post-create-button')];
+                        return [4, this.click('.post-create-button')];
                     case 17:
                         _a.sent();
-                        return [4 /*yield*/, this.waitDisappear('.post-create-button')];
+                        return [4, this.waitDisappear('.post-create-button')];
                     case 18:
                         _a.sent();
                         protocol.end('success');
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });

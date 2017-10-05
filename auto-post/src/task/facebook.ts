@@ -65,8 +65,8 @@ class Facebook extends Nightmare {
      * For publishing on facebook.
      */
     private async publish() {
-        let postReference = 'Ref#'+Date.now().toString();
-        let postThis = lib.textify(this.post.content) + '\r\n' + postReference;
+        //shaping the post
+        let postThis = this.post.title + '\r\n' +lib.textify(this.post.content);
 
         protocol.send('open forum: ' + this.argv.category, 'openning..')
         await this.get(this.serverUrl + '/' + this.argv.category);
@@ -85,7 +85,7 @@ class Facebook extends Nightmare {
             protocol.send('post', 'Post pending.')
         }
         else {
-            let isPosted = await this.findPost(postReference);
+            let isPosted = await this.findPost( postThis );
             (isPosted) ? protocol.send('post', 'ok')
                        : protocol.end("post", 'post not found!');
         }
