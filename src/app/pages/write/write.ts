@@ -190,7 +190,7 @@ export class WritePage implements OnDestroy {
             console.log(`ERROR: ${data}`);
             let errstr = data.toString();
             let msg = '';
-            if (errstr.indexOf('Cannot find module')) {
+            if (errstr.indexOf('Cannot find module') !== -1) {
                 msg = `Error: cannot find ${script} script.`;
             }
             else {

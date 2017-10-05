@@ -18,8 +18,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
+    return { next: verb(0), "throw": verb(1), "return": verb(2) };
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -74,20 +74,20 @@ var Blogger = (function (_super) {
                 switch (_b.label) {
                     case 0:
                         _a = this;
-                        return [4, firebase_1.getPost(argv.user, argv.key)];
+                        return [4 /*yield*/, firebase_1.getPost(argv.user, argv.key)];
                     case 1:
                         _a.post = _b.sent();
                         if (this.post === null)
                             protocol.end('fail', 'failed to get post from firebase');
                         else
                             protocol.send('got post from firebase');
-                        return [4, this.login()];
+                        return [4 /*yield*/, this.login()];
                     case 2:
                         _b.sent();
-                        return [4, this.publish()];
+                        return [4 /*yield*/, this.publish()];
                     case 3:
                         _b.sent();
-                        return [2];
+                        return [2 /*return*/];
                 }
             });
         });
@@ -97,32 +97,32 @@ var Blogger = (function (_super) {
             var isLogin;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.get(this.bloggerUrl + "/go/signin")];
+                    case 0: return [4 /*yield*/, this.get(this.bloggerUrl + "/go/signin")];
                     case 1:
                         _a.sent();
                         protocol.send('Logging in..');
-                        return [4, this.type("#identifierId", this.id)];
+                        return [4 /*yield*/, this.type("#identifierId", this.id)];
                     case 2:
                         _a.sent();
-                        return [4, this.click("#identifierNext")];
+                        return [4 /*yield*/, this.click("#identifierNext")];
                     case 3:
                         _a.sent();
-                        return [4, this.wait(3000)];
+                        return [4 /*yield*/, this.wait(3000)];
                     case 4:
                         _a.sent();
-                        return [4, this.insert('input[name="password"]', this.password)];
+                        return [4 /*yield*/, this.insert('input[name="password"]', this.password)];
                     case 5:
                         _a.sent();
-                        return [4, this.click('#passwordNext')];
+                        return [4 /*yield*/, this.click('#passwordNext')];
                     case 6:
                         _a.sent();
-                        return [4, this.waitDisappear("html:contains('Loading')")];
+                        return [4 /*yield*/, this.waitDisappear("html:contains('Loading')")];
                     case 7:
                         isLogin = _a.sent();
                         if (!isLogin)
                             protocol.end('Login failed script will end.');
                         protocol.send("Login", "Wait for login to finish");
-                        return [2];
+                        return [2 /*return*/];
                 }
             });
         });
@@ -135,44 +135,44 @@ var Blogger = (function (_super) {
                     case 0:
                         protocol.send('Going to blog with id: ' + argv.category);
                         blogUrl = '/blogger.g?blogID=' + argv.category;
-                        return [4, this.waitAppear('a[href="#editor/src=sidebar"]')];
+                        return [4 /*yield*/, this.waitAppear('a[href="#editor/src=sidebar"]')];
                     case 1:
                         canClickNewPost = _a.sent();
                         if (!canClickNewPost)
                             protocol.end('Not properly logged in! check internet.');
                         protocol.send('Going to publishing page: ' + this.bloggerUrl + blogUrl + '#editor/src=sidebar');
-                        return [4, this.get(this.bloggerUrl + blogUrl + '#editor/src=sidebar')];
+                        return [4 /*yield*/, this.get(this.bloggerUrl + blogUrl + '#editor/src=sidebar')];
                     case 2:
                         _a.sent();
                         protocol.send('Checking if possible to post.');
-                        return [4, this.waitAppear("#postingHtmlBox")];
+                        return [4 /*yield*/, this.waitAppear("#postingHtmlBox")];
                     case 3:
                         re = _a.sent();
                         if (!re)
                             protocol.end('Cant find posting box! check internet');
-                        return [4, this.waitDisappear("div:contains('Loading')")];
+                        return [4 /*yield*/, this.waitDisappear("div:contains('Loading')")];
                     case 4:
                         canPost = _a.sent();
                         if (!canPost)
                             protocol.end('Loading exceeds timeout! Check internet.');
                         protocol.send('Writing post...');
-                        return [4, this.type(".titleField", this.post.title)];
+                        return [4 /*yield*/, this.type(".titleField", this.post.title)];
                     case 5:
                         _a.sent();
-                        return [4, this.insert("#postingHtmlBox", this.post.content)];
+                        return [4 /*yield*/, this.insert("#postingHtmlBox", this.post.content)];
                     case 6:
                         _a.sent();
-                        return [4, this.click('.OYKEW4D-U-i > .blogg-primary')];
+                        return [4 /*yield*/, this.click('.OYKEW4D-U-i > .blogg-primary')];
                     case 7:
                         _a.sent();
                         protocol.send('Publishing');
-                        return [4, this.waitAppear('.editPosts')];
+                        return [4 /*yield*/, this.waitAppear('.editPosts')];
                     case 8:
                         isNotInPublishing = _a.sent();
                         if (!isNotInPublishing)
                             protocol.send("Exiting publishing page exceeds timeout! Check blog manually if properly posted.");
                         protocol.send('Publising done');
-                        return [2];
+                        return [2 /*return*/];
                 }
             });
         });
@@ -186,16 +186,16 @@ var Blogger = (function (_super) {
                         selector = "div:contains('" + content + "')";
                         protocol.send('Checking if properly publised!');
                         protocol.send('Visiting the Blog:' + argv.endpoint);
-                        return [4, this.get(argv.endpoint)];
+                        return [4 /*yield*/, this.get(argv.endpoint)];
                     case 1:
                         _a.sent();
-                        return [4, this.waitAppear(selector)];
+                        return [4 /*yield*/, this.waitAppear(selector)];
                     case 2:
                         re = _a.sent();
                         if (!re)
                             protocol.end('Post not found. Check it manually');
                         protocol.send('Post Found!');
-                        return [2];
+                        return [2 /*return*/];
                 }
             });
         });

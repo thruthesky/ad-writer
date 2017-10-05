@@ -18,8 +18,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
+    return { next: verb(0), "throw": verb(1), "return": verb(2) };
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -48,7 +48,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Nightmare = require("nightmare");
 var datetime_1 = require("locutus/php/datetime");
 var c = require('cheerio');
-var argv = require('yargs').string('catergory').argv;
+var argv = require('yargs').argv;
 var MyNightmare = (function (_super) {
     __extends(MyNightmare, _super);
     function MyNightmare(defaultOptions) {
@@ -70,30 +70,54 @@ var MyNightmare = (function (_super) {
             var html, $html;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this
+                    case 0: return [4 /*yield*/, this
                             .goto(url)
                             .evaluate(function () { return document.querySelector('html').innerHTML; })
-                            .then(function (a) { return a; })];
+                            .then(function (a) { return a; })
+                            .catch(function (e) {
+                            console.log("ERROR: ", e);
+                        })];
                     case 1:
                         html = _a.sent();
                         $html = c.load(html)('html');
-                        return [2, $html];
+                        return [2 /*return*/, $html];
                 }
             });
         });
     };
     MyNightmare.prototype.getHtml = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var html, $html;
+            var html, i, $html;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this
-                            .evaluate(function () { return document.querySelector('html').innerHTML; })
-                            .then(function (a) { return a; })];
+                    case 0:
+                        html = null;
+                        i = 0;
+                        _a.label = 1;
                     case 1:
+                        if (!(i < 300)) return [3 /*break*/, 6];
+                        return [4 /*yield*/, this
+                                .evaluate(function () {
+                                var doc = document.querySelector('html');
+                                if (doc)
+                                    return doc.innerHTML;
+                                return null;
+                            })
+                                .then(function (a) { return a; })];
+                    case 2:
                         html = _a.sent();
+                        if (!html) return [3 /*break*/, 3];
+                        return [3 /*break*/, 6];
+                    case 3: return [4 /*yield*/, this.wait(100)];
+                    case 4:
+                        _a.sent();
+                        _a.label = 5;
+                    case 5:
+                        i++;
+                        return [3 /*break*/, 1];
+                    case 6:
                         $html = c.load(html)('html');
-                        return [2, $html];
+                        return [2 /*return*/, $html];
                 }
             });
         });
@@ -103,14 +127,14 @@ var MyNightmare = (function (_super) {
             var $html;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.wait(selector)];
+                    case 0: return [4 /*yield*/, this.wait(selector)];
                     case 1:
                         _a.sent();
-                        return [4, this.getHtml()];
+                        return [4 /*yield*/, this.getHtml()];
                     case 2:
                         $html = _a.sent();
                         this.test($html.find(selector).length > 0, message);
-                        return [2];
+                        return [2 /*return*/];
                 }
             });
         });
@@ -141,8 +165,8 @@ var MyNightmare = (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.type(selector, "\x0d")];
-                    case 1: return [2, _a.sent()];
+                    case 0: return [4 /*yield*/, this.type(selector, "\x0d")];
+                    case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
@@ -151,13 +175,13 @@ var MyNightmare = (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.type(selector, str)];
+                    case 0: return [4 /*yield*/, this.type(selector, str)];
                     case 1:
                         _a.sent();
-                        return [4, this.enter(selector)];
+                        return [4 /*yield*/, this.enter(selector)];
                     case 2:
                         _a.sent();
-                        return [2];
+                        return [2 /*return*/];
                 }
             });
         });
@@ -166,13 +190,13 @@ var MyNightmare = (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.typeEnter(type, str)];
+                    case 0: return [4 /*yield*/, this.typeEnter(type, str)];
                     case 1:
                         _a.sent();
-                        return [4, this.wait(wait)];
+                        return [4 /*yield*/, this.wait(wait)];
                     case 2:
                         _a.sent();
-                        return [2];
+                        return [2 /*return*/];
                 }
             });
         });
@@ -181,13 +205,13 @@ var MyNightmare = (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.click(click)];
+                    case 0: return [4 /*yield*/, this.click(click)];
                     case 1:
                         _a.sent();
-                        return [4, this.waitTest(wait, msg)];
+                        return [4 /*yield*/, this.waitTest(wait, msg)];
                     case 2:
                         _a.sent();
-                        return [2];
+                        return [2 /*return*/];
                 }
             });
         });
@@ -199,7 +223,7 @@ var MyNightmare = (function (_super) {
                 if (msg)
                     console.log(msg);
                 process.exit(0);
-                return [2];
+                return [2 /*return*/];
             });
         });
     };
@@ -215,20 +239,20 @@ var MyNightmare = (function (_super) {
                         i = 0;
                         _a.label = 1;
                     case 1:
-                        if (!(i < maxWaitCount)) return [3, 5];
-                        return [4, this.wait(100)];
+                        if (!(i < maxWaitCount)) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.wait(100)];
                     case 2:
                         _a.sent();
-                        return [4, this.getHtml()];
+                        return [4 /*yield*/, this.getHtml()];
                     case 3:
                         $html = _a.sent();
                         if ($html.find(selector).length === 0)
-                            return [2, true];
+                            return [2 /*return*/, true];
                         _a.label = 4;
                     case 4:
                         i++;
-                        return [3, 1];
-                    case 5: return [2, false];
+                        return [3 /*break*/, 1];
+                    case 5: return [2 /*return*/, false];
                 }
             });
         });
@@ -245,23 +269,56 @@ var MyNightmare = (function (_super) {
                         i = 0;
                         _a.label = 1;
                     case 1:
-                        if (!(i < maxWaitCount)) return [3, 5];
-                        return [4, this.wait(100)];
+                        if (!(i < maxWaitCount)) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.wait(100)];
                     case 2:
                         _a.sent();
-                        return [4, this.getHtml()];
+                        return [4 /*yield*/, this.getHtml()];
                     case 3:
                         $html = _a.sent();
                         if ($html.find(selector).length > 0)
-                            return [2, true];
+                            return [2 /*return*/, true];
                         _a.label = 4;
                     case 4:
                         i++;
-                        return [3, 1];
-                    case 5: return [2, false];
+                        return [3 /*break*/, 1];
+                    case 5: return [2 /*return*/, false];
                 }
             });
         });
+    };
+    Object.defineProperty(MyNightmare.prototype, "generatePostId", {
+        get: function () {
+            var _this = this;
+            var splitId = this.generateId().split('');
+            var arr = [];
+            splitId.forEach(function (element) { return __awaiter(_this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    arr.push(this.transformCharacter(element));
+                    return [2 /*return*/];
+                });
+            }); });
+            return arr.join(' ');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    MyNightmare.prototype.generateId = function () {
+        return Date.now().toString();
+    };
+    MyNightmare.prototype.transformCharacter = function (val) {
+        switch (val) {
+            case '0': return '+';
+            case '1': return '-';
+            case '2': return '=';
+            case '3': return '/';
+            case '4': return '*';
+            case '5': return '_';
+            case '6': return '^';
+            case '7': return '#';
+            case '8': return '@';
+            case '9': return '!';
+        }
     };
     MyNightmare.prototype.waitSelectorExist = function (trueSelector, falseSelector, timeout) {
         if (timeout === void 0) { timeout = 30; }
@@ -275,22 +332,22 @@ var MyNightmare = (function (_super) {
                         i = 0;
                         _a.label = 1;
                     case 1:
-                        if (!(i < maxWaitCount)) return [3, 5];
-                        return [4, this.wait(100)];
+                        if (!(i < maxWaitCount)) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.wait(100)];
                     case 2:
                         _a.sent();
-                        return [4, this.getHtml()];
+                        return [4 /*yield*/, this.getHtml()];
                     case 3:
                         $html = _a.sent();
                         if ($html.find(trueSelector).length > 0)
-                            return [2, true];
+                            return [2 /*return*/, true];
                         if ($html.find(falseSelector).length > 0)
-                            return [2, false];
+                            return [2 /*return*/, false];
                         _a.label = 4;
                     case 4:
                         i++;
-                        return [3, 1];
-                    case 5: return [2, false];
+                        return [3 /*break*/, 1];
+                    case 5: return [2 /*return*/, false];
                 }
             });
         });
@@ -307,22 +364,22 @@ var MyNightmare = (function (_super) {
                         i = 0;
                         _a.label = 1;
                     case 1:
-                        if (!(i < maxWaitCount)) return [3, 5];
-                        return [4, this.wait(100)];
+                        if (!(i < maxWaitCount)) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.wait(100)];
                     case 2:
                         _a.sent();
-                        return [4, this.getHtml()];
+                        return [4 /*yield*/, this.getHtml()];
                     case 3:
                         $html = _a.sent();
                         for (i_1 = 0; i_1 < selectors.length; i_1++) {
                             if ($html.find(selectors[i_1]).length > 0)
-                                return [2, i_1];
+                                return [2 /*return*/, i_1];
                         }
                         _a.label = 4;
                     case 4:
                         i++;
-                        return [3, 1];
-                    case 5: return [2, -1];
+                        return [3 /*break*/, 1];
+                    case 5: return [2 /*return*/, -1];
                 }
             });
         });
