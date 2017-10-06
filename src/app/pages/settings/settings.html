@@ -77,7 +77,8 @@
                 placeholder="Enter user password.">
             </div>
             <div class="form-group">
-              <label for="exampleInputCategory">Category</label>
+              <label for="exampleInputCategory" *ngIf="posting.site != 'twitter' ">Category</label>
+              <label for="exampleInputCategory" *ngIf="posting.site == 'twitter' ">Username</label>
               <input type="text" class="form-control" id="exampleInputCategory" name="postingCategory" [(ngModel)]="posting.category" placeholder="Enter category.">
             </div>
 

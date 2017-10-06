@@ -47,7 +47,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var puppeteer = require('puppeteer');
 var cheerio = require('cheerio');
-var argv = require('yargs');
+var argv = require('yargs').argv;
+var protocol = require("./../protocol");
+if (argv.pid === void 0) {
+    console.log('no pid');
+    process.exit(1);
+}
+protocol.set(argv.pid);
+protocol.send('begin', (new Date).toLocaleTimeString());
 var peppeteer_extension_1 = require("./../../puppeteer-extension/peppeteer-extension");
 var KakaoPlus = (function (_super) {
     __extends(KakaoPlus, _super);
@@ -56,58 +63,64 @@ var KakaoPlus = (function (_super) {
     }
     KakaoPlus.prototype.main = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var browser, page;
+            var browser, page, url, re, b;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, puppeteer.launch({ headless: true })];
+                    case 0: return [4 /*yield*/, puppeteer.launch({ headless: false })];
                     case 1:
                         browser = _a.sent();
                         return [4 /*yield*/, browser.newPage()];
                     case 2:
                         page = _a.sent();
                         this.set(browser, page);
-                        return [4 /*yield*/, this.page.goto('https://www.philgo.com/')];
+                        url = "https://accounts.kakao.com/login?continue=https://center-pf.kakao.com/signup";
+                        return [4 /*yield*/, this.page.goto(url)];
                     case 3:
                         _a.sent();
-                        return [4 /*yield*/, this.getTitle()];
+                        return [4 /*yield*/, this.waitAppear(['#recaptcha_area', '#email', 'input[name="email"]'])];
                     case 4:
-                        _a.sent();
-                        return [4 /*yield*/, this.getHtmlTitle()];
+                        re = _a.sent();
+                        if (re === -1)
+                            protocol.fail('login page open failed');
+                        else if (re === 0)
+                            protocol.end('capture appeared');
+                        else
+                            protocol.send('login page open ok');
+                        return [4 /*yield*/, this.insert('#email', argv.id)];
                     case 5:
                         _a.sent();
-                        return [4 /*yield*/, this.browser.close()];
+                        return [4 /*yield*/, this.insert('#password', argv.password)];
                     case 6:
                         _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    KakaoPlus.prototype.getTitle = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var _a, _b, _c;
-            return __generator(this, function (_d) {
-                switch (_d.label) {
-                    case 0:
-                        _b = (_a = console).log;
-                        _c = ['title: '];
-                        return [4 /*yield*/, this.page.title()];
-                    case 1:
-                        _b.apply(_a, _c.concat([_d.sent()]));
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    KakaoPlus.prototype.getHtmlTitle = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var $html;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.html()];
-                    case 1:
-                        $html = _a.sent();
-                        console.log('html title: ', $html.find('title').text());
+                        return [4 /*yield*/, this.page.click('#btn_login')];
+                    case 7:
+                        _a.sent();
+                        protocol.send('login button clicked');
+                        return [4 /*yield*/, this.page.waitFor(1000)];
+                    case 8:
+                        _a.sent();
+                        return [4 /*yield*/, this.waitDisappear('#email')];
+                    case 9:
+                        b = _a.sent();
+                        if (b)
+                            protocol.send('login ok');
+                        else {
+                            this.page.screenshot({ path: 'kakao-plus-home-screenshot.png' });
+                            protocol.fail('fail to login');
+                        }
+                        return [4 /*yield*/, this.waitAppear(['.tit_plus'])];
+                    case 10:
+                        re = _a.sent();
+                        if (re !== 0) {
+                            this.page.screenshot({ path: 'kakao-plus-home-screenshot.png' });
+                            protocol.fail('check screenshot.');
+                        }
+                        return [4 /*yield*/, this.page.waitFor(20000)];
+                    case 11:
+                        _a.sent();
+                        return [4 /*yield*/, this.browser.close()];
+                    case 12:
+                        _a.sent();
                         return [2 /*return*/];
                 }
             });

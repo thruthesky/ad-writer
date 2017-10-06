@@ -171,7 +171,7 @@ export class WritePage implements OnDestroy {
         `--pid=${pid}`,
         `--browser=${this.showBrowser}`
         ];
-        console.log("node " + $params.join(' '));
+        console.log("node: " + $params.join(' '));
         const ls = spawn('node', $params);
         console.log("loader: ", this.autoPostingProcessLoader);
         ls.stdout.on('data', (data) => {
@@ -182,10 +182,15 @@ export class WritePage implements OnDestroy {
             if (re === 'success:') {
                 this.success(pid);
             }
+            else if ( re.indexOf('fail:') === 0 ) {
+                this.error( pid, arr[2] );
+            }
             else {
                 this.message( pid, re) ;
             }
         });
+
+
         ls.stderr.on('data', (data) => {
             console.log(`ERROR: ${data}`);
             let errstr = data.toString();
@@ -197,8 +202,8 @@ export class WritePage implements OnDestroy {
                 msg = `Error: process error.`;
             }
             this.error( pid, msg );
-
         });
+
         ls.on('close', (code) => {
             console.log(`child process exited with code ${code}`);
         });

@@ -1,5 +1,5 @@
 import { MyNightmare as Nightmare } from './../../nightmare/nightmare';
-const argv = require('yargs').argv;
+const argv = require('yargs').string('category').argv;
 import * as protocol from './../protocol';
 import * as lib from '../auto-post-library'
 import { getPost } from '../firebase';
@@ -13,18 +13,8 @@ class Twitter extends Nightmare{
     private twitterUrl = 'https://mobile.twitter.com'
     private post = null;
 
-    private id = this.argv.id;
-    private password = this.argv.password;
-
-    //login
-    loginPage = "/login"
-    usernameField = 'input[name="session[username_or_email]"]';
-    passwordField = 'input[name="session[password]"]';
-    //posting
-    mainTweetPage = this.argv.category;
-    composeTweetPage = "/compose/tweet";
-    composeTweetArea = 'textArea[placeholder="What\'s happening?"]';
-    tweetButton = 'div[data-testid="tweet-button"]';
+    private id = argv.id;
+    private password = argv.password;
 
     constructor(defaultOptions) {
         super(defaultOptions);
@@ -35,49 +25,74 @@ class Twitter extends Nightmare{
         this.post = await getPost(argv.user, argv.key);
         if (this.post === null) protocol.end('fail', 'failed to get post from firebase');
         else protocol.send('got post from firebase');
+        
         await this.login();
         await this.publish();
-        protocol.end('success', 'task finished');
+        protocol.end('Success', 'task finished');
     }
 
-    async login() {
-        this.nextAction("Logging in..")
-        await this.get( this.twitterUrl + this.loginPage );
-        await this.insert( this.usernameField, this.id );
-        await this.typeEnter( this.passwordField, this.password );
+    private async login() {
+        protocol.send("Logging in..")
+            await this.get( this.twitterUrl + '/login' );
+            await this.insert( 'input[name="session[username_or_email]"]', this.id );
+            await this.typeEnter( 'input[name="session[password]"]', this.password );
       
-        this.nextAction("Checking user log in...")
-        let isLogin = await this.waitDisappear( this.passwordField );
-        (isLogin) ? protocol.send("Login","success")
-                  : protocol.end("Login",'failed')
-    }
-
-    async publish(){
-        //shaping the post
-        let postThis = this.post.title + '\r\n' + lib.textify(this.post.content);
+        protocol.send("Checking user log in...")
+        let isLogin = await this.waitDisappear( 'input[name="session[password]"]' );
         
-        protocol.send("Go to compose tweet page.");
-        await this.get( this.twitterUrl + this.composeTweetPage );
-        
-        protocol.send("Typing Tweet");
-        await this.insert( this.composeTweetArea, postThis );
-        
-        protocol.send("Click tweet button.");
-        await this.click( this.tweetButton );
-        
-        // await this.get( this.twitterUrl + '/' + this.mainTweetPage );
-        protocol.send("Checking if tweet is posted!");
-        //checking for new tweet by first line of text.
-        let arr = postThis.split('\n')
-        let selector = `div:contains('${arr[0].trim()}')`
-        let isTweeted = await this.waitAppear( selector , 5);
-        ( isTweeted) ? protocol.send("tweet",'success tweet found')
-                     : protocol.end("tweet","Tweet not found!");
+        if(!isLogin)this.error("Login")
+        protocol.send("Login",'success')
     
     }
+
+    private async publish(){
+        //shaping the post
+        let content = this.post.title + '\n' + lib.textify(this.post.content);
+        let postThis = content.trim();
+
+        protocol.send("Go to compose tweet page.");
+            await this.get( this.twitterUrl + "/compose/tweet" );
+            let canPost = await this.waitAppear('textArea[placeholder="What\'s happening?"]');
+            if (!canPost)  await this.error('Cant find tweet text area!');
+
+        protocol.send("Compose Tweet");
+            await this.insert( 'textArea[placeholder="What\'s happening?"]', postThis )
+
+        protocol.send("Click tweet button.");
+            await this.click( 'div[data-testid="tweet-button"]' );
+            let isTweeted = await this.waitDisappear( 'textArea[placeholder="What\'s happening?"]', 5 );
+            if ( !isTweeted ) this.error('Composing tweet timeout exceeds!')
+                 protocol.send("Click tweet button",'Out of tweet page.'); 
+        
+        /**
+         * Verify/Check if tweet is successful.
+         */
+        protocol.send('Waiting for articles.')
+            let articleLoaded = await this.waitAppear('div[role="article"]');
+            if ( !articleLoaded ) this.error('Articles not properly loaded');
+                protocol.send('Waiting for articles','Articles Found! Success')
+       
+        protocol.send(`Going to ${this.twitterUrl}/${argv.category}`)
+            await this.get(`${this.twitterUrl}/${argv.category}`);
+            let isProfileLoaded = await this.waitAppear(`div:contains('Edit profile')`);
+            if (!isProfileLoaded) this.error('Profile page not loaded properly.');
+                protocol.send(`Going to ${this.twitterUrl}/${argv.category}`, `success Edit profile button found`)
+
+        //checking for new tweet by first line of text.
+        protocol.send("Verifying Tweet task...");
+            let arr = postThis.split('\n')
+            let selector = `span:contains('${arr[0].trim()}')`   
+            let tweetFound = await this.waitAppear( selector , 5);
+            if(!tweetFound ) this.error("Checking Tweet","Tweet not found!");
+                protocol.send("Checking Tweet",'Tweet found! Success')
+            
+    }
+
+    private async error( message, path = `${__dirname}/../screenshot/twitter.png` ){
+        await this.screenshot( path );
+        protocol.end(`${message} Check screenshot at (${path})`, 'Failed! exit on error().');
+    }
 }
-
-
 
 let options = {
     show: argv.browser === 'true',

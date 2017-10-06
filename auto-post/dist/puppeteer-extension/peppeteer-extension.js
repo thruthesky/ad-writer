@@ -58,6 +58,90 @@ var PuppeteerExtension = (function () {
             });
         });
     };
+    PuppeteerExtension.prototype.insert = function (selector, text) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.page.focus(selector)];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, this.page.type(text)];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    PuppeteerExtension.prototype.waitAppear = function (selectors, timeout) {
+        if (timeout === void 0) { timeout = 30; }
+        return __awaiter(this, void 0, void 0, function () {
+            var $html, maxWaitCount, i, i_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        $html = null;
+                        maxWaitCount = timeout * 1000 / 100;
+                        i = 0;
+                        _a.label = 1;
+                    case 1:
+                        if (!(i < maxWaitCount)) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.page.waitFor(100)];
+                    case 2:
+                        _a.sent();
+                        return [4 /*yield*/, this.html()];
+                    case 3:
+                        $html = _a.sent();
+                        for (i_1 = 0; i_1 < selectors.length; i_1++) {
+                            if ($html.find(selectors[i_1]).length > 0)
+                                return [2 /*return*/, i_1];
+                        }
+                        _a.label = 4;
+                    case 4:
+                        i++;
+                        return [3 /*break*/, 1];
+                    case 5: return [2 /*return*/, -1];
+                }
+            });
+        });
+    };
+    PuppeteerExtension.prototype.waitDisappear = function (selector, timeout) {
+        if (timeout === void 0) { timeout = 30; }
+        return __awaiter(this, void 0, void 0, function () {
+            var $html, maxWaitCount, i;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        $html = null;
+                        maxWaitCount = timeout * 1000 / 100;
+                        i = 0;
+                        _a.label = 1;
+                    case 1:
+                        if (!(i < maxWaitCount)) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.page.waitFor(100)];
+                    case 2:
+                        _a.sent();
+                        return [4 /*yield*/, this.html()];
+                    case 3:
+                        $html = _a.sent();
+                        if ($html.find(selector).length === 0)
+                            return [2 /*return*/, true];
+                        _a.label = 4;
+                    case 4:
+                        i++;
+                        return [3 /*break*/, 1];
+                    case 5: return [2 /*return*/, false];
+                }
+            });
+        });
+    };
+    PuppeteerExtension.prototype.waitUntil = function (options) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/];
+            });
+        });
+    };
     return PuppeteerExtension;
 }());
 exports.PuppeteerExtension = PuppeteerExtension;
