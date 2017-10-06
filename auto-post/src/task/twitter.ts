@@ -40,20 +40,20 @@ class Twitter extends Nightmare{
         protocol.send("Checking user log in...")
         let isLogin = await this.waitDisappear( 'input[name="session[password]"]' );
         
-        if(!isLogin)this.error("Login")
+        if(!isLogin) await this.error("Login")
         protocol.send("Login",'success')
     
     }
 
     private async publish(){
-        //shaping the post
+        // shaping the post
         let content = this.post.title + '\n' + lib.textify(this.post.content);
         let postThis = content.trim();
 
         protocol.send("Go to compose tweet page.");
             await this.get( this.twitterUrl + "/compose/tweet" );
             let canPost = await this.waitAppear('textArea[placeholder="What\'s happening?"]');
-            if (!canPost)  await this.error('Cant find tweet text area!');
+            if (!canPost) await this.error('Cant find tweet text area!');
 
         protocol.send("Compose Tweet");
             await this.insert( 'textArea[placeholder="What\'s happening?"]', postThis )
@@ -61,7 +61,7 @@ class Twitter extends Nightmare{
         protocol.send("Click tweet button.");
             await this.click( 'div[data-testid="tweet-button"]' );
             let isTweeted = await this.waitDisappear( 'textArea[placeholder="What\'s happening?"]', 5 );
-            if ( !isTweeted ) this.error('Composing tweet timeout exceeds!')
+            if ( !isTweeted ) await this.error('Composing tweet timeout exceeds!')
                  protocol.send("Click tweet button",'Out of tweet page.'); 
         
         /**
@@ -69,21 +69,21 @@ class Twitter extends Nightmare{
          */
         protocol.send('Waiting for articles.')
             let articleLoaded = await this.waitAppear('div[role="article"]');
-            if ( !articleLoaded ) this.error('Articles not properly loaded');
+            if ( !articleLoaded ) await this.error('Articles not properly loaded');
                 protocol.send('Waiting for articles','Articles Found! Success')
        
         protocol.send(`Going to ${this.twitterUrl}/${argv.category}`)
             await this.get(`${this.twitterUrl}/${argv.category}`);
             let isProfileLoaded = await this.waitAppear(`div:contains('Edit profile')`);
-            if (!isProfileLoaded) this.error('Profile page not loaded properly.');
+            if ( !isProfileLoaded ) await this.error('Profile page not loaded properly.');
                 protocol.send(`Going to ${this.twitterUrl}/${argv.category}`, `success Edit profile button found`)
 
-        //checking for new tweet by first line of text.
+        // checking for new tweet by first line of text.
         protocol.send("Verifying Tweet task...");
             let arr = postThis.split('\n')
             let selector = `span:contains('${arr[0].trim()}')`   
             let tweetFound = await this.waitAppear( selector , 5);
-            if(!tweetFound ) this.error("Checking Tweet","Tweet not found!");
+            if( !tweetFound ) await this.error("Checking Tweet","Tweet not found!");
                 protocol.send("Checking Tweet",'Tweet found! Success')
             
     }
