@@ -164,12 +164,12 @@ var Facebook = (function (_super) {
                         protocol.send('post', 'Post pending.');
                         return [3, 7];
                     case 5:
-                        arr = postThis.split('\n');
+                        arr = postThis.split("\n");
                         return [4, this.findPost(arr[0].trim())];
                     case 6:
                         isPosted = _a.sent();
                         (isPosted) ? protocol.send('post', 'ok')
-                            : protocol.end("post", 'post not found!');
+                            : protocol.end("post", 'Post has been submitted. Post is not pending. But post not found!');
                         _a.label = 7;
                     case 7: return [2];
                 }
@@ -178,12 +178,15 @@ var Facebook = (function (_super) {
     };
     Facebook.prototype.findPost = function (query) {
         return __awaiter(this, void 0, void 0, function () {
-            var selector, re;
+            var selector, $html, re;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, "span:contains('" + query + "')"];
+                    case 0:
+                        selector = "span:contains('" + query + "')";
+                        console.log('selector: ', selector);
+                        return [4, this.getHtml()];
                     case 1:
-                        selector = _a.sent();
+                        $html = _a.sent();
                         return [4, this.waitAppear(selector)];
                     case 2:
                         re = _a.sent();

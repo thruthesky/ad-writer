@@ -32,7 +32,7 @@ class Facebook extends Nightmare {
         this.firefox();
     }
 
-    
+
     /**
      * entry point of the script - It posts the content and the url of the image that is uploaded to sonub website.
      * 
@@ -66,8 +66,9 @@ class Facebook extends Nightmare {
      * For publishing on facebook.
      */
     private async publish() {
-        //shaping the post
-        let postThis = this.post.title + '\r\n' +lib.textify(this.post.content);
+        
+        // shaping the post
+        let postThis = this.post.title + '\r\n' + lib.textify(this.post.content);
 
         protocol.send('open forum: ' + this.argv.category, 'openning..')
         await this.get(this.serverUrl + '/groups/' + this.argv.category);
@@ -80,16 +81,21 @@ class Facebook extends Nightmare {
             .click(this.postButton);
 
         // check if post is posted or pending
-        let isPending = await this.waitAppear(this.groupPostWarn, 5)
+        let isPending = await this.waitAppear(this.groupPostWarn, 5);
+
 
         if (isPending) {
             protocol.send('post', 'Post pending.')
         }
         else {
+<<<<<<< HEAD
+            let arr = postThis.split("\n");
+=======
             let arr = postThis.split('\n')
+>>>>>>> 6629240ad05420977ac7188fd405bf352a0791df
             let isPosted = await this.findPost( arr[0].trim() );
             (isPosted) ? protocol.send('post', 'ok')
-                : protocol.end("post", 'post not found!');
+                : protocol.end("post", 'Post has been submitted. Post is not pending. But post not found!');
         }
     }
 
@@ -98,7 +104,13 @@ class Facebook extends Nightmare {
      * @param query - string to find 
      */
     private async findPost(query: string) {
+<<<<<<< HEAD
+        let selector = `span:contains('${query}')`; // cannot use for wait()
+        console.log('selector: ', selector);
+        let $html = await this.getHtml();
+=======
         let selector = await `span:contains('${query}')`; // cannot use for wait()
+>>>>>>> 6629240ad05420977ac7188fd405bf352a0791df
         let re = await this.waitAppear(selector);
 
         return await re;

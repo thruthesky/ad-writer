@@ -168,9 +168,9 @@ export class SettingsPage implements OnInit, OnDestroy {
         }
         await this.siteReference.child(this.posting.name).set( this.posting );
         this.posting.name = '';
-        this.posting.site = '';
-        this.posting.id = '';
-        this.posting.password = '';
+        // this.posting.site = '';
+        // this.posting.id = '';
+        // this.posting.password = '';
         this.posting.category = '';
         this.posting.endpoint = '';
     }
