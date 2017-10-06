@@ -93,7 +93,7 @@ class Twitter extends Nightmare{
      * @param message 
      * @param imagePath - where to save the captured image 
      */
-    private async captureError( message, imagePath = path.join(__dirname, '/../screenshot/facebook.png') ){
+    private async captureError( message, imagePath = path.join(__dirname, `/../screenshot/${lib.timeStamp()}-twitter.png`) ){
         await this.screenshot( imagePath );
         protocol.end('failed', `${message} Check screenshot at (${imagePath})`);
     }
