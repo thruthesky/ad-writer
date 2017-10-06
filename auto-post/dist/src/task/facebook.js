@@ -107,32 +107,30 @@ var Facebook = (function (_super) {
                     case 0: return [4, this.get(this.serverUrl)];
                     case 1:
                         $html = _a.sent();
-                        return [4, protocol.send('login', 'logging in...')];
+                        protocol.send('login', 'logging in...');
+                        return [4, this.nextAction('Typing email and password.')];
                     case 2:
                         _a.sent();
-                        return [4, this.nextAction('Typing email and password.')];
+                        return [4, this.insert(this.usernameField, this.id)];
                     case 3:
                         _a.sent();
-                        return [4, this.insert(this.usernameField, this.id)];
+                        return [4, this.insert(this.passwordField, this.password)];
                     case 4:
                         _a.sent();
-                        return [4, this.insert(this.passwordField, this.password)];
+                        return [4, this.nextAction('Press enter to login.')];
                     case 5:
                         _a.sent();
-                        return [4, this.nextAction('Press enter to login.')];
+                        return [4, this.enter(this.passwordField)];
                     case 6:
                         _a.sent();
-                        return [4, this.enter(this.passwordField)];
-                    case 7:
-                        _a.sent();
                         return [4, this.waitDisappear(this.passwordField)];
-                    case 8:
+                    case 7:
                         re = _a.sent();
                         if (!re)
                             protocol.end('login', 'failed');
                         protocol.send('login', 'success');
                         return [4, this.wait('body')];
-                    case 9:
+                    case 8:
                         _a.sent();
                         return [2];
                 }
@@ -141,7 +139,7 @@ var Facebook = (function (_super) {
     };
     Facebook.prototype.publish = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var postThis, isPending, isPosted;
+            var postThis, isPending, arr, isPosted;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -165,7 +163,9 @@ var Facebook = (function (_super) {
                         if (!isPending) return [3, 5];
                         protocol.send('post', 'Post pending.');
                         return [3, 7];
-                    case 5: return [4, this.findPost(postThis)];
+                    case 5:
+                        arr = postThis.split('\n');
+                        return [4, this.findPost(arr[0].trim())];
                     case 6:
                         isPosted = _a.sent();
                         (isPosted) ? protocol.send('post', 'ok')
@@ -178,20 +178,17 @@ var Facebook = (function (_super) {
     };
     Facebook.prototype.findPost = function (query) {
         return __awaiter(this, void 0, void 0, function () {
-            var selector, $html, re;
+            var selector, re;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4, "span:contains('" + query + "')"];
                     case 1:
                         selector = _a.sent();
-                        return [4, this.getHtml()];
-                    case 2:
-                        $html = _a.sent();
                         return [4, this.waitAppear(selector)];
-                    case 3:
+                    case 2:
                         re = _a.sent();
                         return [4, re];
-                    case 4: return [2, _a.sent()];
+                    case 3: return [2, _a.sent()];
                 }
             });
         });
