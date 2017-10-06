@@ -44,7 +44,7 @@ class Facebook extends Nightmare {
         else protocol.send('got post from firebase');
         await this.login();
         await this.publish();
-        protocol.end('success', 'success');
+        protocol.end('success');
 
     }
 
@@ -88,11 +88,7 @@ class Facebook extends Nightmare {
             protocol.send('post', 'Post pending.')
         }
         else {
-<<<<<<< HEAD
-            let arr = postThis.split("\n");
-=======
             let arr = postThis.split('\n')
->>>>>>> 6629240ad05420977ac7188fd405bf352a0791df
             let isPosted = await this.findPost( arr[0].trim() );
             (isPosted) ? protocol.send('post', 'ok')
                 : protocol.end("post", 'Post has been submitted. Post is not pending. But post not found!');
@@ -104,13 +100,7 @@ class Facebook extends Nightmare {
      * @param query - string to find 
      */
     private async findPost(query: string) {
-<<<<<<< HEAD
-        let selector = `span:contains('${query}')`; // cannot use for wait()
-        console.log('selector: ', selector);
-        let $html = await this.getHtml();
-=======
         let selector = await `span:contains('${query}')`; // cannot use for wait()
->>>>>>> 6629240ad05420977ac7188fd405bf352a0791df
         let re = await this.waitAppear(selector);
 
         return await re;
