@@ -49,6 +49,7 @@ var nightmare_1 = require("./../../nightmare/nightmare");
 var argv = require('yargs').string('category').argv;
 var protocol = require("./../protocol");
 var lib = require("../auto-post-library");
+var path = require("path");
 var firebase_1 = require("../firebase");
 if (argv.pid === void 0) {
     console.log('no pid');
@@ -207,15 +208,15 @@ var Twitter = (function (_super) {
             });
         });
     };
-    Twitter.prototype.captureError = function (message, path) {
-        if (path === void 0) { path = __dirname + "/../screenshot/twitter.png"; }
+    Twitter.prototype.captureError = function (message, imagePath) {
+        if (imagePath === void 0) { imagePath = path.join(__dirname, '/../screenshot/facebook.png'); }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.screenshot(path)];
+                    case 0: return [4, this.screenshot(imagePath)];
                     case 1:
                         _a.sent();
-                        protocol.end(message + " Check screenshot at (" + path + ")", 'Failed! exit on captureError().');
+                        protocol.end('failed', message + " Check screenshot at (" + imagePath + ")");
                         return [2];
                 }
             });
