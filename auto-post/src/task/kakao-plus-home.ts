@@ -14,7 +14,7 @@ class KakaoPlus extends PuppeteerExtension {
         const page = await browser.newPage();
         this.set( browser, page );
 
-        await this.page.goto('https://www.philgo.com');
+        await this.page.goto('https://www.philgo.com/');
         await this.getTitle();
         await this.getHtmlTitle();
 

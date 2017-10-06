@@ -129,12 +129,11 @@ var Twitter = (function (_super) {
     };
     Twitter.prototype.publish = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var postThis, selector, isTweeted;
+            var postThis, arr, selector, isTweeted;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         postThis = this.post.title + '\r\n' + lib.textify(this.post.content);
-                        selector = "div:contains('" + postThis + "')";
                         protocol.send("Go to compose tweet page.");
                         return [4 /*yield*/, this.get(this.twitterUrl + this.composeTweetPage)];
                     case 1:
@@ -148,6 +147,8 @@ var Twitter = (function (_super) {
                     case 3:
                         _a.sent();
                         protocol.send("Checking if tweet is posted!");
+                        arr = postThis.split('\n');
+                        selector = "div:contains('" + arr[0].trim() + "')";
                         return [4 /*yield*/, this.waitAppear(selector, 5)];
                     case 4:
                         isTweeted = _a.sent();

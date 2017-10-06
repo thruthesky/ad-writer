@@ -107,32 +107,30 @@ var Facebook = (function (_super) {
                     case 0: return [4 /*yield*/, this.get(this.serverUrl)];
                     case 1:
                         $html = _a.sent();
-                        return [4 /*yield*/, protocol.send('login', 'logging in...')];
+                        protocol.send('login', 'logging in...');
+                        return [4 /*yield*/, this.nextAction('Typing email and password.')];
                     case 2:
                         _a.sent();
-                        return [4 /*yield*/, this.nextAction('Typing email and password.')];
+                        return [4 /*yield*/, this.insert(this.usernameField, this.id)];
                     case 3:
                         _a.sent();
-                        return [4 /*yield*/, this.insert(this.usernameField, this.id)];
+                        return [4 /*yield*/, this.insert(this.passwordField, this.password)];
                     case 4:
                         _a.sent();
-                        return [4 /*yield*/, this.insert(this.passwordField, this.password)];
+                        return [4 /*yield*/, this.nextAction('Press enter to login.')];
                     case 5:
                         _a.sent();
-                        return [4 /*yield*/, this.nextAction('Press enter to login.')];
+                        return [4 /*yield*/, this.enter(this.passwordField)];
                     case 6:
                         _a.sent();
-                        return [4 /*yield*/, this.enter(this.passwordField)];
-                    case 7:
-                        _a.sent();
                         return [4 /*yield*/, this.waitDisappear(this.passwordField)];
-                    case 8:
+                    case 7:
                         re = _a.sent();
                         if (!re)
                             protocol.end('login', 'failed');
                         protocol.send('login', 'success');
                         return [4 /*yield*/, this.wait('body')];
-                    case 9:
+                    case 8:
                         _a.sent();
                         return [2 /*return*/];
                 }

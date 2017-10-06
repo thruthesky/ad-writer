@@ -66,7 +66,7 @@ var KakaoPlus = (function (_super) {
                     case 2:
                         page = _a.sent();
                         this.set(browser, page);
-                        return [4 /*yield*/, this.page.goto('https://www.philgo.com')];
+                        return [4 /*yield*/, this.page.goto('https://www.philgo.com/')];
                     case 3:
                         _a.sent();
                         return [4 /*yield*/, this.getTitle()];
