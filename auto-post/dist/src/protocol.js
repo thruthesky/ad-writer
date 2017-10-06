@@ -16,4 +16,8 @@ function end(code, msg) {
     process.exit(0);
 }
 exports.end = end;
+function success() {
+    end('success');
+}
+exports.success = success;
 //# sourceMappingURL=protocol.js.map

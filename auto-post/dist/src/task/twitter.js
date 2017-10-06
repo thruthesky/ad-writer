@@ -113,8 +113,12 @@ var Twitter = (function (_super) {
                         return [4, this.waitDisappear('input[name="session[password]"]')];
                     case 4:
                         isLogin = _a.sent();
-                        if (!isLogin)
-                            this.error("Login");
+                        if (!!isLogin) return [3, 6];
+                        return [4, this.captureError("Login")];
+                    case 5:
+                        _a.sent();
+                        _a.label = 6;
+                    case 6:
                         protocol.send("Login", 'success');
                         return [2];
                 }
@@ -137,7 +141,7 @@ var Twitter = (function (_super) {
                     case 2:
                         canPost = _a.sent();
                         if (!!canPost) return [3, 4];
-                        return [4, this.error('Cant find tweet text area!')];
+                        return [4, this.captureError('Cant find tweet text area!')];
                     case 3:
                         _a.sent();
                         _a.label = 4;
@@ -153,41 +157,57 @@ var Twitter = (function (_super) {
                         return [4, this.waitDisappear('textArea[placeholder="What\'s happening?"]', 5)];
                     case 7:
                         isTweeted = _a.sent();
-                        if (!isTweeted)
-                            this.error('Composing tweet timeout exceeds!');
+                        if (!!isTweeted) return [3, 9];
+                        return [4, this.captureError('Composing tweet timeout exceeds!')];
+                    case 8:
+                        _a.sent();
+                        _a.label = 9;
+                    case 9:
                         protocol.send("Click tweet button", 'Out of tweet page.');
                         protocol.send('Waiting for articles.');
                         return [4, this.waitAppear('div[role="article"]')];
-                    case 8:
+                    case 10:
                         articleLoaded = _a.sent();
-                        if (!articleLoaded)
-                            this.error('Articles not properly loaded');
+                        if (!!articleLoaded) return [3, 12];
+                        return [4, this.captureError('Articles not properly loaded')];
+                    case 11:
+                        _a.sent();
+                        _a.label = 12;
+                    case 12:
                         protocol.send('Waiting for articles', 'Articles Found! Success');
                         protocol.send("Going to " + this.twitterUrl + "/" + argv.category);
                         return [4, this.get(this.twitterUrl + "/" + argv.category)];
-                    case 9:
+                    case 13:
                         _a.sent();
                         return [4, this.waitAppear("div:contains('Edit profile')")];
-                    case 10:
+                    case 14:
                         isProfileLoaded = _a.sent();
-                        if (!isProfileLoaded)
-                            this.error('Profile page not loaded properly.');
+                        if (!!isProfileLoaded) return [3, 16];
+                        return [4, this.captureError('Profile page not loaded properly.')];
+                    case 15:
+                        _a.sent();
+                        _a.label = 16;
+                    case 16:
                         protocol.send("Going to " + this.twitterUrl + "/" + argv.category, "success Edit profile button found");
                         protocol.send("Verifying Tweet task...");
                         arr = postThis.split('\n');
                         selector = "span:contains('" + arr[0].trim() + "')";
                         return [4, this.waitAppear(selector, 5)];
-                    case 11:
+                    case 17:
                         tweetFound = _a.sent();
-                        if (!tweetFound)
-                            this.error("Checking Tweet", "Tweet not found!");
+                        if (!!tweetFound) return [3, 19];
+                        return [4, this.captureError("Checking Tweet", "Tweet not found!")];
+                    case 18:
+                        _a.sent();
+                        _a.label = 19;
+                    case 19:
                         protocol.send("Checking Tweet", 'Tweet found! Success');
                         return [2];
                 }
             });
         });
     };
-    Twitter.prototype.error = function (message, path) {
+    Twitter.prototype.captureError = function (message, path) {
         if (path === void 0) { path = __dirname + "/../screenshot/twitter.png"; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -195,7 +215,7 @@ var Twitter = (function (_super) {
                     case 0: return [4, this.screenshot(path)];
                     case 1:
                         _a.sent();
-                        protocol.end(message + " Check screenshot at (" + path + ")", 'Failed! exit on error().');
+                        protocol.end(message + " Check screenshot at (" + path + ")", 'Failed! exit on captureError().');
                         return [2];
                 }
             });

@@ -14,3 +14,7 @@ export function end(code, msg = '') {
     send( code, msg );
     process.exit(0);
 }
+
+export function success(){
+    end('success')
+}

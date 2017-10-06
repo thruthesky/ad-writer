@@ -1,10 +1,10 @@
 import { async } from '@angular/core/testing';
 import { MyNightmare as Nightmare } from './../../nightmare/nightmare';
-const argv = require('yargs').argv;
+import * as path from 'path'
 import * as protocol from './../protocol';
 import * as lib from './../auto-post-library';
-
 import { getPost } from '../firebase';
+const argv = require('yargs').argv;
 
 if (argv.pid === void 0) { console.log('no pid'); process.exit(1); }
 protocol.set(argv.pid);
@@ -18,15 +18,7 @@ class Facebook extends Nightmare {
 
     private id = this.argv.id;
     private password = this.argv.password;
-
-    // m.facebook.com elements
-    private loginButton = 'input[name="login"]';
-    private usernameField = 'input[name="email"]';
-    private passwordField = 'input[name="pass"]';
-    private postTextArea = 'textarea[name="xc_message"]';
-    private postButton = 'input[name="view_post"]';
-    private groupPostWarn = `a:contains('${"1 post requiring approval"}')`;
-
+    
     constructor(defaultOptions) {
         super(defaultOptions);
         this.firefox();
@@ -42,57 +34,63 @@ class Facebook extends Nightmare {
         this.post = await getPost(argv.user, argv.key);
         if (this.post === null) protocol.end('fail', 'failed to get post from firebase');
         else protocol.send('got post from firebase');
+        
         await this.login();
         await this.publish();
-        protocol.end('success', 'success');
+        
+        protocol.success();
 
     }
 
     private async login() {
         let $html = await this.get(this.serverUrl);
         protocol.send('login', 'logging in...')
-        await this.nextAction('Typing email and password.');
-        await this.insert(this.usernameField, this.id);
-        await this.insert(this.passwordField, this.password);
-        await this.nextAction('Press enter to login.');
-        await this.enter(this.passwordField);
+        await this.insert('input[name="email"]', this.id);
+        await this.insert('input[name="pass"]', this.password);
+        await this.enter('input[name="pass"]');
 
-        let re = await this.waitDisappear(this.passwordField);
-        if (!re) protocol.end('login', 'failed');
+        let re = await this.waitDisappear('input[name="pass"]', 5);
+        if (!re) this.captureError('Still in login page after timeout!.',);
+        
+        await this.get( this.serverUrl );
+
+        let isLogin = await this.waitAppear(`a:contains('Logout')`, 5);
+        if(!isLogin) await this.captureError('Failed login.')
         protocol.send('login', 'success');
-        await this.wait('body');
     }
     /**
      * For publishing on facebook.
      */
-    private async publish() {
-        
+    private async publish() { 
         // shaping the post
-        let postThis = this.post.title + '\r\n' + lib.textify(this.post.content);
+        let content = this.post.title + '\n' + lib.textify(this.post.content);
+        let postThis = content.trim();
 
-        protocol.send('open forum: ' + this.argv.category, 'openning..')
-        await this.get(this.serverUrl + '/groups/' + this.argv.category);
+        protocol.send('Opening Group: ', argv.category );
+            await this.get(this.serverUrl + '/groups/' + this.argv.category);
 
-        protocol.send('checking post text area')
-        await this.waitAppear(this.postTextArea);
+            let isGroupOpen = await this.waitAppear('a[name=groupMenuBottom]', 5);
+            if ( !isGroupOpen ) await this.captureError('captureError on opening group page.');
+                protocol.send('Opening :' + argv.category , 'success!')
+
+        protocol.send('checking post text area');
+            let canPost = await this.waitAppear('textarea[name="xc_message"]');
+            if ( !canPost ) await this.captureError('Cant find textarea to post.');
+                protocol.send('checking post text area','text area found!')
 
         protocol.send('Typing the post: ', 'typing..');
-        await this.insert(this.postTextArea, postThis)
-            .click(this.postButton);
+            await this.insert('textarea[name="xc_message"]', postThis);
+            await this.click('input[name="view_post"]');
 
-        // check if post is posted or pending
-        let isPending = await this.waitAppear(this.groupPostWarn, 5);
-
-
-        if (isPending) {
-            protocol.send('post', 'Post pending.')
-        }
-        else {
-            let arr = postThis.split('\n')
-            let isPosted = await this.findPost( arr[0].trim() );
-            (isPosted) ? protocol.send('post', 'ok')
-                : protocol.end("post", 'Post has been submitted. Post is not pending. But post not found!');
-        }
+        // Verify post if posted.
+        // pending?
+        protocol.send('Verify post if posted')    
+            let isPending = await this.waitAppear(`a:contains('1 post requiring approval')`, 5);
+            if (isPending) protocol.end('post', 'Post pending.'); //or delete old and post another.
+            // posted?
+            let isPosted = await this.findPost( postThis );
+                if(!isPosted) await this.captureError('Post not found.');
+                    protocol.send('Posting', 'success');
     }
 
     /**
@@ -100,10 +98,20 @@ class Facebook extends Nightmare {
      * @param query - string to find 
      */
     private async findPost(query: string) {
-        let selector = await `span:contains('${query}')`; // cannot use for wait()
+        let arr = query.trim().split('\n')
+        let selector = `span:contains('${arr[0].trim()}')`; // cannot use for wait()
         let re = await this.waitAppear(selector);
 
-        return await re;
+        return re;
+    }
+    /**
+     * It captures the current screen state and fires 'protocol.end()' closing the script.
+     * @param message 
+     * @param imagePath - where to save the captured image 
+     */
+    private async captureError( message, imagePath = path.join(__dirname, '/../screenshot/facebook.png') ){
+        await this.screenshot( imagePath );
+        protocol.end('failed', `${message} Check screenshot at (${imagePath})`);
     }
 
 }
