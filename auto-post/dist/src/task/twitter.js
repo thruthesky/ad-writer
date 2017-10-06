@@ -88,7 +88,7 @@ var Twitter = (function (_super) {
                         return [4, this.publish()];
                     case 3:
                         _b.sent();
-                        protocol.end('Success', 'task finished');
+                        protocol.success();
                         return [2];
                 }
             });
@@ -202,7 +202,7 @@ var Twitter = (function (_super) {
                         _a.sent();
                         _a.label = 19;
                     case 19:
-                        protocol.send("Checking Tweet", 'Tweet found! Success');
+                        protocol.send("Checking Tweet", 'Tweet found!');
                         return [2];
                 }
             });
@@ -216,7 +216,7 @@ var Twitter = (function (_super) {
                     case 0: return [4, this.screenshot(imagePath)];
                     case 1:
                         _a.sent();
-                        protocol.end('failed', message + " Check screenshot at (" + imagePath + ")");
+                        protocol.end('fail', message + " Check screenshot at (" + imagePath + ")");
                         return [2];
                 }
             });

@@ -92,6 +92,7 @@ var Blogger = (function (_super) {
                         return [4, this.checkBlog()];
                     case 4:
                         _b.sent();
+                        protocol.success();
                         return [2];
                 }
             });
@@ -240,7 +241,7 @@ var Blogger = (function (_super) {
                     case 0: return [4, this.screenshot(imagePath)];
                     case 1:
                         _a.sent();
-                        protocol.end('failed', message + " Check screenshot at (" + imagePath + ")");
+                        protocol.end('fail', message + " Check screenshot at (" + imagePath + ")");
                         return [2];
                 }
             });
