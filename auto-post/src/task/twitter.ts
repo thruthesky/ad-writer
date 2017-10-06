@@ -29,7 +29,7 @@ class Twitter extends Nightmare{
         
         await this.login();
         await this.publish();
-        protocol.end('Success', 'task finished');
+        protocol.success();
     }
 
     private async login() {
@@ -85,7 +85,7 @@ class Twitter extends Nightmare{
             let selector = `span:contains('${arr[0].trim()}')`   
             let tweetFound = await this.waitAppear( selector , 5);
             if( !tweetFound ) await this.captureError("Checking Tweet","Tweet not found!");
-                protocol.send("Checking Tweet",'Tweet found! Success')
+                protocol.send("Checking Tweet",'Tweet found!');
             
     }
     /**
@@ -95,7 +95,7 @@ class Twitter extends Nightmare{
      */
     private async captureError( message, imagePath = path.join(__dirname, `/../screenshot/${lib.timeStamp()}-twitter.png`) ){
         await this.screenshot( imagePath );
-        protocol.end('failed', `${message} Check screenshot at (${imagePath})`);
+        protocol.end('fail', `${message} Check screenshot at (${imagePath})`);
     }
 }
 

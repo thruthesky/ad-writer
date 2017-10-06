@@ -32,7 +32,7 @@ class Blogger extends Nightmare{
         await this.publish();
         await this.checkBlog();
 
-        // protocol.end('task done.')
+        protocol.success();
     }
     /**
      * 
@@ -115,7 +115,7 @@ class Blogger extends Nightmare{
      */
     private async captureError( message, imagePath = path.join(__dirname, `/../screenshot/${lib.timeStamp()}-blogger.png`) ){
         await this.screenshot( imagePath );
-        protocol.end('failed', `${message} Check screenshot at (${imagePath})`);
+        protocol.end('fail', `${message} Check screenshot at (${imagePath})`);
     }
 
 }

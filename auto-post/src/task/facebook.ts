@@ -108,7 +108,7 @@ class Facebook extends Nightmare {
      */
     private async captureError( message, imagePath = path.join(__dirname, `/../screenshot/${lib.timeStamp()}-facebook.png`) ){
         await this.screenshot( imagePath );
-        protocol.end('failed', `${message} Check screenshot at (${imagePath})`);
+        protocol.end('fail', `${message} Check screenshot at (${imagePath})`);
     }
 
 }
