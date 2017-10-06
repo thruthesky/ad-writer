@@ -213,7 +213,7 @@ var Facebook = (function (_super) {
         });
     };
     Facebook.prototype.captureError = function (message, imagePath) {
-        if (imagePath === void 0) { imagePath = path.join(__dirname, '/../screenshot/facebook.png'); }
+        if (imagePath === void 0) { imagePath = path.join(__dirname, "/../screenshot/" + lib.timeStamp() + "-facebook.png"); }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {

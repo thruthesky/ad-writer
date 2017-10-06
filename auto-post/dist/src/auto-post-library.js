@@ -27,4 +27,9 @@ function textify(html) {
     return re;
 }
 exports.textify = textify;
+function timeStamp() {
+    var date = new Date;
+    return [date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()].join('-');
+}
+exports.timeStamp = timeStamp;
 //# sourceMappingURL=auto-post-library.js.map
