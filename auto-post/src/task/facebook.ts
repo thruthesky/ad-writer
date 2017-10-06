@@ -4,26 +4,24 @@ import * as path from 'path'
 import * as protocol from './../protocol';
 import * as lib from './../auto-post-library';
 import { getPost } from '../firebase';
-const argv = require('yargs').argv;
+const argv = require('yargs').string('category').argv;
 
 if (argv.pid === void 0) { console.log('no pid'); process.exit(1); }
 protocol.set(argv.pid);
 protocol.send('begin', (new Date).toLocaleTimeString());
-
 
 class Facebook extends Nightmare {
 
     private serverUrl = 'https://m.facebook.com'
     private post = null;
 
-    private id = this.argv.id;
-    private password = this.argv.password;
+    private id = argv.id;
+    private password = argv.password;
     
     constructor(defaultOptions) {
         super(defaultOptions);
         this.firefox();
     }
-
 
     /**
      * entry point of the script - It posts the content and the url of the image that is uploaded to sonub website.
@@ -39,7 +37,6 @@ class Facebook extends Nightmare {
         await this.publish();
         
         protocol.success();
-
     }
 
     private async login() {
@@ -90,7 +87,7 @@ class Facebook extends Nightmare {
             // posted?
             let isPosted = await this.findPost( postThis );
                 if(!isPosted) await this.captureError('Post not found.');
-                    protocol.send('Posting', 'success');
+                protocol.send('Posting', 'success');
     }
 
     /**
@@ -121,5 +118,4 @@ let options = {
     x: 1408, y: 0, width: 360, height: 700,
     openDevTools: { mode: '' },
 };
-
 (new Facebook(options)).main();

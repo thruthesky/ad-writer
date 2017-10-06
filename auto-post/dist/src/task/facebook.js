@@ -50,7 +50,7 @@ var path = require("path");
 var protocol = require("./../protocol");
 var lib = require("./../auto-post-library");
 var firebase_1 = require("../firebase");
-var argv = require('yargs').argv;
+var argv = require('yargs').string('category').argv;
 if (argv.pid === void 0) {
     console.log('no pid');
     process.exit(1);
@@ -63,8 +63,8 @@ var Facebook = (function (_super) {
         var _this = _super.call(this, defaultOptions) || this;
         _this.serverUrl = 'https://m.facebook.com';
         _this.post = null;
-        _this.id = _this.argv.id;
-        _this.password = _this.argv.password;
+        _this.id = argv.id;
+        _this.password = argv.password;
         _this.firefox();
         return _this;
     }
