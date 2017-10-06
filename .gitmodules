@@ -4,3 +4,6 @@
 [submodule "auto-post/nightmare"]
 	path = auto-post/nightmare
 	url = https://github.com/thruthesky/nightmare
+[submodule "auto-post/puppeteer-extension"]
+	path = auto-post/puppeteer-extension
+	url = https://github.com/thruthesky/puppeteer-extension

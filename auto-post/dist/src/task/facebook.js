@@ -141,7 +141,7 @@ var Facebook = (function (_super) {
     };
     Facebook.prototype.publish = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var postThis, isPending, isPosted;
+            var postThis, isPending, arr, isPosted;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -165,11 +165,13 @@ var Facebook = (function (_super) {
                         if (!isPending) return [3 /*break*/, 5];
                         protocol.send('post', 'Post pending.');
                         return [3 /*break*/, 7];
-                    case 5: return [4 /*yield*/, this.findPost(postThis)];
+                    case 5:
+                        arr = postThis.split("\n");
+                        return [4 /*yield*/, this.findPost(arr[0].trim())];
                     case 6:
                         isPosted = _a.sent();
                         (isPosted) ? protocol.send('post', 'ok')
-                            : protocol.end("post", 'post not found!');
+                            : protocol.end("post", 'Post has been submitted. Post is not pending. But post not found!');
                         _a.label = 7;
                     case 7: return [2 /*return*/];
                 }
@@ -181,17 +183,17 @@ var Facebook = (function (_super) {
             var selector, $html, re;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, "span:contains('" + query + "')"];
-                    case 1:
-                        selector = _a.sent();
+                    case 0:
+                        selector = "span:contains('" + query + "')";
+                        console.log('selector: ', selector);
                         return [4 /*yield*/, this.getHtml()];
-                    case 2:
+                    case 1:
                         $html = _a.sent();
                         return [4 /*yield*/, this.waitAppear(selector)];
-                    case 3:
+                    case 2:
                         re = _a.sent();
                         return [4 /*yield*/, re];
-                    case 4: return [2 /*return*/, _a.sent()];
+                    case 3: return [2 /*return*/, _a.sent()];
                 }
             });
         });

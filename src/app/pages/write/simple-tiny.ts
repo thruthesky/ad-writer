@@ -23,6 +23,7 @@ export class SimpleTinyComponent implements AfterViewInit, OnDestroy {
             plugins: ['link', 'paste', 'table', 'textcolor'],
             toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent link paste forecolor backcolor",
             skin_url: 'assets/skins/lightgray',
+            height: 500,
             setup: editor => {
                 this.editor = editor;
                 // editor.on('keyup', () => {
