@@ -23,18 +23,18 @@ export function textify(html: string): string {
 
 
 
-    re = $html.text(); 
+    re = $html.text();
 
 
     const $a = $html.find('a');
     let aDone = [];
-    if ( $a.length ) {
-        $a.each( (i, e) => {
+    if ($a.length) {
+        $a.each((i, e) => {
             const txt = $(e).text();
-            if ( aDone.indexOf( txt ) !== -1 ) return;
+            if (aDone.indexOf(txt) !== -1) return;
             const url = $(e).prop('href');
-            re = re.split(txt).join( `${txt} (${url}) `);
-            aDone.push( txt );
+            re = re.split(txt).join(`${txt} (${url}) `);
+            aDone.push(txt);
         });
     }
 
@@ -42,5 +42,10 @@ export function textify(html: string): string {
 
     return re;
 }
-
-
+/**
+ * Returns time in year, month, date, hour, minutes, seconds(2017-10-6-17-24-58)
+ */
+export function timeStamp() {
+    let date = new Date;
+    return [date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()].join('-');
+}

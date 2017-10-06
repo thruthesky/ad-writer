@@ -46,10 +46,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var nightmare_1 = require("./../../nightmare/nightmare");
-var argv = require('yargs').argv;
+var path = require("path");
 var protocol = require("./../protocol");
 var lib = require("./../auto-post-library");
 var firebase_1 = require("../firebase");
+var argv = require('yargs').string('category').argv;
 if (argv.pid === void 0) {
     console.log('no pid');
     process.exit(1);
@@ -62,14 +63,8 @@ var Facebook = (function (_super) {
         var _this = _super.call(this, defaultOptions) || this;
         _this.serverUrl = 'https://m.facebook.com';
         _this.post = null;
-        _this.id = _this.argv.id;
-        _this.password = _this.argv.password;
-        _this.loginButton = 'input[name="login"]';
-        _this.usernameField = 'input[name="email"]';
-        _this.passwordField = 'input[name="pass"]';
-        _this.postTextArea = 'textarea[name="xc_message"]';
-        _this.postButton = 'input[name="view_post"]';
-        _this.groupPostWarn = "a:contains('" + "1 post requiring approval" + "')";
+        _this.id = argv.id;
+        _this.password = argv.password;
         _this.firefox();
         return _this;
     }
@@ -93,7 +88,7 @@ var Facebook = (function (_super) {
                         return [4 /*yield*/, this.publish()];
                     case 3:
                         _b.sent();
-                        protocol.end('success');
+                        protocol.success();
                         return [2 /*return*/];
                 }
             });
@@ -101,37 +96,40 @@ var Facebook = (function (_super) {
     };
     Facebook.prototype.login = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var $html, re;
+            var $html, re, isLogin;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.get(this.serverUrl)];
                     case 1:
                         $html = _a.sent();
                         protocol.send('login', 'logging in...');
-                        return [4 /*yield*/, this.nextAction('Typing email and password.')];
+                        return [4 /*yield*/, this.insert('input[name="email"]', this.id)];
                     case 2:
                         _a.sent();
-                        return [4 /*yield*/, this.insert(this.usernameField, this.id)];
+                        return [4 /*yield*/, this.insert('input[name="pass"]', this.password)];
                     case 3:
                         _a.sent();
-                        return [4 /*yield*/, this.insert(this.passwordField, this.password)];
+                        return [4 /*yield*/, this.enter('input[name="pass"]')];
                     case 4:
                         _a.sent();
-                        return [4 /*yield*/, this.nextAction('Press enter to login.')];
+                        return [4 /*yield*/, this.waitDisappear('input[name="pass"]', 5)];
                     case 5:
-                        _a.sent();
-                        return [4 /*yield*/, this.enter(this.passwordField)];
-                    case 6:
-                        _a.sent();
-                        return [4 /*yield*/, this.waitDisappear(this.passwordField)];
-                    case 7:
                         re = _a.sent();
                         if (!re)
-                            protocol.end('login', 'failed');
-                        protocol.send('login', 'success');
-                        return [4 /*yield*/, this.wait('body')];
+                            this.captureError('Still in login page after timeout!.');
+                        return [4 /*yield*/, this.get(this.serverUrl)];
+                    case 6:
+                        _a.sent();
+                        return [4 /*yield*/, this.waitAppear("a:contains('Logout')", 5)];
+                    case 7:
+                        isLogin = _a.sent();
+                        if (!!isLogin) return [3 /*break*/, 9];
+                        return [4 /*yield*/, this.captureError('Failed login.')];
                     case 8:
                         _a.sent();
+                        _a.label = 9;
+                    case 9:
+                        protocol.send('login', 'success');
                         return [2 /*return*/];
                 }
             });
@@ -139,56 +137,91 @@ var Facebook = (function (_super) {
     };
     Facebook.prototype.publish = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var postThis, isPending, arr, isPosted;
+            var content, postThis, isGroupOpen, canPost, isPending, isPosted;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        postThis = this.post.title + '\r\n' + lib.textify(this.post.content);
-                        protocol.send('open forum: ' + this.argv.category, 'openning..');
+                        content = this.post.title + '\n' + lib.textify(this.post.content);
+                        postThis = content.trim();
+                        protocol.send('Opening Group: ', argv.category);
                         return [4 /*yield*/, this.get(this.serverUrl + '/groups/' + this.argv.category)];
                     case 1:
                         _a.sent();
-                        protocol.send('checking post text area');
-                        return [4 /*yield*/, this.waitAppear(this.postTextArea)];
+                        return [4 /*yield*/, this.waitAppear('a[name=groupMenuBottom]', 5)];
                     case 2:
-                        _a.sent();
-                        protocol.send('Typing the post: ', 'typing..');
-                        return [4 /*yield*/, this.insert(this.postTextArea, postThis)
-                                .click(this.postButton)];
+                        isGroupOpen = _a.sent();
+                        if (!!isGroupOpen) return [3 /*break*/, 4];
+                        return [4 /*yield*/, this.captureError('captureError on opening group page.')];
                     case 3:
                         _a.sent();
-                        return [4 /*yield*/, this.waitAppear(this.groupPostWarn, 5)];
+                        _a.label = 4;
                     case 4:
-                        isPending = _a.sent();
-                        if (!isPending) return [3 /*break*/, 5];
-                        protocol.send('post', 'Post pending.');
-                        return [3 /*break*/, 7];
+                        protocol.send('Opening :' + argv.category, 'success!');
+                        protocol.send('checking post text area');
+                        return [4 /*yield*/, this.waitAppear('textarea[name="xc_message"]')];
                     case 5:
-                        arr = postThis.split('\n');
-                        return [4 /*yield*/, this.findPost(arr[0].trim())];
+                        canPost = _a.sent();
+                        if (!!canPost) return [3 /*break*/, 7];
+                        return [4 /*yield*/, this.captureError('Cant find textarea to post.')];
                     case 6:
-                        isPosted = _a.sent();
-                        (isPosted) ? protocol.send('post', 'ok')
-                            : protocol.end("post", 'Post has been submitted. Post is not pending. But post not found!');
+                        _a.sent();
                         _a.label = 7;
-                    case 7: return [2 /*return*/];
+                    case 7:
+                        protocol.send('checking post text area', 'text area found!');
+                        protocol.send('Typing the post: ', 'typing..');
+                        return [4 /*yield*/, this.insert('textarea[name="xc_message"]', postThis)];
+                    case 8:
+                        _a.sent();
+                        return [4 /*yield*/, this.click('input[name="view_post"]')];
+                    case 9:
+                        _a.sent();
+                        protocol.send('Verify post if posted');
+                        return [4 /*yield*/, this.waitAppear("a:contains('1 post requiring approval')", 5)];
+                    case 10:
+                        isPending = _a.sent();
+                        if (isPending)
+                            protocol.end('post', 'Post pending.');
+                        return [4 /*yield*/, this.findPost(postThis)];
+                    case 11:
+                        isPosted = _a.sent();
+                        if (!!isPosted) return [3 /*break*/, 13];
+                        return [4 /*yield*/, this.captureError('Post not found.')];
+                    case 12:
+                        _a.sent();
+                        _a.label = 13;
+                    case 13:
+                        protocol.send('Posting', 'success');
+                        return [2 /*return*/];
                 }
             });
         });
     };
     Facebook.prototype.findPost = function (query) {
         return __awaiter(this, void 0, void 0, function () {
-            var selector, re;
+            var arr, selector, re;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, "span:contains('" + query + "')"];
-                    case 1:
-                        selector = _a.sent();
+                    case 0:
+                        arr = query.trim().split('\n');
+                        selector = "span:contains('" + arr[0].trim() + "')";
                         return [4 /*yield*/, this.waitAppear(selector)];
-                    case 2:
+                    case 1:
                         re = _a.sent();
-                        return [4 /*yield*/, re];
-                    case 3: return [2 /*return*/, _a.sent()];
+                        return [2 /*return*/, re];
+                }
+            });
+        });
+    };
+    Facebook.prototype.captureError = function (message, imagePath) {
+        if (imagePath === void 0) { imagePath = path.join(__dirname, "/../screenshot/" + lib.timeStamp() + "-facebook.png"); }
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.screenshot(imagePath)];
+                    case 1:
+                        _a.sent();
+                        protocol.end('fail', message + " Check screenshot at (" + imagePath + ")");
+                        return [2 /*return*/];
                 }
             });
         });

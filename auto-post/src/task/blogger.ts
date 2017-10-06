@@ -2,7 +2,8 @@ import { MyNightmare as Nightmare } from './../../nightmare/nightmare';
 const argv = require('yargs').string('category').argv;
 const $ = require('cheerio')
 import * as protocol from './../protocol';
-import * as lib from '../auto-post-library'
+import * as lib from '../auto-post-library';
+import * as path from 'path';
 import { getPost } from '../firebase';
 declare var document;
 
@@ -29,72 +30,99 @@ class Blogger extends Nightmare {
 
         await this.login();
         await this.publish();
-        await this.checkBlog(this.post.title);
+        await this.checkBlog();
 
-        // protocol.end('task done.')
+        protocol.success();
     }
     /**
      * 
      * 
      * 
      */
-    private async login() {
-        await this.get(this.bloggerUrl + "/go/signin");
+    private async login(){
+        await this.get( this.bloggerUrl + "/go/signin");
+        let canLogin = await this.waitAppear('#identifierId', 5)
+        if ( !canLogin ) await this.captureError('Cannot find email field!');
+        
         protocol.send('Logging in..')
-        await this.type("#identifierId", this.id)
-        await this.click("#identifierNext");
+            await this.type( "#identifierId", this.id )
+            await this.click("#identifierNext");
 
-        await this.wait(3000);
-        await this.insert('input[name="password"]', this.password);
-        await this.click('#passwordNext');
-        //Wait for login to finish
-        let isLogin = await this.waitDisappear(`html:contains('Loading')`);
-        if (!isLogin) protocol.end('Login failed script will end.');
-        protocol.send("Login", "Wait for login to finish");
+            await this.wait(3000);
+            await this.insert( 'input[name="password"]', this.password );
+            await this.click('#passwordNext');
+        
+        protocol.send('Exiting login page.');
+            let outOfLoginPage = await this.waitDisappear('#passwordNext', 10);
+            if( !outOfLoginPage ) await this.captureError('Login page timeout exceeds!');
+
+        protocol.send('Completing login...')
+            let isLogin = await this.waitDisappear(`html:contains('Loading')`);
+            if(!isLogin) this.captureError('Login failed script will end.');
+            protocol.send("Login","ok");
 
     }
 
-    private async publish() {
-
-
-        protocol.send('Going to blog with id: ' + argv.category)
-        let blogUrl = '/blogger.g?blogID=' + argv.category;
-
-        let canClickNewPost = await this.waitAppear('a[href="#editor/src=sidebar"]');
-        if (!canClickNewPost) protocol.end('Not properly logged in! check internet.');
-        protocol.send('Going to publishing page: ' + this.bloggerUrl + blogUrl + '#editor/src=sidebar')
-        await this.get(this.bloggerUrl + blogUrl + '#editor/src=sidebar')
-
+    private async publish(){
+        protocol.send('Publishing start on', argv.category)
+            let blogUrl = '/blogger.g?blogID=' + argv.category;
+        
+        protocol.send('Verifying if app can go to editor.')
+            let canClickNewPost = await this.waitAppear('a[href="#editor/src=sidebar"]');
+            if ( !canClickNewPost ) await this.captureError('Cant find link for editor!');
+        
+        protocol.send('Going to editor:' + this.bloggerUrl + blogUrl + '#editor/src=sidebar' )
+            await this.get(this.bloggerUrl + blogUrl +'#editor/src=sidebar')
+        
         //Check for elements for posting nicely
-        protocol.send('Checking if possible to post.')
-        let re = await this.waitAppear("#postingHtmlBox");
-        if (!re) protocol.end('Cant find posting box! check internet');
+        protocol.send('Looking for html box.')
+            let re = await this.waitAppear("#postingHtmlBox");
+            if(!re) this.captureError('Cant find posting box! check internet');
+            protocol.send('Looking for html box', 'Found!')
+        
+        protocol.send('Waiting for extra resources before writing')
+            let canPost = await this.waitDisappear( `div:contains('Loading')` );
+            if (!canPost ) protocol.end('Loading exceeds timeout! Check internet.');
+        
+        // Write the post with reference ID
+        protocol.send('Writing post...');
+            await this.type( ".titleField", this.post.title.trim());
+            await this.insert("#postingHtmlBox", this.post.content.trim());
+            await this.click('.OYKEW4D-U-i > .blogg-primary');
 
-        let canPost = await this.waitDisappear(`div:contains('Loading')`);
-        if (!canPost) protocol.end('Loading exceeds timeout! Check internet.');
-
-        //Write the post with reference ID
-        protocol.send('Writing post...')
-        await this.type(".titleField", this.post.title);
-        await this.insert("#postingHtmlBox", this.post.content);
-        await this.click('.OYKEW4D-U-i > .blogg-primary');
-        protocol.send('Publishing')
-        let isNotInPublishing = await this.waitAppear('.editPosts');
-        if (!isNotInPublishing) protocol.send("Exiting publishing page exceeds timeout! Check blog manually if properly posted.")
-        protocol.send('Publising done');
+        protocol.send('Publishing..');
+            let isNotInPublishing = await this.waitAppear('.editPosts');
+            if( !isNotInPublishing ) await this.captureError("Admin page exceeds timeout!");
+            protocol.send('In admin page');
     }
 
-    private async checkBlog(content) {
-        let selector = `div:contains('${content}')`;
-        protocol.send('Checking if properly publised!')
+    private async checkBlog(){
+        let content = lib.textify(this.post.content);
+        let arr = content.trim().split('\n')
+        protocol.send('Check blog if post is successful');
+        
+        //first check for title
+        protocol.send('Looking for title');
+            let title = await this.waitAppear(`a:contains("${this.post.title}")`.trim(),5);
+            if (title) protocol.success();
+            if (!title) protocol.send('Looking for title','Title not found!');
+        
+        protocol.send('Looking for first line of text.');
+            let firstLineText = await this.waitAppear(`a:contains("${arr[0].trim()}")`,5);
+            if (!firstLineText) await this.captureError('Blog post not found.');
+            protocol.send('Blog post found.')
+    }   
 
-        protocol.send('Visiting the Blog:' + argv.endpoint);
-        await this.get(argv.endpoint);
-        let re = await this.waitAppear(selector);
-        if (!re) protocol.end('Post not found. Check it manually')
-        protocol.send('Post Found!');
-
+        /**
+     * It captures the current screen state and fires 'protocol.end()' closing the script.
+     * @param message 
+     * @param imagePath - where to save the captured image 
+     */
+    private async captureError( message, imagePath = path.join(__dirname, `/../screenshot/${lib.timeStamp()}-blogger.png`) ){
+        await this.screenshot( imagePath );
+        protocol.end('fail', `${message} Check screenshot at (${imagePath})`);
     }
+
 }
 
 let options = {
@@ -103,3 +131,4 @@ let options = {
     openDevTools: { mode: '' },
 };
 (new Blogger(options)).main();
+
