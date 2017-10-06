@@ -92,21 +92,26 @@ class Blogger extends Nightmare{
 
         protocol.send('Publishing..');
             let isNotInPublishing = await this.waitAppear('.editPosts');
-            if( !isNotInPublishing ) protocol.send("Exiting publish page exceeds timeout! Check blog manually if properly posted.");
-            protocol.send('Publishing done');
+            if( !isNotInPublishing ) await this.captureError("Admin page exceeds timeout!");
+            protocol.send('In admin page');
     }
 
     private async checkBlog(){
+        let content = lib.textify(this.post.content);
+        let arr = content.trim().split('\n')
         protocol.send('Check blog if post is successful');
-
-        protocol.send('Visiting the Blog:' + argv.endpoint);
-            await this.get(argv.endpoint);
         
+        //first check for title
         protocol.send('Looking for title');
-            let title = await this.waitAppear(this.post.title.trim());
-            if (!title) this.captureError('title not found. Check it manually');
-            protocol.send('title Found!');
-    }
+            let title = await this.waitAppear(`a:contains("${this.post.title}")`.trim(),5);
+            if (title) protocol.success();
+            if (!title) protocol.send('Looking for title','Title not found!');
+        
+        protocol.send('Looking for first line of text.');
+            let firstLineText = await this.waitAppear(`a:contains("${arr[0].trim()}")`,5);
+            if (!firstLineText) await this.captureError('Blog post not found.');
+            protocol.send('Blog post found.')
+    }   
 
         /**
      * It captures the current screen state and fires 'protocol.end()' closing the script.

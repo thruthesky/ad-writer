@@ -202,9 +202,13 @@ var Blogger = (function (_super) {
                         return [4, this.waitAppear('.editPosts')];
                     case 10:
                         isNotInPublishing = _a.sent();
-                        if (!isNotInPublishing)
-                            protocol.send("Exiting publish page exceeds timeout! Check blog manually if properly posted.");
-                        protocol.send('Publishing done');
+                        if (!!isNotInPublishing) return [3, 12];
+                        return [4, this.captureError("Admin page exceeds timeout!")];
+                    case 11:
+                        _a.sent();
+                        _a.label = 12;
+                    case 12:
+                        protocol.send('In admin page');
                         return [2];
                 }
             });
@@ -212,22 +216,32 @@ var Blogger = (function (_super) {
     };
     Blogger.prototype.checkBlog = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var title;
+            var content, arr, title, firstLineText;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        content = lib.textify(this.post.content);
+                        arr = content.trim().split('\n');
                         protocol.send('Check blog if post is successful');
-                        protocol.send('Visiting the Blog:' + argv.endpoint);
-                        return [4, this.get(argv.endpoint)];
-                    case 1:
-                        _a.sent();
                         protocol.send('Looking for title');
-                        return [4, this.waitAppear(this.post.title.trim())];
-                    case 2:
+                        return [4, this.waitAppear(("a:contains(\"" + this.post.title + "\")").trim(), 5)];
+                    case 1:
                         title = _a.sent();
+                        if (title)
+                            protocol.success();
                         if (!title)
-                            this.captureError('title not found. Check it manually');
-                        protocol.send('title Found!');
+                            protocol.send('Looking for title', 'Title not found!');
+                        protocol.send('Looking for first line of text.');
+                        return [4, this.waitAppear("a:contains(\"" + arr[0].trim() + "\")", 5)];
+                    case 2:
+                        firstLineText = _a.sent();
+                        if (!!firstLineText) return [3, 4];
+                        return [4, this.captureError('Blog post not found.')];
+                    case 3:
+                        _a.sent();
+                        _a.label = 4;
+                    case 4:
+                        protocol.send('Blog post found.');
                         return [2];
                 }
             });
