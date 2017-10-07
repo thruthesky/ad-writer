@@ -48,7 +48,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Nightmare = require("nightmare");
 var datetime_1 = require("locutus/php/datetime");
 var c = require('cheerio');
-var argv = require('yargs').string('catergory').argv;
+var argv = require('yargs').argv;
 var MyNightmare = (function (_super) {
     __extends(MyNightmare, _super);
     function MyNightmare(defaultOptions) {
@@ -262,6 +262,39 @@ var MyNightmare = (function (_super) {
                 }
             });
         });
+    };
+    Object.defineProperty(MyNightmare.prototype, "generatePostId", {
+        get: function () {
+            var _this = this;
+            var splitId = this.generateId().split('');
+            var arr = [];
+            splitId.forEach(function (element) { return __awaiter(_this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    arr.push(this.transformCharacter(element));
+                    return [2];
+                });
+            }); });
+            return arr.join(' ');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    MyNightmare.prototype.generateId = function () {
+        return Date.now().toString();
+    };
+    MyNightmare.prototype.transformCharacter = function (val) {
+        switch (val) {
+            case '0': return '+';
+            case '1': return '-';
+            case '2': return '=';
+            case '3': return '/';
+            case '4': return '*';
+            case '5': return '_';
+            case '6': return '^';
+            case '7': return '#';
+            case '8': return '@';
+            case '9': return '!';
+        }
     };
     MyNightmare.prototype.waitSelectorExist = function (trueSelector, falseSelector, timeout) {
         if (timeout === void 0) { timeout = 30; }

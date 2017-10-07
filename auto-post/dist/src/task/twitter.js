@@ -51,6 +51,7 @@ var protocol = require("./../protocol");
 var lib = require("../auto-post-library");
 var path = require("path");
 var firebase_1 = require("../firebase");
+var fs = require("fs");
 if (argv.pid === void 0) {
     console.log('no pid');
     process.exit(1);
@@ -208,15 +209,19 @@ var Twitter = (function (_super) {
             });
         });
     };
-    Twitter.prototype.captureError = function (message, imagePath) {
-        if (imagePath === void 0) { imagePath = path.join(__dirname, "/../screenshot/" + lib.timeStamp() + "-twitter.png"); }
+    Twitter.prototype.captureError = function (message, filePath, fileName) {
+        if (filePath === void 0) { filePath = path.join(__dirname, '..', 'screenshot'); }
+        if (fileName === void 0) { fileName = lib.timeStamp() + '-blogger.png'; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.screenshot(imagePath)];
+                    case 0:
+                        if (!fs.existsSync(filePath))
+                            fs.mkdirSync(filePath);
+                        return [4, this.screenshot(filePath)];
                     case 1:
                         _a.sent();
-                        protocol.end('fail', message + " Check screenshot at (" + imagePath + ")");
+                        protocol.end('fail', message + " Check screenshot at (" + filePath + "/" + fileName + ")");
                         return [2];
                 }
             });

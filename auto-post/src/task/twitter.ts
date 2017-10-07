@@ -4,6 +4,7 @@ import * as protocol from './../protocol';
 import * as lib from '../auto-post-library'
 import * as path from 'path'
 import { getPost } from '../firebase';
+import * as fs from 'fs';
 
 
 if ( argv.pid === void 0 ) { console.log('no pid'); process.exit(1); }
@@ -91,11 +92,14 @@ class Twitter extends Nightmare{
     /**
      * It captures the current screen state and fires 'protocol.end()' closing the script.
      * @param message 
-     * @param imagePath - where to save the captured image 
+     * @param filePath - where to save the captured image 
+     * @param fileName - filename of the image.
      */
-    private async captureError( message, imagePath = path.join(__dirname, `/../screenshot/${lib.timeStamp()}-twitter.png`) ){
-        await this.screenshot( imagePath );
-        protocol.end('fail', `${message} Check screenshot at (${imagePath})`);
+    private async captureError( message, filePath = path.join(__dirname, '..', 'screenshot'), fileName = lib.timeStamp() + '-blogger.png' ){
+        if (!fs.existsSync(filePath))fs.mkdirSync(filePath);
+        await this.screenshot( filePath );
+        
+        protocol.end('fail', `${message} Check screenshot at (${filePath}/${fileName})`);
     }
 }
 
