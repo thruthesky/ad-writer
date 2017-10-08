@@ -51,6 +51,7 @@ var $ = require('cheerio');
 var protocol = require("./../protocol");
 var lib = require("../auto-post-library");
 var path = require("path");
+var fs = require("fs");
 var firebase_1 = require("../firebase");
 if (argv.pid === void 0) {
     console.log('no pid');
@@ -247,15 +248,19 @@ var Blogger = (function (_super) {
             });
         });
     };
-    Blogger.prototype.captureError = function (message, imagePath) {
-        if (imagePath === void 0) { imagePath = path.join(__dirname, "/../screenshot/" + lib.timeStamp() + "-blogger.png"); }
+    Blogger.prototype.captureError = function (message, filePath, fileName) {
+        if (filePath === void 0) { filePath = path.join(__dirname, '..', 'screenshot'); }
+        if (fileName === void 0) { fileName = lib.timeStamp() + '-blogger.png'; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.screenshot(imagePath)];
+                    case 0:
+                        if (!fs.existsSync(filePath))
+                            fs.mkdirSync(filePath);
+                        return [4 /*yield*/, this.screenshot(filePath)];
                     case 1:
                         _a.sent();
-                        protocol.end('fail', message + " Check screenshot at (" + imagePath + ")");
+                        protocol.end('fail', message + " Check screenshot at (" + filePath + "/" + fileName + ")");
                         return [2 /*return*/];
                 }
             });
