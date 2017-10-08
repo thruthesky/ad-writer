@@ -28,6 +28,8 @@ export class WritePage implements OnDestroy {
 
     showBrowser = false;
 
+    link = '';
+
     constructor(
         public app: AppService,
         private http: HttpClient
@@ -83,6 +85,7 @@ export class WritePage implements OnDestroy {
         let data = {
             title: c.post_title ? c.post_title : '',
             content: this.tiny.editor.getContent(),
+            url_preview: this.link,
             files: c.files
         };
 
@@ -124,7 +127,7 @@ export class WritePage implements OnDestroy {
                 }
                 else {
                     console.log("site running: ", site);
-                    this.fork(script, name, user, key, category, id, password);
+                    this.fork(script, name, user, key, category, id, password );
                 }
 
             }
@@ -168,13 +171,14 @@ export class WritePage implements OnDestroy {
         `--category=${category}`,
         `--id=${id}`,
         `--password=${password}`,
-        `--pid=${pid}`,
+        `--pid="${pid}"`,
         `--browser=${this.showBrowser}`
         ];
-        console.log("node: " + $params.join(' '));
+        console.log("node " + $params.join(' '));
         const ls = spawn('node', $params);
         console.log("loader: ", this.autoPostingProcessLoader);
         ls.stdout.on('data', (data) => {
+            console.log("data: " + data.toString());
             let arr = data.toString().split('=');
             let pid = arr[0];
             let re = arr[1].trim();

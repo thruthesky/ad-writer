@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var $ = require('cheerio');
 function set(pid) {
+    pid = pid.replace(/^"|"$/g, '');
     exports.protocolName = pid;
 }
 exports.set = set;

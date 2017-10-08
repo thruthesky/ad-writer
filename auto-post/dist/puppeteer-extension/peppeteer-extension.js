@@ -39,7 +39,17 @@ var puppeteer = require('puppeteer');
 var cheerio = require("cheerio");
 var PuppeteerExtension = (function () {
     function PuppeteerExtension() {
+        this.ua = {
+            firefox: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:54.0) Gecko/20100101 Firefox/54.0",
+            chrome: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36"
+        };
     }
+    PuppeteerExtension.prototype.firefox = function () {
+        this.page.setUserAgent(this.ua.firefox);
+    };
+    PuppeteerExtension.prototype.chrome = function () {
+        this.page.setUserAgent(this.ua.chrome);
+    };
     PuppeteerExtension.prototype.set = function (browser, page) {
         this.browser = browser;
         this.page = page;
@@ -62,11 +72,20 @@ var PuppeteerExtension = (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.page.focus(selector)];
+                    case 0: return [4 /*yield*/, this.page.waitFor(100)];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, this.page.type(text)];
+                        return [4 /*yield*/, this.page.focus(selector)];
                     case 2:
+                        _a.sent();
+                        return [4 /*yield*/, this.page.waitFor(100)];
+                    case 3:
+                        _a.sent();
+                        return [4 /*yield*/, this.page.type(text)];
+                    case 4:
+                        _a.sent();
+                        return [4 /*yield*/, this.page.waitFor(100)];
+                    case 5:
                         _a.sent();
                         return [2 /*return*/];
                 }

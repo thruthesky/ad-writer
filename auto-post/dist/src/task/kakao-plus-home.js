@@ -49,6 +49,7 @@ var puppeteer = require('puppeteer');
 var cheerio = require('cheerio');
 var argv = require('yargs').argv;
 var protocol = require("./../protocol");
+var firebase_1 = require("../firebase");
 if (argv.pid === void 0) {
     console.log('no pid');
     process.exit(1);
@@ -56,6 +57,7 @@ if (argv.pid === void 0) {
 protocol.set(argv.pid);
 protocol.send('begin', (new Date).toLocaleTimeString());
 var peppeteer_extension_1 = require("./../../puppeteer-extension/peppeteer-extension");
+var lib = require("./../auto-post-library");
 var KakaoPlus = (function (_super) {
     __extends(KakaoPlus, _super);
     function KakaoPlus() {
@@ -63,22 +65,30 @@ var KakaoPlus = (function (_super) {
     }
     KakaoPlus.prototype.main = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var browser, page, url, re, b;
+            var post, browser, page, url, re, b, $html, content, bool;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, puppeteer.launch({ headless: false })];
+                    case 0: return [4 /*yield*/, firebase_1.getPost(argv.user, argv.key)];
                     case 1:
+                        post = _a.sent();
+                        if (post === null)
+                            protocol.end('fail', 'failed to get post from firebase');
+                        else
+                            protocol.send('got post from firebase');
+                        return [4 /*yield*/, puppeteer.launch({ headless: argv.browser !== 'true' })];
+                    case 2:
                         browser = _a.sent();
                         return [4 /*yield*/, browser.newPage()];
-                    case 2:
+                    case 3:
                         page = _a.sent();
                         this.set(browser, page);
+                        this.chrome();
                         url = "https://accounts.kakao.com/login?continue=https://center-pf.kakao.com/signup";
                         return [4 /*yield*/, this.page.goto(url)];
-                    case 3:
+                    case 4:
                         _a.sent();
                         return [4 /*yield*/, this.waitAppear(['#recaptcha_area', '#email', 'input[name="email"]'])];
-                    case 4:
+                    case 5:
                         re = _a.sent();
                         if (re === -1)
                             protocol.fail('login page open failed');
@@ -87,20 +97,20 @@ var KakaoPlus = (function (_super) {
                         else
                             protocol.send('login page open ok');
                         return [4 /*yield*/, this.insert('#email', argv.id)];
-                    case 5:
-                        _a.sent();
-                        return [4 /*yield*/, this.insert('#password', argv.password)];
                     case 6:
                         _a.sent();
-                        return [4 /*yield*/, this.page.click('#btn_login')];
+                        return [4 /*yield*/, this.insert('#password', argv.password)];
                     case 7:
+                        _a.sent();
+                        return [4 /*yield*/, this.page.click('#btn_login')];
+                    case 8:
                         _a.sent();
                         protocol.send('login button clicked');
                         return [4 /*yield*/, this.page.waitFor(1000)];
-                    case 8:
+                    case 9:
                         _a.sent();
                         return [4 /*yield*/, this.waitDisappear('#email')];
-                    case 9:
+                    case 10:
                         b = _a.sent();
                         if (b)
                             protocol.send('login ok');
@@ -108,18 +118,70 @@ var KakaoPlus = (function (_super) {
                             this.page.screenshot({ path: 'kakao-plus-home-screenshot.png' });
                             protocol.fail('fail to login');
                         }
-                        return [4 /*yield*/, this.waitAppear(['.tit_plus'])];
-                    case 10:
+                        return [4 /*yield*/, this.waitAppear(['.tit_plus', '.desc_backup'])];
+                    case 11:
                         re = _a.sent();
-                        if (re !== 0) {
+                        if (re === -1) {
                             this.page.screenshot({ path: 'kakao-plus-home-screenshot.png' });
                             protocol.fail('check screenshot.');
                         }
-                        return [4 /*yield*/, this.page.waitFor(20000)];
-                    case 11:
+                        return [4 /*yield*/, this.page.goto("https://center-pf.kakao.com/" + argv.category + "/posts")];
+                    case 12:
+                        _a.sent();
+                        if (!post['url_preview']) return [3 /*break*/, 18];
+                        return [4 /*yield*/, this.page.waitFor('.tab_g').then(function (a) { return protocol.send('opening link tab'); }).catch(function (e) { return protocol.end('no openling link tab'); })];
+                    case 13:
+                        _a.sent();
+                        return [4 /*yield*/, this.page.click('.tab_g li:nth-child(3) button')];
+                    case 14:
+                        _a.sent();
+                        return [4 /*yield*/, this.page.waitFor('.outlink_write input').then(function (a) { return protocol.send('url preview box open ok'); }).catch(function (e) { return protocol.end('url preview box open end'); })];
+                    case 15:
+                        _a.sent();
+                        return [4 /*yield*/, this.insert('.outlink_write input', post['url_preview'])];
+                    case 16:
+                        _a.sent();
+                        return [4 /*yield*/, this.page.waitFor(5000)];
+                    case 17:
+                        _a.sent();
+                        _a.label = 18;
+                    case 18: return [4 /*yield*/, this.html()];
+                    case 19:
+                        $html = _a.sent();
+                        this.insert('.box_write .tit_tf input', post.title);
+                        this.page.waitFor(500);
+                        content = lib.textify(post.content);
+                        this.insert('.box_write textarea', content);
+                        this.page.waitFor(6000);
+                        return [4 /*yield*/, this.html()];
+                    case 20:
+                        $html = _a.sent();
+                        if ($html.find('.btn_g2').length)
+                            protocol.send('clicking post button');
+                        else
+                            protocol.end('cannot find post button');
+                        this.page.click('.btn_g2');
+                        this.page.waitFor(1000);
+                        this.page.screenshot({ path: 'kakao-plus-home-after-click-button-screenshot.png' });
+                        bool = this.waitDisappear('.btn_g2');
+                        if (!bool) return [3 /*break*/, 22];
+                        return [4 /*yield*/, this.browser.close()];
+                    case 21:
+                        _a.sent();
+                        protocol.success();
+                        return [3 /*break*/, 24];
+                    case 22:
+                        this.page.screenshot({ path: 'kakao-plus-home-after-click-button-screenshot.png' });
+                        return [4 /*yield*/, this.browser.close()];
+                    case 23:
+                        _a.sent();
+                        protocol.fail();
+                        _a.label = 24;
+                    case 24: return [4 /*yield*/, this.page.waitFor(200000)];
+                    case 25:
                         _a.sent();
                         return [4 /*yield*/, this.browser.close()];
-                    case 12:
+                    case 26:
                         _a.sent();
                         return [2 /*return*/];
                 }
