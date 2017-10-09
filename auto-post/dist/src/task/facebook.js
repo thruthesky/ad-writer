@@ -46,10 +46,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var nightmare_1 = require("./../../nightmare/nightmare");
+var firebase_1 = require("../firebase");
 var path = require("path");
 var protocol = require("./../protocol");
 var lib = require("./../auto-post-library");
-var firebase_1 = require("../firebase");
 var fs = require("fs");
 var argv = require('yargs').string('category').argv;
 if (argv.pid === void 0) {
@@ -190,9 +190,7 @@ var Facebook = (function (_super) {
                     case 12:
                         _a.sent();
                         _a.label = 13;
-                    case 13:
-                        protocol.send('Posting', 'success');
-                        return [2 /*return*/];
+                    case 13: return [2 /*return*/];
                 }
             });
         });
@@ -215,7 +213,7 @@ var Facebook = (function (_super) {
     };
     Facebook.prototype.captureError = function (message, filePath, fileName) {
         if (filePath === void 0) { filePath = path.join(__dirname, '..', 'screenshot'); }
-        if (fileName === void 0) { fileName = lib.timeStamp() + '-twitter.png'; }
+        if (fileName === void 0) { fileName = lib.timeStamp() + '-facebook.png'; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -226,7 +224,7 @@ var Facebook = (function (_super) {
                     case 1:
                         _a.sent();
                         protocol.fail(message + 'Check screenshot at :' + path.join(filePath, fileName));
-                        return [2];
+                        return [2 /*return*/];
                 }
             });
         });
