@@ -24,6 +24,7 @@ class Blogger extends Nightmare {
 
 
     async main() {
+
         this.post = await getPost(argv.user, argv.key);
         if (this.post === null) protocol.end('fail', 'failed to get post from firebase');
         else protocol.send('got post from firebase');
@@ -33,8 +34,11 @@ class Blogger extends Nightmare {
         await this.checkBlog();
 
         protocol.success();
+
     }
-    private async login(){
+
+    private async login() {
+
         await this.get( this.bloggerUrl + "/go/signin");
         let canLogin = await this.waitAppear('#identifierId', 5)
         if ( !canLogin ) await this.captureError('Cannot find email field!');
@@ -56,9 +60,10 @@ class Blogger extends Nightmare {
             if ( !isLogin ) await this.captureError('Login failed script will end.');
             protocol.send("Login", "ok");
 
-    }
+    } // end of login()
 
-    private async publish(){
+    private async publish() {
+
         protocol.send('Publishing start on', argv.category)
             let blogUrl = '/blogger.g?blogID=' + argv.category;
         
@@ -79,23 +84,24 @@ class Blogger extends Nightmare {
             let canPost = await this.waitDisappear( `div:contains('Loading')` );
             if (!canPost ) protocol.end('Loading exceeds timeout! Check internet.');
 
-        // Click HTML tab
         protocol.send('Choose HTML editor.');
             await this.click('.OYKEW4D-U-n > .blogg-collapse-left') 
 
         // Write the post with reference ID
         protocol.send('Writing post...');
-            await this.type( ".titleField", this.post.title.trim());
+            await this.type(".titleField", this.post.title.trim());
             await this.insert("#postingHtmlBox", this.post.content.trim());
             await this.click('.OYKEW4D-U-i > .blogg-primary');
 
         protocol.send('Publishing..');
             let isNotInPublishing = await this.waitAppear('.editPosts');
-            if ( !isNotInPublishing ) await this.captureError("Admin page exceeds timeout!");
+            if (!isNotInPublishing) await this.captureError("Admin page exceeds timeout!");
             protocol.send('In admin page');
-    }
+    
+    } // end if publish()
 
-    private async checkBlog(){
+    private async checkBlog() {
+
         let content = lib.textify(this.post.content);
         let arr = content.trim().split('\n')
 

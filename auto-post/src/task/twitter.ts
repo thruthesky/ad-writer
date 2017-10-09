@@ -48,11 +48,11 @@ class Twitter extends Nightmare{
             if ( !isLinkReady ) await this.captureError('Link not found after timeout!');
             protocol.send("Login", 'success');
     
-    }
+    } // end of login()
 
     private async publish(){
         // shaping the post
-        let content = this.post.title + '\n' + lib.textify(this.post.content);
+        let content = this.post.title.trim() + '\n' + lib.textify(this.post.content.trim());
         let postThis = content.trim();
 
         protocol.send("Go to compose tweet page.");
@@ -91,7 +91,8 @@ class Twitter extends Nightmare{
             if ( !tweetFound ) await this.captureError("Tweet not found");
                 // protocol.send("Checking Tweet", 'Tweet found!');
             
-    }
+    } // end of publish()
+
     /**
      * It captures the current screen state and fires 'protocol.end()' closing the script.
      * @param message 
@@ -101,7 +102,7 @@ class Twitter extends Nightmare{
     private async captureError( message, filePath = path.join(__dirname, '..', 'screenshot'), fileName = lib.timeStamp() + '-twitter.png' ){
         
         if (!fs.existsSync(filePath)) fs.mkdirSync(filePath);
-        
+    
         await this.screenshot( path.join(filePath, fileName) );
         protocol.fail(message + 'Check screenshot at :' + path.join(filePath, fileName) );    
 
