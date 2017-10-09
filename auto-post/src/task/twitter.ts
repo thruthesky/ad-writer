@@ -42,8 +42,8 @@ class Twitter extends Nightmare{
         protocol.send("Checking user log in...")
         let isLogin = await this.waitDisappear( 'input[name="session[password]"]' );
         
-        if(!isLogin) await this.captureError("Login")
-        protocol.send("Login",'success')
+        if (!isLogin) await this.captureError("Still in login page after timeout exceeds!")
+        protocol.send("Login", 'success')
     
     }
 
@@ -64,7 +64,7 @@ class Twitter extends Nightmare{
             await this.click( 'div[data-testid="tweet-button"]' );
             let isTweeted = await this.waitDisappear( 'textArea[placeholder="What\'s happening?"]', 5 );
             if ( !isTweeted ) await this.captureError('Composing tweet timeout exceeds!')
-                 protocol.send("Click tweet button",'Out of tweet page.'); 
+                 protocol.send("Click tweet button", 'Out of tweet page.'); 
         
         /**
          * Verify/Check if tweet is successful.
@@ -72,7 +72,7 @@ class Twitter extends Nightmare{
         protocol.send('Waiting for articles.')
             let articleLoaded = await this.waitAppear('div[role="article"]');
             if ( !articleLoaded ) await this.captureError('Articles not properly loaded');
-                protocol.send('Waiting for articles','Articles Found! Success')
+                protocol.send('Waiting for articles', 'Articles Found! Success')
        
         protocol.send(`Going to ${this.twitterUrl}/${argv.category}`)
             await this.get(`${this.twitterUrl}/${argv.category}`);
@@ -85,8 +85,8 @@ class Twitter extends Nightmare{
             let arr = postThis.split('\n')
             let selector = `span:contains('${arr[0].trim()}')`   
             let tweetFound = await this.waitAppear( selector , 5);
-            if( !tweetFound ) await this.captureError("Checking Tweet","Tweet not found!");
-                protocol.send("Checking Tweet",'Tweet found!');
+            if ( !tweetFound ) await this.captureError("Tweet not found");
+                protocol.send("Checking Tweet", 'Tweet found!');
             
     }
     /**
@@ -95,11 +95,13 @@ class Twitter extends Nightmare{
      * @param filePath - where to save the captured image 
      * @param fileName - filename of the image.
      */
-    private async captureError( message, filePath = path.join(__dirname, '..', 'screenshot'), fileName = lib.timeStamp() + '-blogger.png' ){
-        if (!fs.existsSync(filePath))fs.mkdirSync(filePath);
-        await this.screenshot( filePath );
+    private async captureError( message, filePath = path.join(__dirname, '..', 'screenshot'), fileName = lib.timeStamp() + '-twitter.png' ){
         
-        protocol.end('fail', `${message} Check screenshot at (${filePath}/${fileName})`);
+        if (!fs.existsSync(filePath)) fs.mkdirSync(filePath);
+        
+        await this.screenshot( path.join(filePath, fileName) );
+        protocol.fail(message + 'Check screenshot at :' + path.join(filePath, fileName) );    
+
     }
 }
 
@@ -109,3 +111,4 @@ let options = {
     openDevTools: { mode: '' },
 };
 (new Twitter(options)).main();
+

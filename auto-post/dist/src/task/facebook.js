@@ -215,18 +215,18 @@ var Facebook = (function (_super) {
     };
     Facebook.prototype.captureError = function (message, filePath, fileName) {
         if (filePath === void 0) { filePath = path.join(__dirname, '..', 'screenshot'); }
-        if (fileName === void 0) { fileName = lib.timeStamp() + '-blogger.png'; }
+        if (fileName === void 0) { fileName = lib.timeStamp() + '-twitter.png'; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         if (!fs.existsSync(filePath))
                             fs.mkdirSync(filePath);
-                        return [4 /*yield*/, this.screenshot(filePath)];
+                        return [4 /*yield*/, this.screenshot(path.join(filePath, fileName))];
                     case 1:
                         _a.sent();
-                        protocol.end('fail', message + " Check screenshot at (" + filePath + "/" + fileName + ")");
-                        return [2 /*return*/];
+                        protocol.fail(message + 'Check screenshot at :' + path.join(filePath, fileName));
+                        return [2];
                 }
             });
         });

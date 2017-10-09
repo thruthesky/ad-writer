@@ -146,8 +146,12 @@ var Blogger = (function (_super) {
                         return [4 /*yield*/, this.waitDisappear("html:contains('Loading')")];
                     case 13:
                         isLogin = _a.sent();
-                        if (!isLogin)
-                            this.captureError('Login failed script will end.');
+                        if (!!isLogin) return [3 /*break*/, 15];
+                        return [4 /*yield*/, this.captureError('Login failed script will end.')];
+                    case 14:
+                        _a.sent();
+                        _a.label = 15;
+                    case 15:
                         protocol.send("Login", "ok");
                         return [2 /*return*/];
                 }
@@ -177,38 +181,42 @@ var Blogger = (function (_super) {
                     case 4:
                         _a.sent();
                         protocol.send('Looking for html box.');
-                        return [4 /*yield*/, this.waitAppear("#postingHtmlBox")];
+                        return [4 /*yield*/, this.waitAppear("#postingHtmlBox", 10)];
                     case 5:
                         re = _a.sent();
-                        if (!re)
-                            this.captureError('Cant find posting box! check internet');
+                        if (!!re) return [3 /*break*/, 7];
+                        return [4 /*yield*/, this.captureError('Cant find posting box!')];
+                    case 6:
+                        _a.sent();
+                        _a.label = 7;
+                    case 7:
                         protocol.send('Looking for html box', 'Found!');
                         protocol.send('Waiting for extra resources before writing');
                         return [4 /*yield*/, this.waitDisappear("div:contains('Loading')")];
-                    case 6:
+                    case 8:
                         canPost = _a.sent();
                         if (!canPost)
                             protocol.end('Loading exceeds timeout! Check internet.');
                         protocol.send('Writing post...');
                         return [4 /*yield*/, this.type(".titleField", this.post.title.trim())];
-                    case 7:
+                    case 9:
                         _a.sent();
                         return [4 /*yield*/, this.insert("#postingHtmlBox", this.post.content.trim())];
-                    case 8:
+                    case 10:
                         _a.sent();
                         return [4 /*yield*/, this.click('.OYKEW4D-U-i > .blogg-primary')];
-                    case 9:
+                    case 11:
                         _a.sent();
                         protocol.send('Publishing..');
                         return [4 /*yield*/, this.waitAppear('.editPosts')];
-                    case 10:
-                        isNotInPublishing = _a.sent();
-                        if (!!isNotInPublishing) return [3 /*break*/, 12];
-                        return [4 /*yield*/, this.captureError("Admin page exceeds timeout!")];
-                    case 11:
-                        _a.sent();
-                        _a.label = 12;
                     case 12:
+                        isNotInPublishing = _a.sent();
+                        if (!!isNotInPublishing) return [3 /*break*/, 14];
+                        return [4 /*yield*/, this.captureError("Admin page exceeds timeout!")];
+                    case 13:
+                        _a.sent();
+                        _a.label = 14;
+                    case 14:
                         protocol.send('In admin page');
                         return [2 /*return*/];
                 }
@@ -250,18 +258,18 @@ var Blogger = (function (_super) {
     };
     Blogger.prototype.captureError = function (message, filePath, fileName) {
         if (filePath === void 0) { filePath = path.join(__dirname, '..', 'screenshot'); }
-        if (fileName === void 0) { fileName = lib.timeStamp() + '-blogger.png'; }
+        if (fileName === void 0) { fileName = lib.timeStamp() + '-twitter.png'; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         if (!fs.existsSync(filePath))
                             fs.mkdirSync(filePath);
-                        return [4 /*yield*/, this.screenshot(filePath)];
+                        return [4 /*yield*/, this.screenshot(path.join(filePath, fileName))];
                     case 1:
                         _a.sent();
-                        protocol.end('fail', message + " Check screenshot at (" + filePath + "/" + fileName + ")");
-                        return [2 /*return*/];
+                        protocol.fail(message + 'Check screenshot at :' + path.join(filePath, fileName));
+                        return [2];
                 }
             });
         });
