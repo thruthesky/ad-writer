@@ -34,11 +34,6 @@ class Blogger extends Nightmare {
 
         protocol.success();
     }
-    /**
-     * 
-     * 
-     * 
-     */
     private async login(){
         await this.get( this.bloggerUrl + "/go/signin");
         let canLogin = await this.waitAppear('#identifierId', 5)
@@ -83,7 +78,11 @@ class Blogger extends Nightmare {
         protocol.send('Waiting for extra resources before writing')
             let canPost = await this.waitDisappear( `div:contains('Loading')` );
             if (!canPost ) protocol.end('Loading exceeds timeout! Check internet.');
-        
+
+        // Click HTML tab
+        protocol.send('Choose HTML editor.');
+            await this.click('.OYKEW4D-U-n > .blogg-collapse-left') 
+            
         // Write the post with reference ID
         protocol.send('Writing post...');
             await this.type( ".titleField", this.post.title.trim());
@@ -99,11 +98,12 @@ class Blogger extends Nightmare {
     private async checkBlog(){
         let content = lib.textify(this.post.content);
         let arr = content.trim().split('\n')
+
         protocol.send('Check blog if post is successful');
         
         // first check for title
         protocol.send('Looking for title');
-            let title = await this.waitAppear(`a:contains("${this.post.title}")`.trim(), 5);
+            let title = await this.waitAppear(`a:contains("${this.post.title.trim()}")`, 5);
             if (title) protocol.success();
             if (!title) protocol.send('Looking for title', 'Title not found!');
         
@@ -132,8 +132,16 @@ class Blogger extends Nightmare {
 
 let options = {
     show: argv.browser === 'true',
-    x: 1000, y: 0, width: 800, height: 700,
+    x: 1000, y: 0, width: 1100, height: 700,
     openDevTools: { mode: '' },
 };
 (new Blogger(options)).main();
 
+
+
+/**
+ * OPTIONAL Handing changes on DOM.
+ *         protocol.send('Choose HTML editor.');
+            await this.click('.OYKEW4D-U-n > .blogg-collapse-left') // Click HTML tab
+                        .then(a => a).catch( () => this.captureError('Error clicking html tab') ); // capture errors
+ */
