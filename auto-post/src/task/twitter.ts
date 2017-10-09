@@ -39,11 +39,14 @@ class Twitter extends Nightmare{
             await this.insert( 'input[name="session[username_or_email]"]', this.id );
             await this.typeEnter( 'input[name="session[password]"]', this.password );
       
-        protocol.send("Checking user log in...")
-        let isLogin = await this.waitDisappear( 'input[name="session[password]"]' );
+        protocol.send("Checking user log in...");
+            let isLogin = await this.waitDisappear( 'input[name="session[password]"]' );
+            if (!isLogin) await this.captureError("Still in login page after timeout exceeds!")
         
-        if (!isLogin) await this.captureError("Still in login page after timeout exceeds!")
-        protocol.send("Login", 'success')
+        protocol.send('Waiting for link to compose tweet page.');
+            let isLinkReady = await this.waitAppear(`a[href='/compose/tweet']`, 10);
+            if ( !isLinkReady ) await this.captureError('Link not found after timeout!');
+            protocol.send("Login", 'success');
     
     }
 
@@ -86,7 +89,7 @@ class Twitter extends Nightmare{
             let selector = `span:contains('${arr[0].trim()}')`   
             let tweetFound = await this.waitAppear( selector , 5);
             if ( !tweetFound ) await this.captureError("Tweet not found");
-                protocol.send("Checking Tweet", 'Tweet found!');
+                // protocol.send("Checking Tweet", 'Tweet found!');
             
     }
     /**
