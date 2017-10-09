@@ -18,8 +18,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
+    return { next: verb(0), "throw": verb(1), "return": verb(2) };
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -76,21 +76,21 @@ var Twitter = (function (_super) {
                 switch (_b.label) {
                     case 0:
                         _a = this;
-                        return [4, firebase_1.getPost(argv.user, argv.key)];
+                        return [4 /*yield*/, firebase_1.getPost(argv.user, argv.key)];
                     case 1:
                         _a.post = _b.sent();
                         if (this.post === null)
                             protocol.end('fail', 'failed to get post from firebase');
                         else
                             protocol.send('got post from firebase');
-                        return [4, this.login()];
+                        return [4 /*yield*/, this.login()];
                     case 2:
                         _b.sent();
-                        return [4, this.publish()];
+                        return [4 /*yield*/, this.publish()];
                     case 3:
                         _b.sent();
                         protocol.success();
-                        return [2];
+                        return [2 /*return*/];
                 }
             });
         });
@@ -102,27 +102,27 @@ var Twitter = (function (_super) {
                 switch (_a.label) {
                     case 0:
                         protocol.send("Logging in..");
-                        return [4, this.get(this.twitterUrl + '/login')];
+                        return [4 /*yield*/, this.get(this.twitterUrl + '/login')];
                     case 1:
                         _a.sent();
-                        return [4, this.insert('input[name="session[username_or_email]"]', this.id)];
+                        return [4 /*yield*/, this.insert('input[name="session[username_or_email]"]', this.id)];
                     case 2:
                         _a.sent();
-                        return [4, this.typeEnter('input[name="session[password]"]', this.password)];
+                        return [4 /*yield*/, this.typeEnter('input[name="session[password]"]', this.password)];
                     case 3:
                         _a.sent();
                         protocol.send("Checking user log in...");
-                        return [4, this.waitDisappear('input[name="session[password]"]')];
+                        return [4 /*yield*/, this.waitDisappear('input[name="session[password]"]')];
                     case 4:
                         isLogin = _a.sent();
-                        if (!!isLogin) return [3, 6];
-                        return [4, this.captureError("Login")];
+                        if (!!isLogin) return [3 /*break*/, 6];
+                        return [4 /*yield*/, this.captureError("Login")];
                     case 5:
                         _a.sent();
                         _a.label = 6;
                     case 6:
                         protocol.send("Login", 'success');
-                        return [2];
+                        return [2 /*return*/];
                 }
             });
         });
@@ -136,56 +136,56 @@ var Twitter = (function (_super) {
                         content = this.post.title + '\n' + lib.textify(this.post.content);
                         postThis = content.trim();
                         protocol.send("Go to compose tweet page.");
-                        return [4, this.get(this.twitterUrl + "/compose/tweet")];
+                        return [4 /*yield*/, this.get(this.twitterUrl + "/compose/tweet")];
                     case 1:
                         _a.sent();
-                        return [4, this.waitAppear('textArea[placeholder="What\'s happening?"]')];
+                        return [4 /*yield*/, this.waitAppear('textArea[placeholder="What\'s happening?"]')];
                     case 2:
                         canPost = _a.sent();
-                        if (!!canPost) return [3, 4];
-                        return [4, this.captureError('Cant find tweet text area!')];
+                        if (!!canPost) return [3 /*break*/, 4];
+                        return [4 /*yield*/, this.captureError('Cant find tweet text area!')];
                     case 3:
                         _a.sent();
                         _a.label = 4;
                     case 4:
                         protocol.send("Compose Tweet");
-                        return [4, this.insert('textArea[placeholder="What\'s happening?"]', postThis)];
+                        return [4 /*yield*/, this.insert('textArea[placeholder="What\'s happening?"]', postThis)];
                     case 5:
                         _a.sent();
                         protocol.send("Click tweet button.");
-                        return [4, this.click('div[data-testid="tweet-button"]')];
+                        return [4 /*yield*/, this.click('div[data-testid="tweet-button"]')];
                     case 6:
                         _a.sent();
-                        return [4, this.waitDisappear('textArea[placeholder="What\'s happening?"]', 5)];
+                        return [4 /*yield*/, this.waitDisappear('textArea[placeholder="What\'s happening?"]', 5)];
                     case 7:
                         isTweeted = _a.sent();
-                        if (!!isTweeted) return [3, 9];
-                        return [4, this.captureError('Composing tweet timeout exceeds!')];
+                        if (!!isTweeted) return [3 /*break*/, 9];
+                        return [4 /*yield*/, this.captureError('Composing tweet timeout exceeds!')];
                     case 8:
                         _a.sent();
                         _a.label = 9;
                     case 9:
                         protocol.send("Click tweet button", 'Out of tweet page.');
                         protocol.send('Waiting for articles.');
-                        return [4, this.waitAppear('div[role="article"]')];
+                        return [4 /*yield*/, this.waitAppear('div[role="article"]')];
                     case 10:
                         articleLoaded = _a.sent();
-                        if (!!articleLoaded) return [3, 12];
-                        return [4, this.captureError('Articles not properly loaded')];
+                        if (!!articleLoaded) return [3 /*break*/, 12];
+                        return [4 /*yield*/, this.captureError('Articles not properly loaded')];
                     case 11:
                         _a.sent();
                         _a.label = 12;
                     case 12:
                         protocol.send('Waiting for articles', 'Articles Found! Success');
                         protocol.send("Going to " + this.twitterUrl + "/" + argv.category);
-                        return [4, this.get(this.twitterUrl + "/" + argv.category)];
+                        return [4 /*yield*/, this.get(this.twitterUrl + "/" + argv.category)];
                     case 13:
                         _a.sent();
-                        return [4, this.waitAppear("div:contains('Edit profile')")];
+                        return [4 /*yield*/, this.waitAppear("div:contains('Edit profile')")];
                     case 14:
                         isProfileLoaded = _a.sent();
-                        if (!!isProfileLoaded) return [3, 16];
-                        return [4, this.captureError('Profile page not loaded properly.')];
+                        if (!!isProfileLoaded) return [3 /*break*/, 16];
+                        return [4 /*yield*/, this.captureError('Profile page not loaded properly.')];
                     case 15:
                         _a.sent();
                         _a.label = 16;
@@ -194,17 +194,17 @@ var Twitter = (function (_super) {
                         protocol.send("Verifying Tweet task...");
                         arr = postThis.split('\n');
                         selector = "span:contains('" + arr[0].trim() + "')";
-                        return [4, this.waitAppear(selector, 5)];
+                        return [4 /*yield*/, this.waitAppear(selector, 5)];
                     case 17:
                         tweetFound = _a.sent();
-                        if (!!tweetFound) return [3, 19];
-                        return [4, this.captureError("Checking Tweet", "Tweet not found!")];
+                        if (!!tweetFound) return [3 /*break*/, 19];
+                        return [4 /*yield*/, this.captureError("Checking Tweet", "Tweet not found!")];
                     case 18:
                         _a.sent();
                         _a.label = 19;
                     case 19:
                         protocol.send("Checking Tweet", 'Tweet found!');
-                        return [2];
+                        return [2 /*return*/];
                 }
             });
         });
@@ -218,11 +218,11 @@ var Twitter = (function (_super) {
                     case 0:
                         if (!fs.existsSync(filePath))
                             fs.mkdirSync(filePath);
-                        return [4, this.screenshot(path.join(filePath, fileName))];
+                        return [4 /*yield*/, this.screenshot(path.join(filePath, fileName))];
                     case 1:
                         _a.sent();
                         protocol.end('fail', message + " Check screenshot at (" + filePath + "/" + fileName + ")");
-                        return [2];
+                        return [2 /*return*/];
                 }
             });
         });

@@ -39,17 +39,7 @@ var puppeteer = require('puppeteer');
 var cheerio = require("cheerio");
 var PuppeteerExtension = (function () {
     function PuppeteerExtension() {
-        this.ua = {
-            firefox: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:54.0) Gecko/20100101 Firefox/54.0",
-            chrome: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36"
-        };
     }
-    PuppeteerExtension.prototype.firefox = function () {
-        this.page.setUserAgent(this.ua.firefox);
-    };
-    PuppeteerExtension.prototype.chrome = function () {
-        this.page.setUserAgent(this.ua.chrome);
-    };
     PuppeteerExtension.prototype.set = function (browser, page) {
         this.browser = browser;
         this.page = page;
@@ -65,99 +55,6 @@ var PuppeteerExtension = (function () {
                         $html = cheerio.load(html)('html');
                         return [2 /*return*/, $html];
                 }
-            });
-        });
-    };
-    PuppeteerExtension.prototype.insert = function (selector, text) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.page.waitFor(100)];
-                    case 1:
-                        _a.sent();
-                        return [4 /*yield*/, this.page.focus(selector)];
-                    case 2:
-                        _a.sent();
-                        return [4 /*yield*/, this.page.waitFor(100)];
-                    case 3:
-                        _a.sent();
-                        return [4 /*yield*/, this.page.type(text)];
-                    case 4:
-                        _a.sent();
-                        return [4 /*yield*/, this.page.waitFor(100)];
-                    case 5:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    PuppeteerExtension.prototype.waitAppear = function (selectors, timeout) {
-        if (timeout === void 0) { timeout = 30; }
-        return __awaiter(this, void 0, void 0, function () {
-            var $html, maxWaitCount, i, i_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        $html = null;
-                        maxWaitCount = timeout * 1000 / 100;
-                        i = 0;
-                        _a.label = 1;
-                    case 1:
-                        if (!(i < maxWaitCount)) return [3 /*break*/, 5];
-                        return [4 /*yield*/, this.page.waitFor(100)];
-                    case 2:
-                        _a.sent();
-                        return [4 /*yield*/, this.html()];
-                    case 3:
-                        $html = _a.sent();
-                        for (i_1 = 0; i_1 < selectors.length; i_1++) {
-                            if ($html.find(selectors[i_1]).length > 0)
-                                return [2 /*return*/, i_1];
-                        }
-                        _a.label = 4;
-                    case 4:
-                        i++;
-                        return [3 /*break*/, 1];
-                    case 5: return [2 /*return*/, -1];
-                }
-            });
-        });
-    };
-    PuppeteerExtension.prototype.waitDisappear = function (selector, timeout) {
-        if (timeout === void 0) { timeout = 30; }
-        return __awaiter(this, void 0, void 0, function () {
-            var $html, maxWaitCount, i;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        $html = null;
-                        maxWaitCount = timeout * 1000 / 100;
-                        i = 0;
-                        _a.label = 1;
-                    case 1:
-                        if (!(i < maxWaitCount)) return [3 /*break*/, 5];
-                        return [4 /*yield*/, this.page.waitFor(100)];
-                    case 2:
-                        _a.sent();
-                        return [4 /*yield*/, this.html()];
-                    case 3:
-                        $html = _a.sent();
-                        if ($html.find(selector).length === 0)
-                            return [2 /*return*/, true];
-                        _a.label = 4;
-                    case 4:
-                        i++;
-                        return [3 /*break*/, 1];
-                    case 5: return [2 /*return*/, false];
-                }
-            });
-        });
-    };
-    PuppeteerExtension.prototype.waitUntil = function (options) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/];
             });
         });
     };

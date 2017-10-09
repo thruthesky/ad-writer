@@ -55,12 +55,12 @@ class Blogger extends Nightmare {
         
         protocol.send('Exiting login page.');
             let outOfLoginPage = await this.waitDisappear('#passwordNext', 10);
-            if( !outOfLoginPage ) await this.captureError('Login page timeout exceeds!');
+            if ( !outOfLoginPage ) await this.captureError('Login page timeout exceeds!');
 
         protocol.send('Completing login...')
             let isLogin = await this.waitDisappear(`html:contains('Loading')`);
-            if(!isLogin) await this.captureError('Login failed script will end.');
-            protocol.send("Login","ok");
+            if ( !isLogin ) await this.captureError('Login failed script will end.');
+            protocol.send("Login", "ok");
 
     }
 
@@ -73,12 +73,12 @@ class Blogger extends Nightmare {
             if ( !canClickNewPost ) await this.captureError('Cant find link for editor!');
         
         protocol.send('Going to editor:' + this.bloggerUrl + blogUrl + '#editor/src=sidebar' )
-            await this.get(this.bloggerUrl + blogUrl +'#editor/src=sidebar')
+            await this.get(this.bloggerUrl + blogUrl + '#editor/src=sidebar')
         
-        //Check for elements for posting nicely
+        // Check for elements for posting nicely
         protocol.send('Looking for html box.')
             let re = await this.waitAppear("#postingHtmlBox", 10);
-            if(!re) await this.captureError('Cant find posting box!');
+            if (!re) await this.captureError('Cant find posting box!');
             protocol.send('Looking for html box', 'Found!')
         
         protocol.send('Waiting for extra resources before writing')
@@ -93,7 +93,7 @@ class Blogger extends Nightmare {
 
         protocol.send('Publishing..');
             let isNotInPublishing = await this.waitAppear('.editPosts');
-            if( !isNotInPublishing ) await this.captureError("Admin page exceeds timeout!");
+            if ( !isNotInPublishing ) await this.captureError("Admin page exceeds timeout!");
             protocol.send('In admin page');
     }
 
@@ -102,14 +102,14 @@ class Blogger extends Nightmare {
         let arr = content.trim().split('\n')
         protocol.send('Check blog if post is successful');
         
-        //first check for title
+        // first check for title
         protocol.send('Looking for title');
-            let title = await this.waitAppear(`a:contains("${this.post.title}")`.trim(),5);
+            let title = await this.waitAppear(`a:contains("${this.post.title}")`.trim(), 5);
             if (title) protocol.success();
-            if (!title) protocol.send('Looking for title','Title not found!');
+            if (!title) protocol.send('Looking for title', 'Title not found!');
         
         protocol.send('Looking for first line of text.');
-            let firstLineText = await this.waitAppear(`a:contains("${arr[0].trim()}")`,5);
+            let firstLineText = await this.waitAppear(`a:contains("${arr[0].trim()}")`, 5);
             if (!firstLineText) await this.captureError('Blog post not found.');
             protocol.send('Blog post found.')
     }   
