@@ -82,7 +82,7 @@ class Blogger extends Nightmare {
         // Click HTML tab
         protocol.send('Choose HTML editor.');
             await this.click('.OYKEW4D-U-n > .blogg-collapse-left') 
-            
+
         // Write the post with reference ID
         protocol.send('Writing post...');
             await this.type( ".titleField", this.post.title.trim());
@@ -110,7 +110,7 @@ class Blogger extends Nightmare {
         protocol.send('Looking for first line of text.');
             let firstLineText = await this.waitAppear(`a:contains("${arr[0].trim()}")`, 5);
             if (!firstLineText) await this.captureError('Blog post not found.');
-            protocol.send('Blog post found.')
+            // protocol.send('Blog post found.')
     }   
 
     /**
