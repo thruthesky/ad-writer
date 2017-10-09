@@ -47,17 +47,20 @@
 
             <label class="pointer">
                   <input type="checkbox" name="{{ name }}" [(ngModel)]=" results[ name ] ">
+
                           {{ sites[name].name }}
                           {{ sites[name].category }}
                           {{ sites[name].id }}
+                        </label>
+                          <a href="{{ sites[name].url }}" target="_blank"><i class="fa fa-home pointer"></i></a>
                           <div>
+                            
                       
                               <span *ngIf=" autoPostingProcessLoader[ name ] === 0 "><i class="fa fa-spinner fa-spin"></i></span>
                               <span *ngIf=" autoPostingProcessLoader[ name ] === 1 "><i class="fa fa-check"></i></span>
                               <span *ngIf=" autoPostingProcessLoader[ name ] === 2 "><i class="fa fa-times"></i></span>
                             {{ autoPostingProcessMessage[ name ] }}
                           </div>
-                        </label>
           </div>
 
 

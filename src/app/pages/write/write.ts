@@ -43,6 +43,13 @@ export class WritePage implements OnDestroy {
                 if (snap.val()) {
 
                     this.sites = snap.val();
+
+                    for (const n of Object.keys(this.sites)) {
+                        const type = this.sites[n].site;
+                        if ( type === 'philgo' ) this.sites[n].url = "https://wwww.philgo.com?" + this.sites[n].category;
+                        if ( type === 'facebook' ) this.sites[n].url = "https://www.facebook.com/groups/" + this.sites[n].category;
+                        
+                    }
                 }
                 console.log("this site: ", this.sites);
             });
@@ -51,11 +58,11 @@ export class WritePage implements OnDestroy {
     }
 
     sitesKeys() {
-        return Object.keys( this.sites );
+        return Object.keys(this.sites);
     }
 
     ngOnDestroy() {
-        if ( this.sitesOn ) this.app.referenceSite().off('value', this.sitesOn);
+        if (this.sitesOn) this.app.referenceSite().off('value', this.sitesOn);
     }
 
     // tinyMceKeyup(content) {
@@ -122,12 +129,12 @@ export class WritePage implements OnDestroy {
                 const password = site.password;
                 const endpoint = site.endpoint;
 
-                if ( script === 'blogapi' ) {
+                if (script === 'blogapi') {
                     this.blogApi(site);
                 }
                 else {
                     console.log("site running: ", site);
-                    this.fork(script, name, user, key, category, id, password );
+                    this.fork(script, name, user, key, category, id, password);
                 }
 
             }
@@ -136,8 +143,8 @@ export class WritePage implements OnDestroy {
 
     }
 
-    blogApi( site ) {
-        this.prepare( site.name );
+    blogApi(site) {
+        this.prepare(site.name);
         console.log("blog api begin: ", site);
         let body = {};
 
@@ -150,8 +157,8 @@ export class WritePage implements OnDestroy {
 
         console.log('body: ', body);
 
-        this.http.post( 'http://keyword-rank-observer-server.sonub.com/api/metaWeblog.newPost.php', body )
-            .subscribe( re => {
+        this.http.post('http://keyword-rank-observer-server.sonub.com/api/metaWeblog.newPost.php', body)
+            .subscribe(re => {
                 console.log("re: ", re);
                 this.success(site.name);
             }, e => {
@@ -186,11 +193,11 @@ export class WritePage implements OnDestroy {
             if (re === 'success:') {
                 this.success(pid);
             }
-            else if ( re.indexOf('fail:') === 0 ) {
-                this.error( pid, arr[2] );
+            else if (re.indexOf('fail:') === 0) {
+                this.error(pid, arr[2]);
             }
             else {
-                this.message( pid, re) ;
+                this.message(pid, re);
             }
         });
 
@@ -205,7 +212,7 @@ export class WritePage implements OnDestroy {
             else {
                 msg = `Error: process error.`;
             }
-            this.error( pid, msg );
+            this.error(pid, msg);
         });
 
         ls.on('close', (code) => {
@@ -213,24 +220,24 @@ export class WritePage implements OnDestroy {
         });
     }
 
-    
+
     prepare(pid) {
         this.autoPostingProcessLoader[pid] = 0;
         this.autoPostingProcessMessage[pid] = 'preparing';
         this.app.render();
     }
-    error( pid, msg ) {
+    error(pid, msg) {
         console.log("error() : ", pid, msg);
         this.autoPostingProcessMessage[pid] = msg;
         this.autoPostingProcessLoader[pid] = 2;
         this.app.render(100);
     }
-    success( pid ) {
+    success(pid) {
         this.autoPostingProcessLoader[pid] = 1;
         this.autoPostingProcessMessage[pid] = 'success';
         this.app.render(100);
     }
-    message( pid, msg ) {
+    message(pid, msg) {
         this.autoPostingProcessMessage[pid] = msg;
         this.app.render(100);
     }
