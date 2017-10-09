@@ -1,10 +1,10 @@
-import { async } from '@angular/core/testing';
 import { MyNightmare as Nightmare } from './../../nightmare/nightmare';
+import { getPost } from '../firebase';
 import * as path from 'path'
 import * as protocol from './../protocol';
 import * as lib from './../auto-post-library';
-import { getPost } from '../firebase';
 import * as fs from 'fs';
+
 const argv = require('yargs').string('category').argv;
 
 if (argv.pid === void 0) { console.log('no pid'); process.exit(1); }
@@ -113,7 +113,7 @@ class Facebook extends Nightmare {
         if (!fs.existsSync(filePath)) fs.mkdirSync(filePath);
         
         await this.screenshot( path.join(filePath, fileName) );
-        protocol.fail(message + 'Check screenshot at :' +path.join(filePath, fileName) );    
+        protocol.fail(message + 'Check screenshot at :' + path.join(filePath, fileName) );    
 
     }   
 

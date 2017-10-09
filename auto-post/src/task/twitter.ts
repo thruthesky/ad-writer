@@ -100,7 +100,7 @@ class Twitter extends Nightmare{
         if (!fs.existsSync(filePath)) fs.mkdirSync(filePath);
         
         await this.screenshot( path.join(filePath, fileName) );
-        protocol.fail(message + 'Check screenshot at :' +path.join(filePath, fileName) );    
+        protocol.fail(message + 'Check screenshot at :' + path.join(filePath, fileName) );    
 
     }
 }
