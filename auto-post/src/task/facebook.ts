@@ -88,7 +88,6 @@ class Facebook extends Nightmare {
         // posted?
         let isPosted = await this.findPost(postThis);
         if (!isPosted) await this.captureError('Post not found.');
-        protocol.send('Posting', 'success');
     }
 
     /**
