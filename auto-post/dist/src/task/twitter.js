@@ -221,7 +221,7 @@ var Twitter = (function (_super) {
                         return [4, this.screenshot(path.join(filePath, fileName))];
                     case 1:
                         _a.sent();
-                        protocol.end('fail', message + " Check screenshot at (" + filePath + "/" + fileName + ")");
+                        protocol.fail(message + 'Check screenshot at :' + path.join(filePath, fileName));
                         return [2];
                 }
             });

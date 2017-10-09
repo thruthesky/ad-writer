@@ -258,7 +258,7 @@ var Blogger = (function (_super) {
     };
     Blogger.prototype.captureError = function (message, filePath, fileName) {
         if (filePath === void 0) { filePath = path.join(__dirname, '..', 'screenshot'); }
-        if (fileName === void 0) { fileName = lib.timeStamp() + '-blogger.png'; }
+        if (fileName === void 0) { fileName = lib.timeStamp() + '-twitter.png'; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -268,7 +268,7 @@ var Blogger = (function (_super) {
                         return [4, this.screenshot(path.join(filePath, fileName))];
                     case 1:
                         _a.sent();
-                        protocol.end('fail', message + " Check screenshot at (" + filePath + "/" + fileName + ")");
+                        protocol.fail(message + 'Check screenshot at :' + path.join(filePath, fileName));
                         return [2];
                 }
             });

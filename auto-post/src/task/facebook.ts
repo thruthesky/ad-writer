@@ -108,14 +108,14 @@ class Facebook extends Nightmare {
      * @param filePath - where to save the captured image 
      * @param fileName - filename of the image.
      */
-    private async captureError( message, filePath = path.join(__dirname, '..', 'screenshot'), fileName = lib.timeStamp() + '-facebook.png' ){
+    private async captureError( message, filePath = path.join(__dirname, '..', 'screenshot'), fileName = lib.timeStamp() + '-twitter.png' ){
         
         if (!fs.existsSync(filePath)) fs.mkdirSync(filePath);
         
         await this.screenshot( path.join(filePath, fileName) );
-        protocol.end('fail', `${message} Check screenshot at (${filePath}/${fileName})`);    
+        protocol.fail(message + 'Check screenshot at :' +path.join(filePath, fileName) );    
 
-    }
+    }   
 
 }
 
