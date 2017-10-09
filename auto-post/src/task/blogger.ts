@@ -59,7 +59,7 @@ class Blogger extends Nightmare {
 
         protocol.send('Completing login...')
             let isLogin = await this.waitDisappear(`html:contains('Loading')`);
-            if(!isLogin) this.captureError('Login failed script will end.');
+            if(!isLogin) await this.captureError('Login failed script will end.');
             protocol.send("Login","ok");
 
     }
@@ -77,8 +77,8 @@ class Blogger extends Nightmare {
         
         //Check for elements for posting nicely
         protocol.send('Looking for html box.')
-            let re = await this.waitAppear("#postingHtmlBox");
-            if(!re) this.captureError('Cant find posting box! check internet');
+            let re = await this.waitAppear("#postingHtmlBox", 10);
+            if(!re) await this.captureError('Cant find posting box!');
             protocol.send('Looking for html box', 'Found!')
         
         protocol.send('Waiting for extra resources before writing')
@@ -121,10 +121,12 @@ class Blogger extends Nightmare {
      * @param fileName - filename of the image.
      */
     private async captureError( message, filePath = path.join(__dirname, '..', 'screenshot'), fileName = lib.timeStamp() + '-blogger.png' ){
-        if (!fs.existsSync(filePath))fs.mkdirSync(filePath);
-        await this.screenshot( filePath );
         
-        protocol.end('fail', `${message} Check screenshot at (${filePath}/${fileName})`);
+        if (!fs.existsSync(filePath)) fs.mkdirSync(filePath);
+        
+        await this.screenshot( path.join(filePath, fileName) );
+        protocol.end('fail', `${message} Check screenshot at (${filePath}/${fileName})`);    
+
     }
 
 }

@@ -18,8 +18,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
-    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -71,17 +71,17 @@ var Philgo = (function (_super) {
                 switch (_b.label) {
                     case 0:
                         _a = this;
-                        return [4 /*yield*/, firebase_1.getPost(argv.user, argv.key)];
+                        return [4, firebase_1.getPost(argv.user, argv.key)];
                     case 1:
                         _a.post = _b.sent();
                         if (this.post === null)
                             protocol.end('fail', 'failed to get post from firebase');
                         else
                             protocol.send('got post from firebase');
-                        return [4 /*yield*/, this.publish()];
+                        return [4, this.publish()];
                     case 2:
                         _b.sent();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });
@@ -91,49 +91,49 @@ var Philgo = (function (_super) {
             var re, $html;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.get(this.serverUrl + '/?module=member&action=login')];
+                    case 0: return [4, this.get(this.serverUrl + '/?module=member&action=login')];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, this.insert('.login_page_form input[name="id"]', argv.id)];
+                        return [4, this.insert('.login_page_form input[name="id"]', argv.id)];
                     case 2:
                         _a.sent();
-                        return [4 /*yield*/, this.insert('.login_page_form input[name="password"]', argv.password)];
+                        return [4, this.insert('.login_page_form input[name="password"]', argv.password)];
                     case 3:
                         _a.sent();
-                        return [4 /*yield*/, this.click('.login_page_form .submit')];
+                        return [4, this.click('.login_page_form .submit')];
                     case 4:
                         _a.sent();
-                        return [4 /*yield*/, this.waitDisappear('.login_page_form')];
+                        return [4, this.waitDisappear('.login_page_form')];
                     case 5:
                         re = _a.sent();
                         if (re)
                             protocol.send('login-ok');
                         else
                             protocol.end('fail', 'login failed');
-                        return [4 /*yield*/, this.get(this.serverUrl + '?module=post&action=write&post_id=' + argv.category)];
+                        return [4, this.get(this.serverUrl + '?module=post&action=write&post_id=' + argv.category)];
                     case 6:
                         $html = _a.sent();
                         if ($html.find('input.subject').length)
                             protocol.send('open write form ok');
                         else
                             protocol.end('failed to open write form. check category.');
-                        return [4 /*yield*/, this.insert('input.subject', this.post.title)];
+                        return [4, this.insert('input.subject', this.post.title)];
                     case 7:
                         _a.sent();
-                        return [4 /*yield*/, this.insert('#content', this.post.content)];
+                        return [4, this.insert('#content', this.post.content)];
                     case 8:
                         _a.sent();
-                        return [4 /*yield*/, this.click('.post_write_submit')];
+                        return [4, this.click('.post_write_submit')];
                     case 9:
                         _a.sent();
-                        return [4 /*yield*/, this.waitAppear('.post_vote')];
+                        return [4, this.waitAppear('.post_vote')];
                     case 10:
                         re = _a.sent();
                         if (re)
                             protocol.end('success');
                         else
                             protocol.end('fail', 'failed after clicking post button');
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });
