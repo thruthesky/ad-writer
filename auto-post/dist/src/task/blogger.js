@@ -252,9 +252,7 @@ var Blogger = (function (_super) {
                     case 3:
                         _a.sent();
                         _a.label = 4;
-                    case 4:
-                        protocol.send('Blog post found.');
-                        return [2 /*return*/];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
