@@ -125,7 +125,7 @@ class Blogger extends Nightmare {
         if (!fs.existsSync(filePath)) fs.mkdirSync(filePath);
         
         await this.screenshot( path.join(filePath, fileName) );
-        protocol.end('fail', `${message} Check screenshot at (${filePath}/${fileName})`);    
+        protocol.fail(message + 'Check screenshot at :' +path.join(filePath, fileName) );    
 
     }
 
