@@ -24,6 +24,7 @@ class Blogger extends Nightmare {
 
 
     async main() {
+
         this.post = await getPost(argv.user, argv.key);
         if (this.post === null) protocol.end('fail', 'failed to get post from firebase');
         else protocol.send('got post from firebase');
@@ -33,13 +34,11 @@ class Blogger extends Nightmare {
         await this.checkBlog();
 
         protocol.success();
+
     }
-    /**
-     * 
-     * 
-     * 
-     */
-    private async login(){
+
+    private async login() {
+
         await this.get( this.bloggerUrl + "/go/signin");
         let canLogin = await this.waitAppear('#identifierId', 5)
         if ( !canLogin ) await this.captureError('Cannot find email field!');
@@ -61,9 +60,10 @@ class Blogger extends Nightmare {
             if ( !isLogin ) await this.captureError('Login failed script will end.');
             protocol.send("Login", "ok");
 
-    }
+    } // end of login()
 
-    private async publish(){
+    private async publish() {
+
         protocol.send('Publishing start on', argv.category)
             let blogUrl = '/blogger.g?blogID=' + argv.category;
         
@@ -83,34 +83,40 @@ class Blogger extends Nightmare {
         protocol.send('Waiting for extra resources before writing')
             let canPost = await this.waitDisappear( `div:contains('Loading')` );
             if (!canPost ) protocol.end('Loading exceeds timeout! Check internet.');
-        
+
+        protocol.send('Choose HTML editor.');
+            await this.click('.OYKEW4D-U-n > .blogg-collapse-left') 
+
         // Write the post with reference ID
         protocol.send('Writing post...');
-            await this.type( ".titleField", this.post.title.trim());
+            await this.type(".titleField", this.post.title.trim());
             await this.insert("#postingHtmlBox", this.post.content.trim());
             await this.click('.OYKEW4D-U-i > .blogg-primary');
 
         protocol.send('Publishing..');
             let isNotInPublishing = await this.waitAppear('.editPosts');
-            if ( !isNotInPublishing ) await this.captureError("Admin page exceeds timeout!");
+            if (!isNotInPublishing) await this.captureError("Admin page exceeds timeout!");
             protocol.send('In admin page');
-    }
+    
+    } // end if publish()
 
-    private async checkBlog(){
+    private async checkBlog() {
+
         let content = lib.textify(this.post.content);
         let arr = content.trim().split('\n')
+
         protocol.send('Check blog if post is successful');
         
         // first check for title
         protocol.send('Looking for title');
-            let title = await this.waitAppear(`a:contains("${this.post.title}")`.trim(), 5);
+            let title = await this.waitAppear(`a:contains("${this.post.title.trim()}")`, 5);
             if (title) protocol.success();
             if (!title) protocol.send('Looking for title', 'Title not found!');
         
         protocol.send('Looking for first line of text.');
             let firstLineText = await this.waitAppear(`a:contains("${arr[0].trim()}")`, 5);
             if (!firstLineText) await this.captureError('Blog post not found.');
-            protocol.send('Blog post found.')
+            // protocol.send('Blog post found.')
     }   
 
     /**
@@ -132,8 +138,16 @@ class Blogger extends Nightmare {
 
 let options = {
     show: argv.browser === 'true',
-    x: 1000, y: 0, width: 800, height: 700,
+    x: 1000, y: 0, width: 1100, height: 700,
     openDevTools: { mode: '' },
 };
 (new Blogger(options)).main();
 
+
+
+/**
+ * OPTIONAL Handing changes on DOM.
+ *         protocol.send('Choose HTML editor.');
+            await this.click('.OYKEW4D-U-n > .blogg-collapse-left') // Click HTML tab
+                        .then(a => a).catch( () => this.captureError('Error clicking html tab') ); // capture errors
+ */

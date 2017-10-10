@@ -39,17 +39,20 @@ class Twitter extends Nightmare{
             await this.insert( 'input[name="session[username_or_email]"]', this.id );
             await this.typeEnter( 'input[name="session[password]"]', this.password );
       
-        protocol.send("Checking user log in...")
-        let isLogin = await this.waitDisappear( 'input[name="session[password]"]' );
+        protocol.send("Checking user log in...");
+            let isLogin = await this.waitDisappear( 'input[name="session[password]"]' );
+            if (!isLogin) await this.captureError("Still in login page after timeout exceeds!")
         
-        if (!isLogin) await this.captureError("Still in login page after timeout exceeds!")
-        protocol.send("Login", 'success')
+        protocol.send('Waiting for link to compose tweet page.');
+            let isLinkReady = await this.waitAppear(`a[href='/compose/tweet']`, 10);
+            if ( !isLinkReady ) await this.captureError('Link not found after timeout!');
+            protocol.send("Login", 'success');
     
-    }
+    } // end of login()
 
     private async publish(){
         // shaping the post
-        let content = this.post.title + '\n' + lib.textify(this.post.content);
+        let content = this.post.title.trim() + '\n' + lib.textify(this.post.content.trim());
         let postThis = content.trim();
 
         protocol.send("Go to compose tweet page.");
@@ -86,9 +89,10 @@ class Twitter extends Nightmare{
             let selector = `span:contains('${arr[0].trim()}')`   
             let tweetFound = await this.waitAppear( selector , 5);
             if ( !tweetFound ) await this.captureError("Tweet not found");
-                protocol.send("Checking Tweet", 'Tweet found!');
+                // protocol.send("Checking Tweet", 'Tweet found!');
             
-    }
+    } // end of publish()
+
     /**
      * It captures the current screen state and fires 'protocol.end()' closing the script.
      * @param message 
@@ -98,7 +102,7 @@ class Twitter extends Nightmare{
     private async captureError( message, filePath = path.join(__dirname, '..', 'screenshot'), fileName = lib.timeStamp() + '-twitter.png' ){
         
         if (!fs.existsSync(filePath)) fs.mkdirSync(filePath);
-        
+    
         await this.screenshot( path.join(filePath, fileName) );
         protocol.fail(message + 'Check screenshot at :' + path.join(filePath, fileName) );    
 

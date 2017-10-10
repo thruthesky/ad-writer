@@ -97,7 +97,7 @@ var Twitter = (function (_super) {
     };
     Twitter.prototype.login = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var isLogin;
+            var isLogin, isLinkReady;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -116,11 +116,21 @@ var Twitter = (function (_super) {
                     case 4:
                         isLogin = _a.sent();
                         if (!!isLogin) return [3 /*break*/, 6];
-                        return [4 /*yield*/, this.captureError("Login")];
+                        return [4 /*yield*/, this.captureError("Still in login page after timeout exceeds!")];
                     case 5:
                         _a.sent();
                         _a.label = 6;
                     case 6:
+                        protocol.send('Waiting for link to compose tweet page.');
+                        return [4 /*yield*/, this.waitAppear("a[href='/compose/tweet']", 10)];
+                    case 7:
+                        isLinkReady = _a.sent();
+                        if (!!isLinkReady) return [3 /*break*/, 9];
+                        return [4 /*yield*/, this.captureError('Link not found after timeout!')];
+                    case 8:
+                        _a.sent();
+                        _a.label = 9;
+                    case 9:
                         protocol.send("Login", 'success');
                         return [2 /*return*/];
                 }
@@ -198,13 +208,11 @@ var Twitter = (function (_super) {
                     case 17:
                         tweetFound = _a.sent();
                         if (!!tweetFound) return [3 /*break*/, 19];
-                        return [4 /*yield*/, this.captureError("Checking Tweet", "Tweet not found!")];
+                        return [4 /*yield*/, this.captureError("Tweet not found")];
                     case 18:
                         _a.sent();
                         _a.label = 19;
-                    case 19:
-                        protocol.send("Checking Tweet", 'Tweet found!');
-                        return [2 /*return*/];
+                    case 19: return [2 /*return*/];
                 }
             });
         });
@@ -222,7 +230,7 @@ var Twitter = (function (_super) {
                     case 1:
                         _a.sent();
                         protocol.fail(message + 'Check screenshot at :' + path.join(filePath, fileName));
-                        return [2];
+                        return [2 /*return*/];
                 }
             });
         });

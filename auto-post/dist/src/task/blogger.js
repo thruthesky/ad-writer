@@ -46,13 +46,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var nightmare_1 = require("./../../nightmare/nightmare");
-var argv = require('yargs').string('category').argv;
-var $ = require('cheerio');
+var firebase_1 = require("../firebase");
 var protocol = require("./../protocol");
 var lib = require("../auto-post-library");
 var path = require("path");
 var fs = require("fs");
-var firebase_1 = require("../firebase");
+var argv = require('yargs').string('category').argv;
 if (argv.pid === void 0) {
     console.log('no pid');
     process.exit(1);
@@ -197,26 +196,30 @@ var Blogger = (function (_super) {
                         canPost = _a.sent();
                         if (!canPost)
                             protocol.end('Loading exceeds timeout! Check internet.');
-                        protocol.send('Writing post...');
-                        return [4 /*yield*/, this.type(".titleField", this.post.title.trim())];
+                        protocol.send('Choose HTML editor.');
+                        return [4 /*yield*/, this.click('.OYKEW4D-U-n > .blogg-collapse-left')];
                     case 9:
                         _a.sent();
-                        return [4 /*yield*/, this.insert("#postingHtmlBox", this.post.content.trim())];
+                        protocol.send('Writing post...');
+                        return [4 /*yield*/, this.type(".titleField", this.post.title.trim())];
                     case 10:
                         _a.sent();
-                        return [4 /*yield*/, this.click('.OYKEW4D-U-i > .blogg-primary')];
+                        return [4 /*yield*/, this.insert("#postingHtmlBox", this.post.content.trim())];
                     case 11:
+                        _a.sent();
+                        return [4 /*yield*/, this.click('.OYKEW4D-U-i > .blogg-primary')];
+                    case 12:
                         _a.sent();
                         protocol.send('Publishing..');
                         return [4 /*yield*/, this.waitAppear('.editPosts')];
-                    case 12:
-                        isNotInPublishing = _a.sent();
-                        if (!!isNotInPublishing) return [3 /*break*/, 14];
-                        return [4 /*yield*/, this.captureError("Admin page exceeds timeout!")];
                     case 13:
-                        _a.sent();
-                        _a.label = 14;
+                        isNotInPublishing = _a.sent();
+                        if (!!isNotInPublishing) return [3 /*break*/, 15];
+                        return [4 /*yield*/, this.captureError("Admin page exceeds timeout!")];
                     case 14:
+                        _a.sent();
+                        _a.label = 15;
+                    case 15:
                         protocol.send('In admin page');
                         return [2 /*return*/];
                 }
@@ -233,7 +236,7 @@ var Blogger = (function (_super) {
                         arr = content.trim().split('\n');
                         protocol.send('Check blog if post is successful');
                         protocol.send('Looking for title');
-                        return [4 /*yield*/, this.waitAppear(("a:contains(\"" + this.post.title + "\")").trim(), 5)];
+                        return [4 /*yield*/, this.waitAppear("a:contains(\"" + this.post.title.trim() + "\")", 5)];
                     case 1:
                         title = _a.sent();
                         if (title)
@@ -249,16 +252,14 @@ var Blogger = (function (_super) {
                     case 3:
                         _a.sent();
                         _a.label = 4;
-                    case 4:
-                        protocol.send('Blog post found.');
-                        return [2 /*return*/];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
     };
     Blogger.prototype.captureError = function (message, filePath, fileName) {
         if (filePath === void 0) { filePath = path.join(__dirname, '..', 'screenshot'); }
-        if (fileName === void 0) { fileName = lib.timeStamp() + '-twitter.png'; }
+        if (fileName === void 0) { fileName = lib.timeStamp() + '-blogger.png'; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -269,7 +270,7 @@ var Blogger = (function (_super) {
                     case 1:
                         _a.sent();
                         protocol.fail(message + 'Check screenshot at :' + path.join(filePath, fileName));
-                        return [2];
+                        return [2 /*return*/];
                 }
             });
         });
@@ -278,7 +279,7 @@ var Blogger = (function (_super) {
 }(nightmare_1.MyNightmare));
 var options = {
     show: argv.browser === 'true',
-    x: 1000, y: 0, width: 800, height: 700,
+    x: 1000, y: 0, width: 1100, height: 700,
     openDevTools: { mode: '' },
 };
 (new Blogger(options)).main();

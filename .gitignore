@@ -17,6 +17,7 @@
 *.launch
 .settings/
 *.sublime-workspace
+.jsbeautifyrc
 
 # IDE - VSCode
 .vscode/*
@@ -42,3 +43,4 @@ package-lock.json
 # System Files
 .DS_Store
 Thumbs.db
+
