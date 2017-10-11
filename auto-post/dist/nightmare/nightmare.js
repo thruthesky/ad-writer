@@ -73,7 +73,10 @@ var MyNightmare = (function (_super) {
                     case 0: return [4 /*yield*/, this
                             .goto(url)
                             .evaluate(function () { return document.querySelector('html').innerHTML; })
-                            .then(function (a) { return a; })];
+                            .then(function (a) { return a; })
+                            .catch(function (e) {
+                            console.log("ERROR: ", e);
+                        })];
                     case 1:
                         html = _a.sent();
                         $html = c.load(html)('html');
@@ -84,14 +87,35 @@ var MyNightmare = (function (_super) {
     };
     MyNightmare.prototype.getHtml = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var html, $html;
+            var html, i, $html;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this
-                            .evaluate(function () { return document.querySelector('html').innerHTML; })
-                            .then(function (a) { return a; })];
+                    case 0:
+                        html = null;
+                        i = 0;
+                        _a.label = 1;
                     case 1:
+                        if (!(i < 300)) return [3 /*break*/, 6];
+                        return [4 /*yield*/, this
+                                .evaluate(function () {
+                                var doc = document.querySelector('html');
+                                if (doc)
+                                    return doc.innerHTML;
+                                return null;
+                            })
+                                .then(function (a) { return a; })];
+                    case 2:
                         html = _a.sent();
+                        if (!html) return [3 /*break*/, 3];
+                        return [3 /*break*/, 6];
+                    case 3: return [4 /*yield*/, this.wait(100)];
+                    case 4:
+                        _a.sent();
+                        _a.label = 5;
+                    case 5:
+                        i++;
+                        return [3 /*break*/, 1];
+                    case 6:
                         $html = c.load(html)('html');
                         return [2 /*return*/, $html];
                 }
