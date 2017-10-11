@@ -18,8 +18,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
-    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -71,17 +71,17 @@ var NaverBlog = (function (_super) {
                 switch (_b.label) {
                     case 0:
                         _a = this;
-                        return [4 /*yield*/, firebase_1.getPost(argv.user, argv.key)];
+                        return [4, firebase_1.getPost(argv.user, argv.key)];
                     case 1:
                         _a.post = _b.sent();
                         if (this.post === null)
                             protocol.end('fail', 'failed to get post from firebase');
                         else
                             protocol.send('got post from firebase');
-                        return [4 /*yield*/, this.publish()];
+                        return [4, this.publish()];
                     case 2:
                         _b.sent();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });
@@ -90,16 +90,16 @@ var NaverBlog = (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.login()];
+                    case 0: return [4, this.login()];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, this.openBlogEditor()];
+                        return [4, this.openBlogEditor()];
                     case 2:
                         _a.sent();
-                        return [4 /*yield*/, this.write()];
+                        return [4, this.write()];
                     case 3:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });
@@ -109,32 +109,32 @@ var NaverBlog = (function (_super) {
             var re;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.get('https://m.naver.com/aside/')];
+                    case 0: return [4, this.get('https://m.naver.com/aside/')];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, this.click('.user_name.user_logoff')];
+                        return [4, this.click('.user_name.user_logoff')];
                     case 2:
                         _a.sent();
-                        return [4 /*yield*/, this.wait('#frmNIDLogin').then(function (a) { return protocol.send('open login page'); }).catch(function (e) { return protocol.end('failed to open login page'); })];
+                        return [4, this.wait('#frmNIDLogin').then(function (a) { return protocol.send('open login page'); }).catch(function (e) { return protocol.end('failed to open login page'); })];
                     case 3:
                         _a.sent();
-                        return [4 /*yield*/, this.type('#id', argv.id)];
+                        return [4, this.type('#id', argv.id)];
                     case 4:
                         _a.sent();
-                        return [4 /*yield*/, this.type('#pw', argv.password)];
+                        return [4, this.type('#pw', argv.password)];
                     case 5:
                         _a.sent();
-                        return [4 /*yield*/, this.click('#frmNIDLogin input[type="submit"]')];
+                        return [4, this.click('#frmNIDLogin input[type="submit"]')];
                     case 6:
                         _a.sent();
-                        return [4 /*yield*/, this.waitSelectors(['#ext_profile', '_btn_reset'])];
+                        return [4, this.waitSelectors(['#ext_profile', '_btn_reset'])];
                     case 7:
                         re = _a.sent();
                         if (re === -1)
                             protocol.end('login failed');
                         else
                             protocol.send('login success');
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });
@@ -144,21 +144,21 @@ var NaverBlog = (function (_super) {
             var $html;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.get('http://m.blog.naver.com/PostList.nhn?blogId=fulljebi&categoryNo=' + argv.category)];
+                    case 0: return [4, this.get('http://m.blog.naver.com/PostList.nhn?blogId=fulljebi&categoryNo=' + argv.category)];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, this.get('http://m.blog.naver.com/PostWriteForm.nhn?blogId=fulljebi')];
+                        return [4, this.get('http://m.blog.naver.com/PostWriteForm.nhn?blogId=fulljebi')];
                     case 2:
                         $html = _a.sent();
-                        if (!$html.find('.btn_close2').length) return [3 /*break*/, 5];
-                        return [4 /*yield*/, this.click('.btn_close2')];
+                        if (!$html.find('.btn_close2').length) return [3, 5];
+                        return [4, this.click('.btn_close2')];
                     case 3:
                         _a.sent();
-                        return [4 /*yield*/, this.wait(200)];
+                        return [4, this.wait(200)];
                     case 4:
                         _a.sent();
                         _a.label = 5;
-                    case 5: return [2 /*return*/];
+                    case 5: return [2];
                 }
             });
         });
@@ -168,21 +168,21 @@ var NaverBlog = (function (_super) {
             var content;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.insert('#subject', this.post.title)];
+                    case 0: return [4, this.insert('#subject', this.post.title)];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, this.wait(200)];
+                        return [4, this.wait(200)];
                     case 2:
                         _a.sent();
                         content = this.post.content;
                         content = strip_tags(content);
-                        return [4 /*yield*/, this.insert('#contents', content)];
+                        return [4, this.insert('#contents', content)];
                     case 3:
                         _a.sent();
-                        return [4 /*yield*/, this.wait(200)];
+                        return [4, this.wait(200)];
                     case 4:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });

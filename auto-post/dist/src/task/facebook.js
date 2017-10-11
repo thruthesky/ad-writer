@@ -18,8 +18,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
-    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -76,62 +76,84 @@ var Facebook = (function (_super) {
                 switch (_b.label) {
                     case 0:
                         _a = this;
-                        return [4 /*yield*/, firebase_1.getPost(argv.user, argv.key)];
+                        return [4, firebase_1.getPost(argv.user, argv.key)];
                     case 1:
                         _a.post = _b.sent();
                         if (this.post === null)
                             protocol.end('fail', 'failed to get post from firebase');
                         else
                             protocol.send('got post from firebase');
-                        return [4 /*yield*/, this.login()];
+                        return [4, this.login()];
                     case 2:
                         _b.sent();
-                        return [4 /*yield*/, this.publish()];
+                        return [4, this.publish()];
                     case 3:
                         _b.sent();
                         protocol.success();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });
     };
     Facebook.prototype.login = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var $html, re, isLogin;
+            var _this = this;
+            var $html, emailField, loginPage, re, isLogin;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.get(this.serverUrl)];
+                    case 0: return [4, this.get(this.serverUrl)];
                     case 1:
                         $html = _a.sent();
-                        protocol.send('login', 'logging in...');
-                        return [4 /*yield*/, this.insert('input[name="email"]', this.id)];
+                        protocol.send('Waiting for proper login..');
+                        return [4, this.waitAppear('input[name="email"]', 3)];
                     case 2:
-                        _a.sent();
-                        return [4 /*yield*/, this.insert('input[name="pass"]', this.password)];
+                        emailField = _a.sent();
+                        if (!!emailField) return [3, 5];
+                        return [4, this.waitAppear("a[href='/login/?ref=dbl&fl&refid=8']", 3)];
                     case 3:
-                        _a.sent();
-                        return [4 /*yield*/, this.enter('input[name="pass"]')];
+                        loginPage = _a.sent();
+                        if (!loginPage)
+                            this.captureError('Unhandled page.');
+                        return [4, this.get(this.serverUrl + '/login/?ref=dbl&fl&refid=8')];
                     case 4:
                         _a.sent();
-                        return [4 /*yield*/, this.waitDisappear('input[name="pass"]', 5)];
+                        _a.label = 5;
                     case 5:
+                        protocol.send('logging in...');
+                        return [4, this.insert('input[name="email"]', '').then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
+                    case 6:
+                        _a.sent();
+                        return [4, this.insert('input[name="email"]', this.id)];
+                    case 7:
+                        _a.sent();
+                        return [4, this.insert('input[name="pass"]', '').then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
+                    case 8:
+                        _a.sent();
+                        return [4, this.insert('input[name="pass"]', this.password)];
+                    case 9:
+                        _a.sent();
+                        return [4, this.enter('input[name="pass"]')];
+                    case 10:
+                        _a.sent();
+                        return [4, this.waitDisappear('input[name="pass"]', 5)];
+                    case 11:
                         re = _a.sent();
                         if (!re)
                             this.captureError('Still in login page after timeout!.');
-                        return [4 /*yield*/, this.get(this.serverUrl)];
-                    case 6:
+                        return [4, this.get(this.serverUrl)];
+                    case 12:
                         _a.sent();
-                        return [4 /*yield*/, this.waitAppear("a:contains('Logout')", 5)];
-                    case 7:
+                        return [4, this.waitAppear("a:contains('Logout')", 5)];
+                    case 13:
                         isLogin = _a.sent();
-                        if (!!isLogin) return [3 /*break*/, 9];
-                        return [4 /*yield*/, this.captureError('Failed login.')];
-                    case 8:
+                        if (!!isLogin) return [3, 15];
+                        return [4, this.captureError('Failed login.')];
+                    case 14:
                         _a.sent();
-                        _a.label = 9;
-                    case 9:
+                        _a.label = 15;
+                    case 15:
                         protocol.send('login', 'success');
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });
@@ -145,52 +167,52 @@ var Facebook = (function (_super) {
                         content = this.post.title + '\n' + lib.textify(this.post.content);
                         postThis = content.trim();
                         protocol.send('Opening Group: ', argv.category);
-                        return [4 /*yield*/, this.get(this.serverUrl + '/groups/' + this.argv.category)];
+                        return [4, this.get(this.serverUrl + '/groups/' + this.argv.category)];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, this.waitAppear('a[name=groupMenuBottom]', 5)];
+                        return [4, this.waitAppear('a[name=groupMenuBottom]', 5)];
                     case 2:
                         isGroupOpen = _a.sent();
-                        if (!!isGroupOpen) return [3 /*break*/, 4];
-                        return [4 /*yield*/, this.captureError('captureError on opening group page.')];
+                        if (!!isGroupOpen) return [3, 4];
+                        return [4, this.captureError('captureError on opening group page.')];
                     case 3:
                         _a.sent();
                         _a.label = 4;
                     case 4:
                         protocol.send('Opening :' + argv.category, 'success!');
                         protocol.send('checking post text area');
-                        return [4 /*yield*/, this.waitAppear('textarea[name="xc_message"]')];
+                        return [4, this.waitAppear('textarea[name="xc_message"]')];
                     case 5:
                         canPost = _a.sent();
-                        if (!!canPost) return [3 /*break*/, 7];
-                        return [4 /*yield*/, this.captureError('Cant find textarea to post.')];
+                        if (!!canPost) return [3, 7];
+                        return [4, this.captureError('Cant find textarea to post.')];
                     case 6:
                         _a.sent();
                         _a.label = 7;
                     case 7:
                         protocol.send('checking post text area', 'text area found!');
                         protocol.send('Typing the post: ', 'typing..');
-                        return [4 /*yield*/, this.insert('textarea[name="xc_message"]', postThis)];
+                        return [4, this.insert('textarea[name="xc_message"]', postThis)];
                     case 8:
                         _a.sent();
-                        return [4 /*yield*/, this.click('input[name="view_post"]')];
+                        return [4, this.click('input[name="view_post"]')];
                     case 9:
                         _a.sent();
                         protocol.send('Verify post if posted');
-                        return [4 /*yield*/, this.waitAppear("a:contains('1 post requiring approval')", 5)];
+                        return [4, this.waitAppear("a:contains('1 post requiring approval')", 5)];
                     case 10:
                         isPending = _a.sent();
                         if (isPending)
                             protocol.end('post', 'Post pending.');
-                        return [4 /*yield*/, this.findPost(postThis)];
+                        return [4, this.findPost(postThis)];
                     case 11:
                         isPosted = _a.sent();
-                        if (!!isPosted) return [3 /*break*/, 13];
-                        return [4 /*yield*/, this.captureError('Post not found.')];
+                        if (!!isPosted) return [3, 13];
+                        return [4, this.captureError('Post not found.')];
                     case 12:
                         _a.sent();
                         _a.label = 13;
-                    case 13: return [2 /*return*/];
+                    case 13: return [2];
                 }
             });
         });
@@ -203,10 +225,10 @@ var Facebook = (function (_super) {
                     case 0:
                         arr = query.trim().split('\n');
                         selector = "span:contains('" + arr[0].trim() + "')";
-                        return [4 /*yield*/, this.waitAppear(selector)];
+                        return [4, this.waitAppear(selector)];
                     case 1:
                         re = _a.sent();
-                        return [2 /*return*/, re];
+                        return [2, re];
                 }
             });
         });
@@ -220,11 +242,11 @@ var Facebook = (function (_super) {
                     case 0:
                         if (!fs.existsSync(filePath))
                             fs.mkdirSync(filePath);
-                        return [4 /*yield*/, this.screenshot(path.join(filePath, fileName))];
+                        return [4, this.screenshot(path.join(filePath, fileName))];
                     case 1:
                         _a.sent();
                         protocol.fail(message + 'Check screenshot at :' + path.join(filePath, fileName));
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });
