@@ -35,7 +35,7 @@ class Olx extends Nightmare {
      * @param filePath - where to save the captured image 
      * @param fileName - filename of the image.
      */
-    private async captureError( message, filePath = path.join(__dirname, '..', 'screenshot'), fileName = lib.timeStamp() + '-twitter.png' ){
+    private async captureError( message, filePath = path.join(__dirname, '..', 'screenshot'), fileName = lib.timeStamp() + '-olx.png' ){
         
         if (!fs.existsSync(filePath)) fs.mkdirSync(filePath);
     
