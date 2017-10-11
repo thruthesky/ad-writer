@@ -42,8 +42,19 @@ class Facebook extends Nightmare {
 
     private async login() {
         let $html = await this.get(this.serverUrl);
-        protocol.send('login', 'logging in...')
+
+        protocol.send('Waiting for proper login..');
+        let emailField = await this.waitAppear('input[name="email"]', 3);
+        if( !emailField ){
+            let loginPage = await this.waitAppear(`a[href='/login/?ref=dbl&fl&refid=8']`, 3);
+            if(!loginPage) this.captureError('Unhandled page.')
+            await this.get( this.serverUrl + '/login/?ref=dbl&fl&refid=8' );
+        }
+
+        protocol.send('logging in...');
+        await this.insert('input[name="email"]', '').then(a=>a).catch( e => this.captureError(e) );
         await this.insert('input[name="email"]', this.id);
+        await this.insert('input[name="pass"]', '').then(a=>a).catch( e => this.captureError(e) );
         await this.insert('input[name="pass"]', this.password);
         await this.enter('input[name="pass"]');
 
