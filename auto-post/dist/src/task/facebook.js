@@ -104,11 +104,12 @@ var Facebook = (function (_super) {
                     case 0: return [4, this.get(this.serverUrl)];
                     case 1:
                         $html = _a.sent();
-                        protocol.send('Waiting for proper login..');
+                        protocol.send('Waiting for email field.');
                         return [4, this.waitAppear('input[name="email"]', 3)];
                     case 2:
                         emailField = _a.sent();
-                        if (!!emailField) return [3, 5];
+                        if (!!emailField) return [3, 6];
+                        protocol.send('No email field! 2nd try login...');
                         return [4, this.waitAppear("a[href='/login/?ref=dbl&fl&refid=8']", 3)];
                     case 3:
                         loginPage = _a.sent();
@@ -117,41 +118,46 @@ var Facebook = (function (_super) {
                         return [4, this.get(this.serverUrl + '/login/?ref=dbl&fl&refid=8')];
                     case 4:
                         _a.sent();
-                        _a.label = 5;
+                        return [4, this.waitAppear('input[name="email"]', 3)];
                     case 5:
+                        emailField = _a.sent();
+                        if (!emailField)
+                            this.captureError('Unknown Error.');
+                        _a.label = 6;
+                    case 6:
                         protocol.send('logging in...');
                         return [4, this.insert('input[name="email"]', '').then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
-                    case 6:
-                        _a.sent();
-                        return [4, this.insert('input[name="email"]', this.id)];
                     case 7:
                         _a.sent();
-                        return [4, this.insert('input[name="pass"]', '').then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
+                        return [4, this.insert('input[name="email"]', this.id)];
                     case 8:
                         _a.sent();
-                        return [4, this.insert('input[name="pass"]', this.password)];
+                        return [4, this.insert('input[name="pass"]', '').then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
                     case 9:
                         _a.sent();
-                        return [4, this.enter('input[name="pass"]')];
+                        return [4, this.insert('input[name="pass"]', this.password)];
                     case 10:
                         _a.sent();
-                        return [4, this.waitDisappear('input[name="pass"]', 5)];
+                        return [4, this.enter('input[name="pass"]')];
                     case 11:
+                        _a.sent();
+                        return [4, this.waitDisappear('input[name="pass"]', 5)];
+                    case 12:
                         re = _a.sent();
                         if (!re)
                             this.captureError('Still in login page after timeout!.');
                         return [4, this.get(this.serverUrl)];
-                    case 12:
+                    case 13:
                         _a.sent();
                         return [4, this.waitAppear("a:contains('Logout')", 5)];
-                    case 13:
-                        isLogin = _a.sent();
-                        if (!!isLogin) return [3, 15];
-                        return [4, this.captureError('Failed login.')];
                     case 14:
-                        _a.sent();
-                        _a.label = 15;
+                        isLogin = _a.sent();
+                        if (!!isLogin) return [3, 16];
+                        return [4, this.captureError('Failed login.')];
                     case 15:
+                        _a.sent();
+                        _a.label = 16;
+                    case 16:
                         protocol.send('login', 'success');
                         return [2];
                 }
