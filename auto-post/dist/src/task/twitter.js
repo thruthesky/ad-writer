@@ -143,7 +143,7 @@ var Twitter = (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        content = this.post.title + '\n' + lib.textify(this.post.content);
+                        content = this.post.title.trim() + '\n' + lib.textify(this.post.content.trim());
                         postThis = content.trim();
                         protocol.send("Go to compose tweet page.");
                         return [4 /*yield*/, this.get(this.twitterUrl + "/compose/tweet")];
