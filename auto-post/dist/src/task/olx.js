@@ -72,8 +72,18 @@ var Olx = (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.login()];
+                    case 0:
+                        this.post = {
+                            title: 'This is title',
+                            content: "<p>This is the <strong>post</strong></p>",
+                            price: "13400",
+                            condition: '2nd hand'
+                        };
+                        return [4, this.login()];
                     case 1:
+                        _a.sent();
+                        return [4, this.publish()];
+                    case 2:
                         _a.sent();
                         return [2];
                 }
@@ -82,12 +92,85 @@ var Olx = (function (_super) {
     };
     Olx.prototype.login = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
+            var canLogin, isLogin;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.get(this.olxUrl).catch(function (e) { return _this.captureError('Error opening the page.', _this.olxUrl); })];
+                    case 0: return [4, this.get(this.olxUrl + '/login')];
                     case 1:
                         _a.sent();
+                        protocol.send('Waiting to login...');
+                        return [4, this.waitAppear('input[name="mobile"]', 5)];
+                    case 2:
+                        canLogin = _a.sent();
+                        if (!!canLogin) return [3, 4];
+                        return [4, this.captureError("Can't find mobile field.")];
+                    case 3:
+                        _a.sent();
+                        _a.label = 4;
+                    case 4:
+                        protocol.send('Clear fields.');
+                        return [4, this.insert('input[name="mobile"]', '')];
+                    case 5:
+                        _a.sent();
+                        return [4, this.insert('input[name="password"]', '')];
+                    case 6:
+                        _a.sent();
+                        protocol.send('Login..');
+                        return [4, this.insert('input[name="mobile"]', this.id)];
+                    case 7:
+                        _a.sent();
+                        return [4, this.insert('input[name="password"]', this.password)];
+                    case 8:
+                        _a.sent();
+                        return [4, this.enter('input[name="password"]')];
+                    case 9:
+                        _a.sent();
+                        protocol.send('Waiting for profile.');
+                        return [4, this.waitAppear('.profile')];
+                    case 10:
+                        isLogin = _a.sent();
+                        if (!!isLogin) return [3, 12];
+                        return [4, this.captureError('Profile not found.')];
+                    case 11:
+                        _a.sent();
+                        _a.label = 12;
+                    case 12: return [2];
+                }
+            });
+        });
+    };
+    Olx.prototype.publish = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var canPost, canSell;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        protocol.send('Waiting for /ad/post link');
+                        return [4, this.waitAppear('a[href="/ad/post"]')];
+                    case 1:
+                        canPost = _a.sent();
+                        if (!!canPost) return [3, 3];
+                        return [4, this.captureError('Cant find link for /ad/post')];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        protocol.send('Goto: ' + this.olxUrl + '/ad/post');
+                        return [4, this.get(this.olxUrl + '/ad/post')];
+                    case 4:
+                        _a.sent();
+                        protocol.send('Waiting for sell form.');
+                        return [4, this.waitAppear('.sell-form')];
+                    case 5:
+                        canSell = _a.sent();
+                        if (!!canSell) return [3, 7];
+                        return [4, this.captureError('Cannot find sell form!')];
+                    case 6:
+                        _a.sent();
+                        _a.label = 7;
+                    case 7:
+                        protocol.send('Posting for computer.');
+                        this.computers(this.post);
                         return [2];
                 }
             });
@@ -111,11 +194,80 @@ var Olx = (function (_super) {
             });
         });
     };
+    Olx.prototype.computers = function (post) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            var category;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        protocol.send('Selecting category');
+                        category = argv.category.split('.');
+                        return [4, this.click('#category-btn').then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
+                    case 1:
+                        _a.sent();
+                        return [4, this.click('.category-' + category[0].trim()).then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
+                    case 2:
+                        _a.sent();
+                        return [4, this.click('.category-' + category[1].trim()).then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
+                    case 3:
+                        _a.sent();
+                        protocol.send('Selecting item condition');
+                        if (!post.condition.indexOf('new')) return [3, 5];
+                        return [4, this.select('#param_condition', '1').then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
+                    case 4:
+                        _a.sent();
+                        _a.label = 5;
+                    case 5:
+                        ;
+                        if (!post.condition.indexOf('used')) return [3, 7];
+                        return [4, this.select('#param_condition', '2').then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
+                    case 6:
+                        _a.sent();
+                        _a.label = 7;
+                    case 7:
+                        ;
+                        if (!post.condition.indexOf('2nd')) return [3, 9];
+                        return [4, this.select('#param_condition', '2').then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
+                    case 8:
+                        _a.sent();
+                        _a.label = 9;
+                    case 9:
+                        ;
+                        protocol.send('Typing into fields');
+                        return [4, this.type('#title', post.title)];
+                    case 10:
+                        _a.sent();
+                        return [4, this.type('#param_price', post.price)];
+                    case 11:
+                        _a.sent();
+                        return [4, this.type('#description', lib.textify(post.content).trim())];
+                    case 12:
+                        _a.sent();
+                        protocol.send('Selecting location');
+                        return [4, this.click('#location-btn').then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
+                    case 13:
+                        _a.sent();
+                        return [4, this.click('#location-1').then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
+                    case 14:
+                        _a.sent();
+                        return [4, this.click('#location-1').then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
+                    case 15:
+                        _a.sent();
+                        protocol.send('Submit..');
+                        return [4, this.click('.submit > div > .sell-button').then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
+                    case 16:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
     return Olx;
 }(nightmare_1.MyNightmare));
 var options = {
     show: argv.browser === 'true',
-    x: 1408, y: 0, width: 360, height: 700,
+    x: 1072, y: 0, width: 850, height: 700,
     openDevTools: { mode: '' },
 };
 (new Olx(options)).main();
