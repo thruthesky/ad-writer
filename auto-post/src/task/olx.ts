@@ -34,11 +34,7 @@ class Olx extends Nightmare {
 
     this.post = {
         title : 'This is title',
-<<<<<<< HEAD
         content : `<p>This is the <strong>post</strong></p>klsd;lsd;lg lksjgk;lsj ;lskdjfg;lksdjfg; ;lksdjfg; skdjfg;lksj lk;sdjfg;lksdjf ;lksdjf;glksj;kj dkgjl `, // cannot be shorter than 40 characters
-=======
-        content : `<p>This is the <strong>post</strong></p>`, // cannot be shorter than 40 characters
->>>>>>> 105b48e99deb0589356c5b015aea747f9357901a
         price: `13400`,
         condition: '2nd hand'
     }
@@ -117,7 +113,6 @@ class Olx extends Nightmare {
         * location(required);
      */
     private async computers( post ) {
-<<<<<<< HEAD
         // description cannot be less than 40 characters
         let description = lib.textify(post.content).trim();
         if ( description.length < 40 ) await protocol.fail('Description/Content cannot be shorter than 40 characters.');
@@ -144,53 +139,21 @@ class Olx extends Nightmare {
         await this.click('#location-1').then(a => a).catch( e => this.captureError(e) ); // metro manila
         await this.click('#location-1').then(a => a).catch( e => this.captureError(e) ); // manila
             
-=======
-        // select category
-        protocol.send('Selecting category');
-        let category = argv.category.split('.');
-        await this.click('#category-btn')                       .then(a => a).catch( e => this.captureError(e) );
-        await this.click( '.category-' + category[0].trim() )   .then(a => a).catch( e => this.captureError(e) ); // main category
-        await this.click( '.category-' + category[1].trim() )   .then(a => a).catch( e => this.captureError(e) ); // sub category
-
-        // select item condition
-        protocol.send('Selecting item condition');
-        if( post.condition.indexOf('new') )  await this.select('#param_condition','1').then(a => a).catch( e => this.captureError(e) );;
-        if( post.condition.indexOf('used') ) await this.select('#param_condition', '2').then(a => a).catch( e => this.captureError(e) );;
-        if( post.condition.indexOf('2nd') )  await this.select('#param_condition', '2').then(a => a).catch( e => this.captureError(e) );;
-
->>>>>>> 105b48e99deb0589356c5b015aea747f9357901a
         // input texts
         protocol.send('Typing into fields');
         await this.type('#title', post.title);
         await this.type('#param_price', post.price);
-<<<<<<< HEAD
         await this.type('#description', description);
 
         // protocol.send('Submit..')
         // await this.click('.submit > div > .sell-button').then(a => a).catch( e => this.captureError(e) );
-=======
-        await this.type('#description', lib.textify(post.content).trim());
-
-        // get location
-        protocol.send('Selecting location');
-        await this.click('#location-btn')                     .then(a => a).catch( e => this.captureError(e) );
-        await this.click('#location-1')                       .then(a => a).catch( e => this.captureError(e) ); // metro manila
-        await this.click('#location-1')                       .then(a => a).catch( e => this.captureError(e) ); // manila
-    
-        protocol.send('Submit..')
-        await this.click('.submit > div > .sell-button')            .then(a => a).catch( e => this.captureError(e) );
->>>>>>> 105b48e99deb0589356c5b015aea747f9357901a
     }
 }
 
 let options = {
     show: argv.browser === 'true',
     x: 1072, y: 0, width: 850, height: 700,
-<<<<<<< HEAD
     // openDevTools: { mode: '' },
-=======
-    openDevTools: { mode: '' },
->>>>>>> 105b48e99deb0589356c5b015aea747f9357901a
 };
 (new Olx(options)).main();
 
