@@ -106,11 +106,11 @@ class Olx extends Nightmare {
      * @param post - an object that will contain inputs for computer()
      * computers inputs; 
         * title, 
-        * category(required), 
-        * condition(required),
-        * price(required), 
-        * description, 
-        * location(required);
+        * category, 
+        * condition,
+        * price, 
+        * description(not less than 40), 
+        * location;
      */
     private async computers( post ) {
         // description cannot be less than 40 characters
@@ -153,7 +153,7 @@ class Olx extends Nightmare {
 let options = {
     show: argv.browser === 'true',
     x: 1072, y: 0, width: 850, height: 700,
-    // openDevTools: { mode: '' },
+    // openDevTools: { mode: '' },  // Upload will not work if dev tools is open
 };
 (new Olx(options)).main();
 
