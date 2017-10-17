@@ -214,10 +214,10 @@ var Olx = (function (_super) {
                         return [4, this.click('#category-btn').then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
                     case 3:
                         _a.sent();
-                        return [4, this.click('.category-' + category[0].trim()).then(function (a) { return a; }).catch(function (e) { return _this.captureError('Invalid Category!'); })];
+                        return [4, this.click('.category-' + category[0].trim().toLowerCase()).then(function (a) { return a; }).catch(function (e) { return _this.captureError('Invalid Category!'); })];
                     case 4:
                         _a.sent();
-                        return [4, this.click('.category-' + category[1].trim()).then(function (a) { return a; }).catch(function (e) { return _this.captureError('Invalid Category!'); })];
+                        return [4, this.click('.category-' + category[1].trim().toLowerCase()).then(function (a) { return a; }).catch(function (e) { return _this.captureError('Invalid Category!'); })];
                     case 5:
                         _a.sent();
                         protocol.send('Uploading photo..');

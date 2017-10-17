@@ -113,31 +113,34 @@ class Olx extends Nightmare {
         * location;
      */
     private async computers( post ) {
+        
         // description cannot be less than 40 characters
         let description = lib.textify(post.content).trim();
         if ( description.length < 40 ) await protocol.fail('Description/Content cannot be shorter than 40 characters.');
+        
         // select category
         protocol.send('Selecting category');
         let category = argv.category.split('.');
         await this.click('#category-btn').then(a => a).catch( e => this.captureError(e) );
-        await this.click( '.category-' + category[0].trim() ).then(a => a).catch( e => this.captureError('Invalid Category!') ); // main category
-        await this.click( '.category-' + category[1].trim() ).then(a => a).catch( e => this.captureError('Invalid Category!') ); // sub category
+        await this.click( '.category-' + category[0].trim().toLowerCase() ).then(a => a).catch( e => this.captureError('Invalid Category!') ); // main category
+        await this.click( '.category-' + category[1].trim().toLowerCase() ).then(a => a).catch( e => this.captureError('Invalid Category!') ); // sub category
 
         // upload photo C:\Users\IT Assistant\Pictures\apple.jpg
         protocol.send('Uploading photo..')
         await this.upload('input[accept="image/jpeg,image/gif,image/png"]', path.join(__dirname, '..', 'screenshot', '2017-10-11-11-32-59-twitter.png')).then(a => a).catch(e => console.log(e) );
+        
         // select item condition
         protocol.send('Selecting item condition');
-        if( post.condition.toLowerCase().indexOf('new') )   await this.select('#param_condition', '1').then(a => a).catch( e => this.captureError(e) );;
-        if( post.condition.toLowerCase().indexOf('used') )  await this.select('#param_condition', '2').then(a => a).catch( e => this.captureError(e) );;
-        if( post.condition.toLowerCase().indexOf('2nd') )   await this.select('#param_condition', '2').then(a => a).catch( e => this.captureError(e) );;
-        if( post.condition.toLowerCase().indexOf('second') )await this.select('#param_condition', '2').then(a => a).catch( e => this.captureError(e) );;
+        if ( post.condition.toLowerCase().indexOf('new') )    await this.select('#param_condition', '1').then(a => a).catch( e => this.captureError(e) );;
+        if ( post.condition.toLowerCase().indexOf('used') )   await this.select('#param_condition', '2').then(a => a).catch( e => this.captureError(e) );;
+        if ( post.condition.toLowerCase().indexOf('2nd') )    await this.select('#param_condition', '2').then(a => a).catch( e => this.captureError(e) );;
+        if ( post.condition.toLowerCase().indexOf('second') ) await this.select('#param_condition', '2').then(a => a).catch( e => this.captureError(e) );;
         
         // get location
         protocol.send('Selecting location');
         await this.click('#location-btn').then(a => a).catch( e => this.captureError(e) );
-        await this.click('#location-1').then(a => a).catch( e => this.captureError(e) ); // metro manila
-        await this.click('#location-1').then(a => a).catch( e => this.captureError(e) ); // manila
+        await this.click('#location-1')  .then(a => a).catch( e => this.captureError(e) ); // metro manila
+        await this.click('#location-1')  .then(a => a).catch( e => this.captureError(e) ); // manila
             
         // input texts
         protocol.send('Typing into fields');
@@ -155,5 +158,6 @@ let options = {
     x: 1072, y: 0, width: 850, height: 700,
     // openDevTools: { mode: '' },  // Upload will not work if dev tools is open
 };
-(new Olx(options)).main();
+
+( new Olx(options) ).main();
 
