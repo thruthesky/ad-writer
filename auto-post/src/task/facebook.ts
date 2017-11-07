@@ -72,7 +72,7 @@ class Facebook extends Nightmare {
         await this.get(this.serverUrl);
 
         protocol.send('Checking if successfully logged in.')
-        let isLogin = await this.waitAppear(`a:contains('Logout')`, 5);
+        let isLogin = await this.waitAppear(`input[name="view_post"]`, 5);
         if (!isLogin) await this.captureError('Failed login.')
         protocol.send('login', 'success');
     }
