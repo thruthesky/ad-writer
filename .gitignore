@@ -2,6 +2,7 @@
 
 *.png
 *map
+/dist/
 
 # compiled output
 /dist

@@ -46,6 +46,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var nightmare_1 = require("./../../nightmare/nightmare");
+require('nightmare-upload')(nightmare_1.MyNightmare);
 var argv = require('yargs').string('category').argv;
 var protocol = require("./../protocol");
 var lib = require("../auto-post-library");
@@ -72,23 +73,121 @@ var Olx = (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
+<<<<<<< HEAD
                     case 0: return [4 /*yield*/, this.login()];
                     case 1:
                         _a.sent();
                         return [2 /*return*/];
+=======
+                    case 0:
+                        this.post = {
+                            title: 'This is title',
+                            content: "<p>This is the <strong>post</strong></p>klsd;lsd;lg lksjgk;lsj ;lskdjfg;lksdjfg; ;lksdjfg; skdjfg;lksj lk;sdjfg;lksdjf ;lksdjf;glksj;kj dkgjl ",
+                            price: "13400",
+                            condition: '2nd hand'
+                        };
+                        return [4, this.login()];
+                    case 1:
+                        _a.sent();
+                        return [4, this.publish()];
+                    case 2:
+                        _a.sent();
+                        return [2];
+>>>>>>> 8eac38abdb4683d1847229b22010dd73f645dc8b
                 }
             });
         });
     };
     Olx.prototype.login = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
+            var canLogin, isLogin;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.get(this.olxUrl).catch(function (e) { return _this.captureError('Error opening the page.', _this.olxUrl); })];
+                    case 0: return [4, this.get(this.olxUrl + '/login')];
                     case 1:
                         _a.sent();
+                        protocol.send('Waiting to login...');
+                        return [4, this.waitAppear('input[name="mobile"]', 5)];
+                    case 2:
+                        canLogin = _a.sent();
+                        if (!!canLogin) return [3, 4];
+                        return [4, this.captureError("Can't find mobile field.")];
+                    case 3:
+                        _a.sent();
+                        _a.label = 4;
+                    case 4:
+                        protocol.send('Clear fields.');
+                        return [4, this.insert('input[name="mobile"]', '')];
+                    case 5:
+                        _a.sent();
+                        return [4, this.insert('input[name="password"]', '')];
+                    case 6:
+                        _a.sent();
+                        protocol.send('Login..');
+                        return [4, this.insert('input[name="mobile"]', this.id)];
+                    case 7:
+                        _a.sent();
+                        return [4, this.insert('input[name="password"]', this.password)];
+                    case 8:
+                        _a.sent();
+                        return [4, this.enter('input[name="password"]')];
+                    case 9:
+                        _a.sent();
+                        protocol.send('Waiting for profile.');
+                        return [4, this.waitAppear('.profile')];
+                    case 10:
+                        isLogin = _a.sent();
+                        if (!!isLogin) return [3, 12];
+                        return [4, this.captureError('Profile not found.')];
+                    case 11:
+                        _a.sent();
+                        _a.label = 12;
+                    case 12: return [2];
+                }
+            });
+        });
+    };
+    Olx.prototype.publish = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var canPost, canSell;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+<<<<<<< HEAD
+                    case 0: return [4 /*yield*/, this.get(this.olxUrl).catch(function (e) { return _this.captureError('Error opening the page.', _this.olxUrl); })];
+=======
+                    case 0:
+                        protocol.send('Waiting for /ad/post link');
+                        return [4, this.waitAppear('a[href="/ad/post"]')];
+>>>>>>> 8eac38abdb4683d1847229b22010dd73f645dc8b
+                    case 1:
+                        canPost = _a.sent();
+                        if (!!canPost) return [3, 3];
+                        return [4, this.captureError('Cant find link for /ad/post')];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        protocol.send('Goto: ' + this.olxUrl + '/ad/post');
+                        return [4, this.get(this.olxUrl + '/ad/post')];
+                    case 4:
+                        _a.sent();
+<<<<<<< HEAD
                         return [2 /*return*/];
+=======
+                        protocol.send('Waiting for sell form.');
+                        return [4, this.waitAppear('.sell-form')];
+                    case 5:
+                        canSell = _a.sent();
+                        if (!!canSell) return [3, 7];
+                        return [4, this.captureError('Cannot find sell form!')];
+                    case 6:
+                        _a.sent();
+                        _a.label = 7;
+                    case 7:
+                        protocol.send('Posting for computer.');
+                        this.computers(this.post);
+                        return [2];
+>>>>>>> 8eac38abdb4683d1847229b22010dd73f645dc8b
                 }
             });
         });
@@ -111,12 +210,94 @@ var Olx = (function (_super) {
             });
         });
     };
+    Olx.prototype.computers = function (post) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            var description, category;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        description = lib.textify(post.content).trim();
+                        if (!(description.length < 40)) return [3, 2];
+                        return [4, protocol.fail('Description/Content cannot be shorter than 40 characters.')];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2:
+                        protocol.send('Selecting category');
+                        category = argv.category.split('.');
+                        return [4, this.click('#category-btn').then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
+                    case 3:
+                        _a.sent();
+                        return [4, this.click('.category-' + category[0].trim().toLowerCase()).then(function (a) { return a; }).catch(function (e) { return _this.captureError('Invalid Category!'); })];
+                    case 4:
+                        _a.sent();
+                        return [4, this.click('.category-' + category[1].trim().toLowerCase()).then(function (a) { return a; }).catch(function (e) { return _this.captureError('Invalid Category!'); })];
+                    case 5:
+                        _a.sent();
+                        protocol.send('Uploading photo..');
+                        return [4, this.upload('input[accept="image/jpeg,image/gif,image/png"]', path.join(__dirname, '..', 'screenshot', '2017-10-11-11-32-59-twitter.png')).then(function (a) { return a; }).catch(function (e) { return console.log(e); })];
+                    case 6:
+                        _a.sent();
+                        protocol.send('Selecting item condition');
+                        if (!post.condition.toLowerCase().indexOf('new')) return [3, 8];
+                        return [4, this.select('#param_condition', '1').then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
+                    case 7:
+                        _a.sent();
+                        _a.label = 8;
+                    case 8:
+                        ;
+                        if (!post.condition.toLowerCase().indexOf('used')) return [3, 10];
+                        return [4, this.select('#param_condition', '2').then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
+                    case 9:
+                        _a.sent();
+                        _a.label = 10;
+                    case 10:
+                        ;
+                        if (!post.condition.toLowerCase().indexOf('2nd')) return [3, 12];
+                        return [4, this.select('#param_condition', '2').then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
+                    case 11:
+                        _a.sent();
+                        _a.label = 12;
+                    case 12:
+                        ;
+                        if (!post.condition.toLowerCase().indexOf('second')) return [3, 14];
+                        return [4, this.select('#param_condition', '2').then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
+                    case 13:
+                        _a.sent();
+                        _a.label = 14;
+                    case 14:
+                        ;
+                        protocol.send('Selecting location');
+                        return [4, this.click('#location-btn').then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
+                    case 15:
+                        _a.sent();
+                        return [4, this.click('#location-1').then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
+                    case 16:
+                        _a.sent();
+                        return [4, this.click('#location-1').then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
+                    case 17:
+                        _a.sent();
+                        protocol.send('Typing into fields');
+                        return [4, this.type('#title', post.title)];
+                    case 18:
+                        _a.sent();
+                        return [4, this.type('#param_price', post.price)];
+                    case 19:
+                        _a.sent();
+                        return [4, this.type('#description', description)];
+                    case 20:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
     return Olx;
 }(nightmare_1.MyNightmare));
 var options = {
     show: argv.browser === 'true',
-    x: 1408, y: 0, width: 360, height: 700,
-    openDevTools: { mode: '' },
+    x: 1072, y: 0, width: 850, height: 700,
 };
 (new Olx(options)).main();
 //# sourceMappingURL=olx.js.map

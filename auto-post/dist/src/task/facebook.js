@@ -97,19 +97,28 @@ var Facebook = (function (_super) {
     };
     Facebook.prototype.login = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
             var $html, emailField, loginPage, re, isLogin;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.get(this.serverUrl)];
                     case 1:
                         $html = _a.sent();
+<<<<<<< HEAD
                         protocol.send('Waiting for proper login..');
                         return [4 /*yield*/, this.waitAppear('input[name="email"]', 3)];
                     case 2:
                         emailField = _a.sent();
                         if (!!emailField) return [3 /*break*/, 5];
                         return [4 /*yield*/, this.waitAppear("a[href='/login/?ref=dbl&fl&refid=8']", 3)];
+=======
+                        protocol.send('Waiting for email field.');
+                        return [4, this.waitAppear('input[name="email"]', 3)];
+                    case 2:
+                        emailField = _a.sent();
+                        if (!!emailField) return [3, 5];
+                        protocol.send('No email field! 2nd try login...');
+                        return [4, this.waitAppear("a[href='/login/?ref=dbl&fl&refid=8']", 3)];
+>>>>>>> 8eac38abdb4683d1847229b22010dd73f645dc8b
                     case 3:
                         loginPage = _a.sent();
                         if (!loginPage)
@@ -118,6 +127,7 @@ var Facebook = (function (_super) {
                     case 4:
                         _a.sent();
                         _a.label = 5;
+<<<<<<< HEAD
                     case 5:
                         protocol.send('logging in...');
                         return [4 /*yield*/, this.insert('input[name="email"]', '').then(function (a) { return a; }).catch(function (e) { return _this.captureError(e); })];
@@ -136,10 +146,42 @@ var Facebook = (function (_super) {
                     case 10:
                         _a.sent();
                         return [4 /*yield*/, this.waitDisappear('input[name="pass"]', 5)];
+=======
+                    case 5: return [4, this.waitAppear('input[name="email"]', 3)];
+                    case 6:
+                        emailField = _a.sent();
+                        if (!emailField)
+                            this.captureError('Unknown Error.');
+                        protocol.send('logging in ... ');
+                        return [4, this.insert('input[name="email"]', '')];
+                    case 7:
+                        _a.sent();
+                        return [4, this.wait(800)];
+                    case 8:
+                        _a.sent();
+                        return [4, this.insert('input[name="email"]', this.id)];
+                    case 9:
+                        _a.sent();
+                        return [4, this.insert('input[name="pass"]', '')];
+                    case 10:
+                        _a.sent();
+                        return [4, this.wait(800)];
+>>>>>>> 8eac38abdb4683d1847229b22010dd73f645dc8b
                     case 11:
+                        _a.sent();
+                        return [4, this.insert('input[name="pass"]', this.password)];
+                    case 12:
+                        _a.sent();
+                        return [4, this.click('input[name="login"]')];
+                    case 13:
+                        _a.sent();
+                        protocol.send('Waiting to redirect.');
+                        return [4, this.waitDisappear('input[name="pass"]', 5)];
+                    case 14:
                         re = _a.sent();
                         if (!re)
                             this.captureError('Still in login page after timeout!.');
+<<<<<<< HEAD
                         return [4 /*yield*/, this.get(this.serverUrl)];
                     case 12:
                         _a.sent();
@@ -149,9 +191,22 @@ var Facebook = (function (_super) {
                         if (!!isLogin) return [3 /*break*/, 15];
                         return [4 /*yield*/, this.captureError('Failed login.')];
                     case 14:
-                        _a.sent();
-                        _a.label = 15;
+=======
+                        protocol.send('Redirecting to home page.');
+                        return [4, this.get(this.serverUrl)];
                     case 15:
+                        _a.sent();
+                        protocol.send('Checking if successfully logged in.');
+                        return [4, this.waitAppear("input[name=\"view_post\"]", 5)];
+                    case 16:
+                        isLogin = _a.sent();
+                        if (!!isLogin) return [3, 18];
+                        return [4, this.captureError('Failed login.')];
+                    case 17:
+>>>>>>> 8eac38abdb4683d1847229b22010dd73f645dc8b
+                        _a.sent();
+                        _a.label = 18;
+                    case 18:
                         protocol.send('login', 'success');
                         return [2 /*return*/];
                 }
